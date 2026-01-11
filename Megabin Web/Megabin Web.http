@@ -1,0 +1,6 @@
+@Megabin_Web_HostAddress = http://localhost:5250
+
+GET {{Megabin_Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
