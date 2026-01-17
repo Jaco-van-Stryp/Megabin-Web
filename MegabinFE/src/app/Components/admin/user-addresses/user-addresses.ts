@@ -5,10 +5,20 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { Button } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-user-addresses',
-  imports: [TableModule, TagModule, InputTextModule, IconFieldModule, InputIconModule],
+  imports: [
+    TableModule,
+    TagModule,
+    InputTextModule,
+    IconFieldModule,
+    InputIconModule,
+    Button,
+    TooltipModule,
+  ],
   templateUrl: './user-addresses.html',
 })
 export class UserAddresses implements OnInit {

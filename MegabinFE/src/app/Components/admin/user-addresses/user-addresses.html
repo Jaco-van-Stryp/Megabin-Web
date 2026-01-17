@@ -24,6 +24,9 @@
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
+      <th class="w-5">
+        <p-button icon="pi pi-plus" pTooltip="Add Address" severity="primary" />
+      </th>
       <th pSortableColumn="address">
         Address
         <p-sortIcon field="address"></p-sortIcon>
@@ -43,6 +46,9 @@
   </ng-template>
   <ng-template pTemplate="body" let-address>
     <tr (click)="clickAddress(address.id)">
+      <td class="w-5">
+        <p-button icon="pi pi-pencil" pTooltip="Edit Address" severity="help" />
+      </td>
       <td>{{ address.address }}</td>
       <td>{{ address.totalBins }}</td>
       <td>
