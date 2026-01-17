@@ -37,32 +37,45 @@ namespace Megabin_Web.Services
                 // Create a new scope for dependency injection
                 using var scope = _serviceProvider.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var routeOptimizer = scope.ServiceProvider.GetRequiredService<IRouteOptimizationService>();
+                var routeOptimizer =
+                    scope.ServiceProvider.GetRequiredService<IRouteOptimizationService>();
 
                 var today = DateTime.Today;
                 var dayOfWeek = today.DayOfWeek.ToString();
 
                 // Get all active schedule contracts that need collection today
                 // Based on their frequency and day of week
-                var activeContracts = await dbContext.ScheduledContract
-                    .Include(sc => sc.Addresses)
-                    .Where(sc => sc.Active &&
-                           sc.ApprovedExternally &&
-                           sc.DayOfWeek == dayOfWeek)
+
+                //Convert dayofweek to enum
+                var dayOfWeekEnum = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayOfWeek);
+
+                var activeContracts = await dbContext
+                    .ScheduledContract.Include(sc => sc.Addresses)
+                    .Where(sc =>
+                        sc.Active
+                        && sc.ApprovedExternally
+                        && (DayOfWeek)sc.DayOfWeek == dayOfWeekEnum
+                    )
                     .ToListAsync();
 
                 if (activeContracts.Count == 0)
                 {
-                    _logger.LogInformation("No active schedule contracts found for {DayOfWeek}", dayOfWeek);
+                    _logger.LogInformation(
+                        "No active schedule contracts found for {DayOfWeek}",
+                        dayOfWeek
+                    );
                     return;
                 }
 
-                _logger.LogInformation("Found {Count} active schedule contracts for {DayOfWeek}",
-                    activeContracts.Count, dayOfWeek);
+                _logger.LogInformation(
+                    "Found {Count} active schedule contracts for {DayOfWeek}",
+                    activeContracts.Count,
+                    dayOfWeek
+                );
 
                 // Get all active drivers with their home addresses
-                var drivers = await dbContext.Drivers
-                    .Include(d => d.HomeAddress)
+                var drivers = await dbContext
+                    .Drivers.Include(d => d.HomeAddress)
                     .Where(d => d.Active)
                     .ToListAsync();
 
@@ -82,38 +95,46 @@ namespace Megabin_Web.Services
                         "depot-1",
                         new Location(28.0473, -26.2041), // Johannesburg placeholder
                         "Main Depot, Johannesburg"
-                    )
+                    ),
                 };
 
                 // Build collection jobs from schedule contracts
-                var jobs = activeContracts.Select(sc => new CollectionJob(
-                    sc.Id.ToString(),
-                    new Location(
-                        sc.Addresses.Long,
-                        sc.Addresses.Lat
-                    ),
-                    sc.Addresses.Address
-                )).ToList();
+                var jobs = activeContracts
+                    .Select(sc => new CollectionJob(
+                        sc.Id.ToString(),
+                        new Location(sc.Addresses.Long, sc.Addresses.Lat),
+                        sc.Addresses.Address
+                    ))
+                    .ToList();
 
                 // Build driver vehicles
-                var vehicles = drivers.Select(d => new DriverVehicle(
-                    d.Id.ToString(),
-                    new Location(
-                        d.HomeAddress.Long,
-                        d.HomeAddress.Lat
-                    ),
-                    d.VehicleCapacity
-                )).ToList();
+                var vehicles = drivers
+                    .Select(d => new DriverVehicle(
+                        d.Id.ToString(),
+                        new Location(d.HomeAddress.Long, d.HomeAddress.Lat),
+                        d.VehicleCapacity
+                    ))
+                    .ToList();
 
                 // Optimize routes
-                _logger.LogInformation("Calling route optimization for {JobCount} jobs and {DriverCount} drivers",
-                    jobs.Count, drivers.Count);
+                _logger.LogInformation(
+                    "Calling route optimization for {JobCount} jobs and {DriverCount} drivers",
+                    jobs.Count,
+                    drivers.Count
+                );
 
-                var result = await routeOptimizer.OptimizeMultiVehicleRoutesAsync(jobs, vehicles, depots);
+                var result = await routeOptimizer.OptimizeMultiVehicleRoutesAsync(
+                    jobs,
+                    vehicles,
+                    depots
+                );
 
                 _logger.LogInformation(
                     "Route optimization complete: {RouteCount} routes created, {UnassignedCount} unassigned jobs, Total distance: {Distance}m",
-                    result.Routes.Count, result.UnassignedJobs.Count, result.TotalDistanceMeters);
+                    result.Routes.Count,
+                    result.UnassignedJobs.Count,
+                    result.TotalDistanceMeters
+                );
 
                 // Save optimized routes to database as ScheduledCollections
                 foreach (var route in result.Routes)
@@ -133,7 +154,8 @@ namespace Megabin_Web.Services
                             UserId = driverId, // This is actually the driver ID
                             User = driver.User,
                             Collected = false,
-                            Notes = $"Route order: {route.Stops.IndexOf(stop) + 1}/{route.Stops.Count}"
+                            Notes =
+                                $"Route order: {route.Stops.IndexOf(stop) + 1}/{route.Stops.Count}",
                         };
 
                         dbContext.ScheduledCollections.Add(scheduledCollection);
@@ -142,8 +164,11 @@ namespace Megabin_Web.Services
 
                 await dbContext.SaveChangesAsync();
 
-                _logger.LogInformation("Daily route optimization job completed successfully at {Time}. Created {Count} scheduled collections.",
-                    DateTime.Now, result.Routes.Sum(r => r.Stops.Count(s => s.Type == StopType.Collection)));
+                _logger.LogInformation(
+                    "Daily route optimization job completed successfully at {Time}. Created {Count} scheduled collections.",
+                    DateTime.Now,
+                    result.Routes.Sum(r => r.Stops.Count(s => s.Type == StopType.Collection))
+                );
             }
             catch (Exception ex)
             {
