@@ -8,13 +8,6 @@ on:
     paths:
       - "Megabin Web/**"
       - ".github/workflows/format-backend.yml"
-  pull_request:
-    branches:
-      - master
-      - "Add-*"
-    paths:
-      - "Megabin Web/**"
-      - ".github/workflows/format-backend.yml"
 
 permissions:
   contents: write

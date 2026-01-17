@@ -8,13 +8,6 @@ on:
     paths:
       - "MegabinFE/**"
       - ".github/workflows/build-frontend.yml"
-  pull_request:
-    branches:
-      - master
-      - "Add-*"
-    paths:
-      - "MegabinFE/**"
-      - ".github/workflows/build-frontend.yml"
 
 jobs:
   build-frontend:

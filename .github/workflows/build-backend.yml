@@ -8,13 +8,6 @@ on:
     paths:
       - "Megabin Web/**"
       - ".github/workflows/build-backend.yml"
-  pull_request:
-    branches:
-      - master
-      - "Add-*"
-    paths:
-      - "Megabin Web/**"
-      - ".github/workflows/build-backend.yml"
 
 jobs:
   build-backend:
