@@ -43,7 +43,7 @@ export class Login {
 
     const loginRequest: LoginRequest = {
       email: this.email(),
-      password: this.password()
+      password: this.password(),
     };
 
     this.authService.apiAuthLoginPost(loginRequest).subscribe({
@@ -51,7 +51,7 @@ export class Login {
         if (loginResponse.token && loginResponse.userId) {
           this.authTokenService.setAuthData(loginResponse);
           this.isLoading.set(false);
-          this.router.navigate(['/']);
+          this.router.navigate(['/autocomplete']);
         } else {
           this.errorMessage.set('Invalid response from server');
           this.isLoading.set(false);
@@ -61,7 +61,7 @@ export class Login {
         console.error('Login failed:', err);
         this.errorMessage.set(err.error?.message || 'Invalid email or password');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 }

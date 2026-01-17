@@ -1,5 +1,0 @@
-/* PrimeNG autocomplete width fix */
-.autocomplete-container :deep(.p-autocomplete),
-.autocomplete-container :deep(.p-autocomplete-input) {
-  width: 100%;
-}

@@ -1,6 +1,6 @@
 <div class="autocomplete-container">
   @if (label()) {
-    <label class="block mb-2 text-sm font-medium text-gray-700">{{ label() }}</label>
+    <label class="block mb-2 text-sm">{{ label() }}</label>
   }
 
   <p-autocomplete
@@ -17,9 +17,9 @@
     class="w-full"
   >
     <ng-template let-suggestion pTemplate="item">
-      <div class="suggestion-item py-2 px-3 hover:bg-gray-100 cursor-pointer">
+      <div class="suggestion-item py-2 px-3 cursor-pointer">
         <div class="font-medium">{{ suggestion.label }}</div>
-        <div class="text-sm text-gray-600">
+        <div class="text-sm">
           @if (suggestion.locality || suggestion.region || suggestion.country) {
             <span>
               {{ suggestion.locality }}{{ suggestion.region ? ', ' + suggestion.region : ''

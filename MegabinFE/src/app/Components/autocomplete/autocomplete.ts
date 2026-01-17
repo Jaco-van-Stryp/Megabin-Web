@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AutoComplete, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { AddressService } from '../../services/api/address.service';
@@ -13,13 +13,12 @@ import { AddressSuggestion } from '../../services/model/addressSuggestion';
 export class Autocomplete {
   placeholder = input<string>('Enter address...');
   label = input<string>('Address');
+  addressService = inject(AddressService);
 
   addressSelected = output<AddressSuggestion>();
 
   selectedAddress = signal<AddressSuggestion | null>(null);
   suggestions = signal<AddressSuggestion[]>([]);
-
-  constructor(private addressService: AddressService) {}
 
   onSearch(event: { query: string }) {
     const query = event.query.trim();

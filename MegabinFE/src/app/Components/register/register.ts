@@ -71,10 +71,7 @@ export class Register {
           this.authTokenService.setAuthData(loginResponse);
           this.successMessage.set('Registration successful! Redirecting...');
           this.isLoading.set(false);
-
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 1500);
+          this.router.navigate(['/autocomplete']);
         } else {
           this.errorMessage.set('Invalid response from server');
           this.isLoading.set(false);
