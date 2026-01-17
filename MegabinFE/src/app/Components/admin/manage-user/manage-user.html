@@ -3,7 +3,7 @@
 <div class="grid grid-cols-3 gap-4 text-center mb-3">
   <app-reset-password [User]="user()"></app-reset-password>
   <app-update-user-details [User]="user()"></app-update-user-details>
-  <p-button severity="danger" label="Delete User" />
+  <app-delete-user [User]="user()"></app-delete-user>
 </div>
 
 <app-user-addresses [userId]="userId()"> </app-user-addresses>

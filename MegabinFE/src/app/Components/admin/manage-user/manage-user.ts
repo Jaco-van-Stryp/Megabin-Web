@@ -1,13 +1,13 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { UserAddresses } from '../user-addresses/user-addresses';
 import { AdminService, GetUser } from '../../../services';
-import { Button } from 'primeng/button';
-import { ResetPassword } from "../reset-password/reset-password";
-import { UpdateUserDetails } from "../update-user-details/update-user-details";
+import { ResetPassword } from '../reset-password/reset-password';
+import { UpdateUserDetails } from '../update-user-details/update-user-details';
+import { DeleteUser } from '../delete-user/delete-user';
 
 @Component({
   selector: 'app-manage-user',
-  imports: [UserAddresses, Button, ResetPassword, UpdateUserDetails],
+  imports: [UserAddresses, ResetPassword, UpdateUserDetails, DeleteUser],
   templateUrl: './manage-user.html',
 })
 export class ManageUser implements OnInit {
@@ -28,9 +28,5 @@ export class ManageUser implements OnInit {
         console.error('Error fetching user details:', error);
       },
     });
-  }
-
-  resetPassword() {
-    //Create Dialog to confirm password reset
   }
 }

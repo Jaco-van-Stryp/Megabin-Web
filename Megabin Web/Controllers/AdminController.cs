@@ -86,15 +86,47 @@ namespace Megabin_Web.Controllers
             return Ok();
         }
 
-        // TODO - Delete Users and their associated data
         [HttpDelete("DeleteUser/{userId}")]
         public async Task<ActionResult> DeleteUser(Guid userId)
         {
-            var user = await _dbContext.Users.FindAsync(userId);
+            // Load user with all related entities
+            var user = await _dbContext
+                .Users.Include(u => u.Addresss)
+                .ThenInclude(a => a.Schedules)
+                .Include(u => u.ApiUsageTracker)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
             if (user == null)
                 return NotFound();
 
+            // 1. Delete all ScheduleContracts for all user addresses
+            foreach (var address in user.Addresss)
+            {
+                _dbContext.ScheduledContract.RemoveRange(address.Schedules);
+            }
+
+            // 2. Delete Driver profile if user is a driver
+            var driver = await _dbContext.Drivers.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (driver != null)
+            {
+                _dbContext.Drivers.Remove(driver);
+            }
+
+            // 3. Delete ScheduledCollections where user is assigned as driver
+            var scheduledCollections = await _dbContext
+                .ScheduledCollections.Where(sc => sc.UserId == userId)
+                .ToListAsync();
+            _dbContext.ScheduledCollections.RemoveRange(scheduledCollections);
+
+            // 4. Delete all APIUsageTracker records
+            _dbContext.APIUsageTrackers.RemoveRange(user.ApiUsageTracker);
+
+            // 5. Delete all Addresses (already loaded via Include)
+            _dbContext.Addresses.RemoveRange(user.Addresss);
+
+            // 6. Finally, delete the user
             _dbContext.Users.Remove(user);
+
             await _dbContext.SaveChangesAsync();
             return Ok();
         }
