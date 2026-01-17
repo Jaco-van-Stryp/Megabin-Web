@@ -15,9 +15,14 @@ export const routes: Routes = [
       import('./Components/autocomplete/autocomplete').then((m) => m.Autocomplete),
   },
   {
-    path: 'admin',
+    path: 'admin/admin-dashboard',
     loadComponent: () =>
       import('./Components/admin/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard),
+  },
+  {
+    path: 'admin/manage-user/:userId',
+    loadComponent: () =>
+      import('./Components/admin/manage-user/manage-user').then((m) => m.ManageUser),
   },
   {
     path: '',

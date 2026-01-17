@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { AdminService, GetUser } from '../../../services';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -10,11 +10,11 @@ import { InputIconModule } from 'primeng/inputicon';
   selector: 'app-user-table',
   imports: [TableModule, TagModule, InputTextModule, IconFieldModule, InputIconModule],
   templateUrl: './user-table.html',
-  styleUrl: './user-table.css',
 })
 export class UserTable implements OnInit {
   adminService = inject(AdminService);
   users = signal<GetUser[]>([]);
+  userIdClicked = output<string>();
 
   ngOnInit(): void {
     this.loadUsers();
@@ -31,6 +31,6 @@ export class UserTable implements OnInit {
     });
   }
   clickUser(userId: string) {
-    console.log('User clicked:', userId);
+    this.userIdClicked.emit(userId);
   }
 }

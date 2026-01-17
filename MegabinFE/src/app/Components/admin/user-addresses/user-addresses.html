@@ -1,0 +1,73 @@
+<p-table
+  #dt
+  [value]="addresses()"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="['address', 'totalBins', 'addressStatus', 'addressNotes']"
+  [scrollable]="true"
+  scrollHeight="80vh"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-end">
+      <p-iconField iconPosition="left" class="w-full">
+        <p-inputIcon>
+          <i class="pi pi-search"></i>
+        </p-inputIcon>
+        <input
+          pInputText
+          type="text"
+          (input)="dt.filterGlobal($event.target.value, 'contains')"
+          placeholder="Search Addresses"
+          class="w-full"
+        />
+      </p-iconField>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="address">
+        Address
+        <p-sortIcon field="address"></p-sortIcon>
+      </th>
+      <th pSortableColumn="totalBins">
+        Bins
+        <p-sortIcon field="totalBins"></p-sortIcon>
+      </th>
+      <th pSortableColumn="addressStatus">
+        Status <p-sortIcon field="addressStatus"></p-sortIcon>
+      </th>
+      <th pSortableColumn="addressNotes">
+        Notes
+        <p-sortIcon field="addressNotes"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-address>
+    <tr (click)="clickAddress(address.id)">
+      <td>{{ address.address }}</td>
+      <td>{{ address.totalBins }}</td>
+      <td>
+        @switch (address.addressStatus) {
+          @case ('pendingAddressCompletion') {
+            <p-tag severity="danger" value="Pending Completion"></p-tag>
+          }
+          @case ('binRequested') {
+            <p-tag severity="info" value="Bin Requested"></p-tag>
+          }
+          @case ('pendingBinPayment') {
+            <p-tag severity="danger" value="Pending Payment"></p-tag>
+          }
+          @case ('pendingBinDelivery') {
+            <p-tag severity="info" value="Pending Delivery"></p-tag>
+          }
+          @case ('binDelivered') {
+            <p-tag severity="success" value="Delivered"></p-tag>
+          }
+          @default {
+            <p-tag severity="danger" value="Unknown"></p-tag>
+          }
+        }
+      </td>
+      <td>{{ address.addressNotes }}</td>
+    </tr>
+  </ng-template>
+</p-table>

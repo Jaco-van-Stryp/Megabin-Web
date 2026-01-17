@@ -5,5 +5,5 @@ For now, we will focus on the user management part.
 
 <div class="p-4">
   <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
-  <app-user-table></app-user-table>
+  <app-user-table (userIdClicked)="manageUser($event)"></app-user-table>
 </div>
