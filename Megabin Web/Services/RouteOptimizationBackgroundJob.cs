@@ -30,7 +30,7 @@ namespace Megabin_Web.Services
         /// </summary>
         public async Task OptimizeRoutesAsync()
         {
-            _logger.LogInformation("Starting daily route optimization job at {Time}", DateTime.Now);
+            _logger.LogInformation("Starting daily route optimization job at {Time}", DateTime.UtcNow);
 
             try
             {
@@ -166,7 +166,7 @@ namespace Megabin_Web.Services
 
                 _logger.LogInformation(
                     "Daily route optimization job completed successfully at {Time}. Created {Count} scheduled collections.",
-                    DateTime.Now,
+                    DateTime.UtcNow,
                     result.Routes.Sum(r => r.Stops.Count(s => s.Type == StopType.Collection))
                 );
             }

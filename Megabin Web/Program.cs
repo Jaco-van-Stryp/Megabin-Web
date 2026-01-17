@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Megabin_Web.Configuration;
@@ -108,6 +110,18 @@ builder
 
 builder.Services.AddAuthorization();
 
+// CORS - Allow all origins
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        }
+    );
+});
+
 // HTTP clients for external services
 builder.Services.AddHttpClient<IRouteOptimizationService, RouteOptimizationService>();
 builder.Services.AddHttpClient<IMapboxService, MapboxService>();
@@ -120,6 +134,16 @@ builder.Services.AddScoped<IAPILimitationService, APILimitationService>();
 
 // Background jobs
 builder.Services.AddScoped<RouteOptimizationBackgroundJob>();
+
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.CamelCase)
+        );
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
 var app = builder.Build();
 
@@ -147,6 +171,8 @@ app.UseHangfireDashboard(
 );
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

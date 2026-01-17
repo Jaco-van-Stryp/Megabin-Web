@@ -1,0 +1,63 @@
+<p-table
+  #dt
+  [value]="users()"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="['name', 'email', 'role']"
+  [scrollable]="true"
+  scrollHeight="80vh"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-end">
+      <p-iconField iconPosition="left" class="w-full">
+        <p-inputIcon>
+          <i class="pi pi-search"></i>
+        </p-inputIcon>
+        <input
+          pInputText
+          type="text"
+          (input)="dt.filterGlobal($event.target.value, 'contains')"
+          placeholder="Search Users"
+          class="w-full"
+        />
+      </p-iconField>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="name">
+        Name
+        <p-sortIcon field="name"></p-sortIcon>
+      </th>
+      <th pSortableColumn="email">
+        Email
+        <p-sortIcon field="email"></p-sortIcon>
+      </th>
+      <th pSortableColumn="role">
+        Role
+        <p-sortIcon field="role"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-user>
+    <tr (click)="clickUser(user.id)">
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td>
+        @switch (user.role) {
+          @case ('admin') {
+            <p-tag severity="danger" value="Admin"></p-tag>
+          }
+          @case ('driver') {
+            <p-tag severity="success" value="Driver"></p-tag>
+          }
+          @case ('customer') {
+            <p-tag severity="info" value="Customer"></p-tag>
+          }
+          @default {
+            <p-tag severity="danger" value="Unknown"></p-tag>
+          }
+        }
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

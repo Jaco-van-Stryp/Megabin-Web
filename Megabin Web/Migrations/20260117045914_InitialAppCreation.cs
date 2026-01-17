@@ -19,7 +19,7 @@ namespace Megabin_Web.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false),
                     TotalBins = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -35,6 +35,7 @@ namespace Megabin_Web.Migrations
                     Address = table.Column<string>(type: "text", nullable: false),
                     TotalBins = table.Column<int>(type: "integer", nullable: false),
                     Long = table.Column<double>(type: "double precision", nullable: false),
+                    AddressNotes = table.Column<string>(type: "text", nullable: true),
                     Lat = table.Column<double>(type: "double precision", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false)
@@ -124,10 +125,10 @@ namespace Megabin_Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Frequency = table.Column<string>(type: "text", nullable: false),
-                    DayOfWeek = table.Column<string>(type: "text", nullable: false),
+                    Frequency = table.Column<int>(type: "integer", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "integer", nullable: false),
                     StartingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastCollected = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastCollected = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Active = table.Column<bool>(type: "boolean", nullable: false),
                     ApprovedExternally = table.Column<bool>(type: "boolean", nullable: false),
                     AddressesId = table.Column<Guid>(type: "uuid", nullable: false)

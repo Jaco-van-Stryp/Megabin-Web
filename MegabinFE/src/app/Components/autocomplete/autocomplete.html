@@ -1,0 +1,33 @@
+<div class="autocomplete-container">
+  @if (label()) {
+    <label class="block mb-2 text-sm">{{ label() }}</label>
+  }
+
+  <p-autocomplete
+    [(ngModel)]="selectedAddress"
+    [suggestions]="suggestions()"
+    [placeholder]="placeholder()"
+    [showClear]="true"
+    [dropdown]="false"
+    [minLength]="3"
+    field="label"
+    (completeMethod)="onSearch($event)"
+    (onSelect)="onSelect($event)"
+    (onClear)="onClear()"
+    class="w-full"
+  >
+    <ng-template let-suggestion pTemplate="item">
+      <div class="suggestion-item py-2 px-3 cursor-pointer">
+        <div class="font-medium">{{ suggestion.label }}</div>
+        <div class="text-sm">
+          @if (suggestion.locality || suggestion.region || suggestion.country) {
+            <span>
+              {{ suggestion.locality }}{{ suggestion.region ? ', ' + suggestion.region : ''
+              }}{{ suggestion.country ? ', ' + suggestion.country : '' }}
+            </span>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </p-autocomplete>
+</div>
