@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+dist/
+.angular/
+
+# Build outputs
+build/
+coverage/
+
+# Generated files
+src/app/services/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -51,6 +51,23 @@ namespace Megabin_Web.Controllers
             return Ok();
         }
 
+        [HttpGet("GetUser/{userId}")]
+        public async Task<ActionResult<GetUser>> GetUser(Guid userId)
+        {
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            var userDto = new GetUser
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role,
+            };
+            return Ok(userDto);
+        }
+
         [HttpPost("UpdateUser")]
         public async Task<ActionResult> UpdateUser(UpdateUser updateUser)
         {

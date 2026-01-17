@@ -1,0 +1,13 @@
+# Migrations - often auto-generated and shouldn't be reformatted
+Megabin Web/Migrations/
+
+# obj and bin folders
+**/obj/
+**/bin/
+
+# NuGet packages
+**/packages/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/

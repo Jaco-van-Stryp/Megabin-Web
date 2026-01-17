@@ -51,7 +51,7 @@ export class Login {
           this.isLoading.set(false);
 
           if (loginResponse.role === UserRoles.Admin) {
-            this.router.navigate(['/admin']);
+            this.router.navigate(['/admin/admin-dashboard']);
           } else if (loginResponse.role === UserRoles.Driver) {
             this.router.navigate(['/driver']);
           } else if (loginResponse.role === UserRoles.Customer) {
