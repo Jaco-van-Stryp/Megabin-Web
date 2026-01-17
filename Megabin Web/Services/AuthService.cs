@@ -74,9 +74,8 @@ namespace Megabin_Web.Services
         )
         {
             _logger.LogDebug(
-                "Registering new user with email {Email} and phone number {PhoneNumber}",
-                email,
-                phoneNumber
+                "Registering new user with email {Email}",
+                email
             );
 
             // Check if user already exists
@@ -110,7 +109,7 @@ namespace Megabin_Web.Services
             await _context.SaveChangesAsync();
             await _whatsAppService.SendTextMessageAsync(
                 user.Id,
-                $"Welcome to Megabin, {name}! Your account has been successfully created."
+                $"Welcome to Megabin, {name}! Your account has been successfully created." //TODO change this to something useful
             );
             _logger.LogInformation(
                 "User {Email} registered successfully with role {Role}",

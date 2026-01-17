@@ -1,5 +1,4 @@
 using Megabin_Web.Entities;
-using Megabin_Web.Enums;
 
 namespace Megabin_Web.Interfaces
 {

@@ -41,7 +41,13 @@ export class Register {
     this.successMessage.set(null);
 
     // Validation
-    if (!this.name() || !this.email() || !this.password() || !this.confirmPassword()) {
+    if (
+      !this.name() ||
+      !this.email() ||
+      !this.password() ||
+      !this.confirmPassword() ||
+      !this.phoneNumber()
+    ) {
       this.errorMessage.set('All fields are required');
       return;
     }
@@ -53,6 +59,12 @@ export class Register {
 
     if (this.password().length < 6) {
       this.errorMessage.set('Password must be at least 6 characters long');
+      return;
+    }
+
+    const phoneRegex = /^\+27\d+$/;
+    if (!phoneRegex.test(this.phoneNumber())) {
+      this.errorMessage.set('Phone number must start with +27 followed by digits');
       return;
     }
 

@@ -4,6 +4,7 @@ using System.Text.Json;
 using Megabin_Web.Configuration;
 using Megabin_Web.Data;
 using Megabin_Web.DTOs.WhatsApp;
+using Megabin_Web.Enums;
 using Megabin_Web.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -99,7 +100,7 @@ namespace Megabin_Web.Services
                 var request = new SendMessageRequest
                 {
                     To = user.PhoneNumber,
-                    Type = "text",
+                    Type = WhatsAppMessageType.Text,
                     Text = new TextContent { Body = message, PreviewUrl = previewUrl },
                 };
 
@@ -112,10 +113,7 @@ namespace Megabin_Web.Services
                     "Error sending WhatsApp text message to user {UserId}",
                     userId
                 );
-                throw new InvalidOperationException(
-                    $"Failed to send WhatsApp message to user {userId}",
-                    ex
-                );
+                return null; // Silently fail and return null on error
             }
         }
 
@@ -164,7 +162,7 @@ namespace Megabin_Web.Services
                 var request = new SendMessageRequest
                 {
                     To = user.PhoneNumber,
-                    Type = "template",
+                    Type = WhatsAppMessageType.Template,
                     Template = new TemplateContent
                     {
                         Name = templateName,

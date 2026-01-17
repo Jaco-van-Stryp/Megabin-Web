@@ -14,17 +14,11 @@ namespace Megabin_Web.Controllers
     {
         private readonly AppDbContext _dbContext;
         private readonly IPasswordService _passwordService;
-        private readonly IWhatsAppService _whatsAppService;
 
-        public AdminController(
-            AppDbContext dbContext,
-            IPasswordService passwordService,
-            IWhatsAppService whatsAppService
-        )
+        public AdminController(AppDbContext dbContext, IPasswordService passwordService)
         {
             _dbContext = dbContext;
             _passwordService = passwordService;
-            _whatsAppService = whatsAppService;
         }
 
         [HttpGet("GetAllUsers")]
@@ -205,14 +199,6 @@ namespace Megabin_Web.Controllers
             contract.ApprovedExternally = updateSchedule.ApprovedExternally;
 
             await _dbContext.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpPost("TestWhatsAppService")]
-        public async Task<IActionResult> SendWhatsAppMessage()
-        {
-            var user = CurrentUserId ?? Guid.NewGuid();
-            await _whatsAppService.SendTextMessageAsync(user, "Hello, test successful!");
             return Ok();
         }
     }

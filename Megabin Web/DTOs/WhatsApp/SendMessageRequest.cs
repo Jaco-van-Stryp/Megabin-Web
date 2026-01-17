@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Megabin_Web.Enums;
 
 namespace Megabin_Web.DTOs.WhatsApp
 {
@@ -24,7 +25,7 @@ namespace Megabin_Web.DTOs.WhatsApp
         /// Type of message: "text" or "template"
         /// </summary>
         [JsonPropertyName("type")]
-        public required string Type { get; set; }
+        public required WhatsAppMessageType Type { get; set; }
 
         /// <summary>
         /// Text message content (used when type is "text")

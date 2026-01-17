@@ -1,5 +1,3 @@
-using Megabin_Web.DTOs.Users;
-
 namespace Megabin_Web.Interfaces
 {
     /// <summary>
