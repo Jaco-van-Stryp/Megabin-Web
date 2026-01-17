@@ -82,7 +82,7 @@ namespace Megabin_Web.Controllers
                     request.Name,
                     request.Email,
                     request.Password,
-                    request.Role //TODO - In production DO NOT allow Role creation with register - Admin users can update the status of normal users.
+                    request.PhoneNumber
                 );
 
                 var token = _jwtTokenService.GenerateToken(user.Id, user.Email, user.Role);

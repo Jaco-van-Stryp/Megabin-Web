@@ -25,7 +25,7 @@ export class Register {
   email = signal('');
   password = signal('');
   confirmPassword = signal('');
-  role = signal<UserRoles>(UserRoles.Customer);
+  phoneNumber = signal('');
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
@@ -41,7 +41,13 @@ export class Register {
     this.successMessage.set(null);
 
     // Validation
-    if (!this.name() || !this.email() || !this.password() || !this.confirmPassword()) {
+    if (
+      !this.name() ||
+      !this.email() ||
+      !this.password() ||
+      !this.confirmPassword() ||
+      !this.phoneNumber()
+    ) {
       this.errorMessage.set('All fields are required');
       return;
     }
@@ -56,13 +62,19 @@ export class Register {
       return;
     }
 
+    const phoneRegex = /^\+27\d+$/;
+    if (!phoneRegex.test(this.phoneNumber())) {
+      this.errorMessage.set('Phone number must start with +27 followed by digits');
+      return;
+    }
+
     this.isLoading.set(true);
 
     const registerRequest: RegisterRequest = {
       name: this.name(),
       email: this.email(),
       password: this.password(),
-      role: this.role(),
+      phoneNumber: this.phoneNumber(),
     };
 
     this.authService.apiAuthRegisterPost(registerRequest).subscribe({

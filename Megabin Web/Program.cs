@@ -86,6 +86,7 @@ builder.Services.Configure<OpenRouteServiceOptions>(
 builder.Services.Configure<MapboxOptions>(builder.Configuration.GetSection("Mapbox"));
 builder.Services.Configure<APILimitOptions>(builder.Configuration.GetSection("APILimits"));
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<WhatsAppOptions>(builder.Configuration.GetSection("WhatsApp"));
 
 var jwtOptions =
     builder.Configuration.GetSection("Jwt").Get<JwtOptions>()
@@ -125,6 +126,7 @@ builder.Services.AddCors(options =>
 // HTTP clients for external services
 builder.Services.AddHttpClient<IRouteOptimizationService, RouteOptimizationService>();
 builder.Services.AddHttpClient<IMapboxService, MapboxService>();
+builder.Services.AddHttpClient<IWhatsAppService, WhatsAppService>();
 
 // Application services
 builder.Services.AddScoped<IPasswordService, PasswordService>();
