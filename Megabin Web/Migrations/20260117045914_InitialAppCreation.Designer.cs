@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Megabin_Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260117022913_InitialAppCreation")]
+    [Migration("20260117045914_InitialAppCreation")]
     partial class InitialAppCreation
     {
         /// <inheritdoc />
@@ -55,6 +55,9 @@ namespace Megabin_Web.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressNotes")
                         .HasColumnType("text");
 
                     b.Property<double>("Lat")
@@ -129,15 +132,13 @@ namespace Megabin_Web.Migrations
                     b.Property<bool>("ApprovedExternally")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Frequency")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Frequency")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastCollected")
+                    b.Property<DateTime?>("LastCollected")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("StartingDate")
@@ -194,9 +195,8 @@ namespace Megabin_Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TotalBins")
                         .HasColumnType("integer");
