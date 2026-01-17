@@ -22,8 +22,13 @@ namespace Megabin_Web.Interfaces
         /// <param name="name">The user's full name.</param>
         /// <param name="email">The user's email address.</param>
         /// <param name="password">The user's plain text password.</param>
-        /// <param name="role">The user's role.</param>
+        /// <param name="phoneNumber">The user's phone number.</param>
         /// <returns>The created user entity.</returns>
-        Task<Users> RegisterUserAsync(string name, string email, string password, UserRoles role);
+        Task<Users> RegisterUserAsync(
+            string name,
+            string email,
+            string password,
+            string phoneNumber
+        );
     }
 }

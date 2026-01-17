@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './driver-dashboard.html',
   styleUrl: './driver-dashboard.css',
 })
-export class DriverDashboard {
-
-}
+export class DriverDashboard {}

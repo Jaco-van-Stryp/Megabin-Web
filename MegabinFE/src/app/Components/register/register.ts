@@ -25,7 +25,7 @@ export class Register {
   email = signal('');
   password = signal('');
   confirmPassword = signal('');
-  role = signal<UserRoles>(UserRoles.Customer);
+  phoneNumber = signal('');
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
@@ -62,7 +62,7 @@ export class Register {
       name: this.name(),
       email: this.email(),
       password: this.password(),
-      role: this.role(),
+      phoneNumber: this.phoneNumber(),
     };
 
     this.authService.apiAuthRegisterPost(registerRequest).subscribe({

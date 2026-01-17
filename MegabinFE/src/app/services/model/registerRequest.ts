@@ -7,12 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UserRoles } from './userRoles';
 
 export interface RegisterRequest {
   name: string | null;
   email: string | null;
+  phoneNumber: string | null;
   password: string | null;
-  role: UserRoles;
 }
-export namespace RegisterRequest {}

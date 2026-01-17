@@ -141,21 +141,20 @@
           ></p-password>
 
           <label
-            for="role"
-            class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
-            >Account Type</label
+            for="phoneNumber"
+            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
+            >Phone Number</label
           >
-          <p-select
-            id="role"
-            [ngModel]="role()"
-            (ngModelChange)="role.set($event)"
-            [options]="roleOptions"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select account type"
-            styleClass="w-full mb-8"
+          <input
+            pInputText
+            id="phoneNumber"
+            type="text"
+            placeholder="Phone number (starting with +27)"
+            class="w-full md:w-120 mb-8"
+            [value]="phoneNumber()"
+            (input)="phoneNumber.set($any($event.target).value)"
             [disabled]="isLoading()"
-          ></p-select>
+          />
 
           <p-button
             label="Create Account"
