@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - master
-      - 'Add-*'  # Match your feature branch naming pattern
+      - "Add-*" # Match your feature branch naming pattern
     paths:
-      - '**.cs'
-      - '**.ts'
-      - '**.html'
-      - '**.css'
-      - '**.scss'
-      - '**.json'
-      - '**.js'
+      - "**.cs"
+      - "**.ts"
+      - "**.html"
+      - "**.css"
+      - "**.scss"
+      - "**.json"
+      - "**.js"
 
 permissions:
   contents: write
@@ -36,9 +36,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'MegabinFE/package-lock.json'
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "MegabinFE/package-lock.json"
 
       - name: Install frontend dependencies
         working-directory: MegabinFE
@@ -53,7 +53,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
       - name: Install CSharpier
         run: dotnet tool install -g csharpier

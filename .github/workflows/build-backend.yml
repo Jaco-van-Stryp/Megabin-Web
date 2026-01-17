@@ -1,0 +1,38 @@
+name: Build Backend
+
+on:
+  push:
+    branches:
+      - master
+      - "Add-*"
+    paths:
+      - "Megabin Web/**"
+      - ".github/workflows/build-backend.yml"
+  pull_request:
+    branches:
+      - master
+      - "Add-*"
+    paths:
+      - "Megabin Web/**"
+      - ".github/workflows/build-backend.yml"
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore "Megabin Web/Megabin Web.csproj"
+
+      - name: Build
+        run: dotnet build "Megabin Web/Megabin Web.csproj" --configuration Release --no-restore
