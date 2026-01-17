@@ -1,3 +1,5 @@
+using Megabin_Web.DTOs.Users;
+
 namespace Megabin_Web.Interfaces
 {
     /// <summary>
@@ -19,5 +21,7 @@ namespace Megabin_Web.Interfaces
         /// <param name="passwordHash">The BCrypt hash to verify against.</param>
         /// <returns>True if the password matches the hash; otherwise, false.</returns>
         bool VerifyPassword(string password, string passwordHash);
+
+        Task ResetPassword(Guid UserId, string NewPassword);
     }
 }

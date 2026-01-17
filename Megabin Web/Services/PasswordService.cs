@@ -1,31 +1,34 @@
+using Megabin_Web.Data;
 using Megabin_Web.Interfaces;
 
 namespace Megabin_Web.Services
 {
-    /// <summary>
-    /// Implementation of password hashing and verification using BCrypt.
-    /// </summary>
     public class PasswordService : IPasswordService
     {
         private readonly ILogger<PasswordService> _logger;
+        private readonly AppDbContext _dbContext;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PasswordService"/> class.
-        /// </summary>
-        /// <param name="logger">Logger for password service operations.</param>
-        public PasswordService(ILogger<PasswordService> logger)
+        public PasswordService(ILogger<PasswordService> logger, AppDbContext dbContext)
         {
             _logger = logger;
+            _dbContext = dbContext;
         }
 
-        /// <inheritdoc/>
         public string HashPassword(string password)
         {
             _logger.LogDebug("Hashing password with BCrypt work factor 12");
             return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
         }
 
-        /// <inheritdoc/>
+        public async Task ResetPassword(Guid UserId, string NewPassword)
+        {
+            var user = await _dbContext.Users.FindAsync(UserId);
+            if (user == null)
+                throw new ArgumentException("User not found");
+            user.PasswordHash = HashPassword(NewPassword);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public bool VerifyPassword(string password, string passwordHash)
         {
             try

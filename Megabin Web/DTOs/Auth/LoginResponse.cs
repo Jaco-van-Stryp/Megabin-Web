@@ -1,3 +1,5 @@
+using Megabin_Web.Enums;
+
 namespace Megabin_Web.DTOs.Auth
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace Megabin_Web.DTOs.Auth
         Guid UserId,
         string Name,
         string Email,
-        string Role,
+        UserRoles Role,
         DateTime ExpiresAt
     );
 }

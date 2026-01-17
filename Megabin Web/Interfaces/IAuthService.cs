@@ -1,4 +1,5 @@
 using Megabin_Web.Entities;
+using Megabin_Web.Enums;
 
 namespace Megabin_Web.Interfaces
 {
@@ -23,6 +24,6 @@ namespace Megabin_Web.Interfaces
         /// <param name="password">The user's plain text password.</param>
         /// <param name="role">The user's role.</param>
         /// <returns>The created user entity.</returns>
-        Task<Users> RegisterUserAsync(string name, string email, string password, string role);
+        Task<Users> RegisterUserAsync(string name, string email, string password, UserRoles role);
     }
 }

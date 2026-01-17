@@ -1,12 +1,14 @@
-﻿namespace Megabin_Web.Entities
+﻿using Megabin_Web.Enums;
+
+namespace Megabin_Web.Entities
 {
     public class ScheduleContract
     {
         public Guid Id { get; set; }
-        public required string Frequency { get; set; }
-        public required string DayOfWeek { get; set; }
-        public required DateTime StartingDate { get; set; } = DateTime.Now;
-        public required DateTime LastCollected { get; set; }
+        public required Frequency Frequency { get; set; }
+        public required Enums.DayOfWeek DayOfWeek { get; set; }
+        public DateTime StartingDate { get; set; } = DateTime.Now;
+        public DateTime? LastCollected { get; set; }
         public required bool Active { get; set; } = true;
         public required bool ApprovedExternally { get; set; } = false;
         public required Guid AddressesId { get; set; }

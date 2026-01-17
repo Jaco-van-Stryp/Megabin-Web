@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Megabin_Web.Configuration;
+using Megabin_Web.Enums;
 using Megabin_Web.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -28,16 +29,20 @@ namespace Megabin_Web.Services
         }
 
         /// <inheritdoc/>
-        public string GenerateToken(Guid userId, string email, string role)
+        public string GenerateToken(Guid userId, string email, UserRoles role)
         {
-            _logger.LogDebug("Generating JWT token for user {UserId} with role {Role}", userId, role);
+            _logger.LogDebug(
+                "Generating JWT token for user {UserId} with role {Role}",
+                userId,
+                role
+            );
 
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.Role, role.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));

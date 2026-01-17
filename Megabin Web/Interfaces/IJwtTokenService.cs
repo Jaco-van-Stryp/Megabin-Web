@@ -1,3 +1,5 @@
+using Megabin_Web.Enums;
+
 namespace Megabin_Web.Interfaces
 {
     /// <summary>
@@ -12,6 +14,6 @@ namespace Megabin_Web.Interfaces
         /// <param name="email">The user's email address.</param>
         /// <param name="role">The user's role (Admin, User, or Driver).</param>
         /// <returns>A signed JWT token string.</returns>
-        string GenerateToken(Guid userId, string email, string role);
+        string GenerateToken(Guid userId, string email, UserRoles role);
     }
 }

@@ -1,5 +1,6 @@
 using Megabin_Web.Data;
 using Megabin_Web.Entities;
+using Megabin_Web.Enums;
 using Megabin_Web.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,8 @@ namespace Megabin_Web.Services
         public AuthService(
             AppDbContext context,
             IPasswordService passwordService,
-            ILogger<AuthService> logger)
+            ILogger<AuthService> logger
+        )
         {
             _context = context;
             _passwordService = passwordService;
@@ -35,18 +37,23 @@ namespace Megabin_Web.Services
         {
             _logger.LogDebug("Attempting to authenticate user with email {Email}", email);
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
             {
-                _logger.LogWarning("Authentication failed: User with email {Email} not found", email);
+                _logger.LogWarning(
+                    "Authentication failed: User with email {Email} not found",
+                    email
+                );
                 return null;
             }
 
             if (!_passwordService.VerifyPassword(password, user.PasswordHash))
             {
-                _logger.LogWarning("Authentication failed: Invalid password for user {Email}", email);
+                _logger.LogWarning(
+                    "Authentication failed: Invalid password for user {Email}",
+                    email
+                );
                 return null;
             }
 
@@ -55,17 +62,28 @@ namespace Megabin_Web.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Users> RegisterUserAsync(string name, string email, string password, string role)
+        public async Task<Users> RegisterUserAsync(
+            string name,
+            string email,
+            string password,
+            UserRoles role
+        )
         {
-            _logger.LogDebug("Registering new user with email {Email} and role {Role}", email, role);
+            _logger.LogDebug(
+                "Registering new user with email {Email} and role {Role}",
+                email,
+                role
+            );
 
             // Check if user already exists
-            var existingUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (existingUser != null)
             {
-                _logger.LogError("Registration failed: User with email {Email} already exists", email);
+                _logger.LogError(
+                    "Registration failed: User with email {Email} already exists",
+                    email
+                );
                 throw new InvalidOperationException($"User with email {email} already exists");
             }
 
@@ -80,13 +98,17 @@ namespace Megabin_Web.Services
                 Email = email,
                 PasswordHash = passwordHash,
                 Role = role,
-                TotalBins = 0
+                TotalBins = 0,
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("User {Email} registered successfully with role {Role}", email, role);
+            _logger.LogInformation(
+                "User {Email} registered successfully with role {Role}",
+                email,
+                role
+            );
             return user;
         }
     }

@@ -66,7 +66,6 @@ namespace Megabin_Web.Controllers
             return Ok(response);
         }
 
-        /// <summary>
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
