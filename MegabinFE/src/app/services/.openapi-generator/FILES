@@ -12,6 +12,7 @@ index.ts
 model/addressStatus.ts
 model/addressSuggestion.ts
 model/createAddress.ts
+model/createAddressResponse.ts
 model/createScheduleContract.ts
 model/dayOfWeek.ts
 model/frequency.ts

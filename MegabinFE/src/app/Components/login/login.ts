@@ -51,7 +51,19 @@ export class Login {
         if (loginResponse.token && loginResponse.userId) {
           this.authTokenService.setAuthData(loginResponse);
           this.isLoading.set(false);
-          this.router.navigate(['/autocomplete']);
+
+          // Redirect based on user role
+          // UserRoles: 0 = Customer, 1 = Driver, 2 = Admin
+          if (loginResponse.role === 2) {
+            this.router.navigate(['/admin']);
+          } else if (loginResponse.role === 1) {
+            // TODO: Driver dashboard not yet implemented
+            this.router.navigate(['/autocomplete']);
+          } else {
+            // Customer
+            // TODO: Customer dashboard not yet implemented
+            this.router.navigate(['/autocomplete']);
+          }
         } else {
           this.errorMessage.set('Invalid response from server');
           this.isLoading.set(false);

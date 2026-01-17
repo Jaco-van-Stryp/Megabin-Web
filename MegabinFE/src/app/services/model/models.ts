@@ -1,6 +1,7 @@
 export * from './addressStatus';
 export * from './addressSuggestion';
 export * from './createAddress';
+export * from './createAddressResponse';
 export * from './createScheduleContract';
 export * from './dayOfWeek';
 export * from './frequency';

@@ -1,0 +1,205 @@
+<div class="w-full space-y-6">
+  <!-- Address Info Card -->
+  @if (currentAddress()) {
+    <p-card>
+      <ng-template #header>
+        <div class="p-6 pb-0">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-2xl font-semibold  ">Address Details</h2>
+              <p class=" dark: mt-1">{{ currentAddress()!.address }}</p>
+            </div>
+            <p-button
+              icon="pi pi-arrow-left"
+              [text]="true"
+              label="Back"
+              (onClick)="goBack()"
+            />
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <p class="text-sm  dark:">Total Bins</p>
+          <p class="text-lg font-semibold">{{ currentAddress()!.totalBins }}</p>
+        </div>
+        @if (currentAddress()!.addressNotes) {
+          <div>
+            <p class="text-sm  dark:">Notes</p>
+            <p class="text-lg">{{ currentAddress()!.addressNotes }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Status Stepper -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold mb-4">Delivery Status</h3>
+        <p-stepper [value]="currentStatusIndex()" [linear]="false">
+          @for (status of addressStatuses; track status.value; let idx = $index) {
+            <p-step-panel>
+              <ng-template #header let-onClick="onClick">
+                <button
+                  class="flex items-center gap-2 p-3 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
+                  [class.bg-primary-50]="idx === currentStatusIndex()"
+                  [class.dark:bg-primary-900]="idx === currentStatusIndex()"
+                  (click)="onClick.emit(); onStepClick(idx)"
+                >
+                  <i [class]="'pi ' + status.icon"></i>
+                  <span class="font-medium">{{ status.label }}</span>
+                  @if (idx === currentStatusIndex()) {
+                    <p-tag value="Current" severity="info" styleClass="ml-2" />
+                  }
+                  @if (idx < currentStatusIndex()) {
+                    <i class="pi pi-check text-green-500 ml-2"></i>
+                  }
+                </button>
+              </ng-template>
+            </p-step-panel>
+          }
+        </p-stepper>
+      </div>
+    </p-card>
+  }
+
+  <!-- Schedules Card -->
+  <p-card>
+    <ng-template #header>
+      <div class="p-6 pb-0">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-semibold  ">Collection Schedules</h3>
+          <p-button
+            icon="pi pi-plus"
+            label="Add Schedule"
+            (onClick)="onAddSchedule()"
+          />
+        </div>
+      </div>
+    </ng-template>
+
+    @if (adminState.isLoadingSchedules()) {
+      <div class="space-y-2">
+        <p-skeleton height="120px" />
+        <p-skeleton height="120px" />
+      </div>
+    } @else if (adminState.addressSchedules().length === 0) {
+      <div class="text-center py-12">
+        <i class="pi pi-calendar text-6xl  mb-4"></i>
+        <p class=" dark: text-lg mb-4">No schedules configured</p>
+        <p-button
+          icon="pi pi-plus"
+          label="Add First Schedule"
+          (onClick)="onAddSchedule()"
+        />
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (schedule of adminState.addressSchedules(); track schedule.id) {
+          <p-card styleClass="h-full">
+            <ng-template #header>
+              <div class="p-4 pb-0 flex items-start justify-between">
+                <p-tag
+                  [value]="getFrequencyLabel(schedule.frequency)"
+                  [severity]="schedule.active ? 'success' : 'secondary'"
+                  styleClass="text-sm"
+                />
+                <div class="flex gap-1">
+                  <p-button
+                    icon="pi pi-pencil"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    severity="info"
+                    (onClick)="onEditSchedule(schedule)"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    severity="danger"
+                    (onClick)="onDeleteSchedule(schedule)"
+                  />
+                </div>
+              </div>
+            </ng-template>
+
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-calendar "></i>
+                <span class="font-medium">{{ getDayLabel(schedule.dayOfWeek) }}</span>
+              </div>
+
+              <div class="flex items-center gap-2 text-sm">
+                <i class="pi pi-clock "></i>
+                <span class=" dark:">
+                  Started: {{ schedule.startingDate | date: 'mediumDate' }}
+                </span>
+              </div>
+
+              @if (schedule.lastCollected) {
+                <div class="flex items-center gap-2 text-sm">
+                  <i class="pi pi-check text-green-500"></i>
+                  <span class=" dark:">
+                    Last: {{ schedule.lastCollected | date: 'mediumDate' }}
+                  </span>
+                </div>
+              }
+
+              <div class="flex items-center gap-2">
+                <i [class]="schedule.approvedExternally ? 'pi pi-check-circle text-green-500' : 'pi pi-exclamation-circle text-orange-500'"></i>
+                <span class="text-sm" [class.text-green-600]="schedule.approvedExternally" [class.text-orange-600]="!schedule.approvedExternally">
+                  {{ schedule.approvedExternally ? 'Approved' : 'Pending Approval' }}
+                </span>
+              </div>
+
+              @if (!schedule.active) {
+                <p-tag value="Inactive" severity="secondary" styleClass="w-full" />
+              }
+            </div>
+          </p-card>
+        }
+      </div>
+    }
+  </p-card>
+
+  <!-- Add Schedule Dialog -->
+  <app-edit-schedule-dialog
+    [visible]="showAddScheduleDialog()"
+    [schedule]="null"
+    [isEditMode]="false"
+    (saved)="onSaveSchedule($event)"
+    (cancelled)="showAddScheduleDialog.set(false)"
+  />
+
+  <!-- Edit Schedule Dialog -->
+  <app-edit-schedule-dialog
+    [visible]="showEditScheduleDialog()"
+    [schedule]="selectedSchedule()"
+    [isEditMode]="true"
+    (saved)="onUpdateSchedule($event)"
+    (cancelled)="showEditScheduleDialog.set(false); selectedSchedule.set(null)"
+  />
+
+  <!-- Delete Schedule Confirmation -->
+  <app-confirm-dialog
+    [visible]="showDeleteScheduleDialog()"
+    [header]="'Delete Schedule'"
+    [message]="'Are you sure you want to deactivate this schedule? It will be set to inactive.'"
+    [confirmLabel]="'Deactivate'"
+    [severity]="'danger'"
+    (confirmed)="confirmDelete()"
+    (cancelled)="showDeleteScheduleDialog.set(false); scheduleToDelete.set(null)"
+  />
+
+  <!-- Status Change Confirmation -->
+  <app-confirm-dialog
+    [visible]="showStatusChangeDialog()"
+    [header]="'Change Status'"
+    [message]="statusChangeMessage()"
+    [confirmLabel]="'Change Status'"
+    [severity]="'warn'"
+    (confirmed)="confirmStatusChange()"
+    (cancelled)="showStatusChangeDialog.set(false)"
+  />
+</div>

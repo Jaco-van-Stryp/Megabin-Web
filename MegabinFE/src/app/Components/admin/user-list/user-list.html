@@ -1,0 +1,138 @@
+<div class="w-full">
+  <p-card>
+    <ng-template #header>
+      <div class="p-6 pb-0">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <h2 class="text-2xl font-semibold">Users</h2>
+
+          <p-iconfield iconPosition="left">
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Search users..."
+              [value]="searchQuery()"
+              (input)="searchQuery.set($any($event.target).value)"
+              class="w-full sm:w-80"
+            />
+          </p-iconfield>
+        </div>
+      </div>
+    </ng-template>
+
+    @if (adminState.isLoadingUsers()) {
+      <div class="space-y-2">
+        <p-skeleton height="50px" />
+        <p-skeleton height="50px" />
+        <p-skeleton height="50px" />
+        <p-skeleton height="50px" />
+        <p-skeleton height="50px" />
+      </div>
+    } @else if (filteredUsers().length === 0) {
+      <div class="text-center py-12">
+        <i class="pi pi-users text-6xl mb-4"></i>
+        <p class="text-lg">
+          @if (searchQuery()) {
+            No users found matching "{{ searchQuery() }}"
+          } @else {
+            No users found
+          }
+        </p>
+      </div>
+    } @else {
+      <p-table
+        [value]="filteredUsers()"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+        styleClass="p-datatable-striped"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="name">
+              Name <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="email">
+              Email <p-sortIcon field="email" />
+            </th>
+            <th pSortableColumn="role">
+              Role <p-sortIcon field="role" />
+            </th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-user>
+          <tr class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700" (click)="onRowClick(user)">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <p-tag
+                [value]="getRoleLabel(user.role)"
+                [severity]="getRoleSeverity(user.role)"
+              />
+            </td>
+            <td>
+              <div class="flex gap-2">
+                <p-button
+                  icon="pi pi-pencil"
+                  label="Edit"
+                  severity="info"
+                  size="small"
+                  [text]="true"
+                  (onClick)="onEditUser(user, $event)"
+                />
+                <p-button
+                  icon="pi pi-key"
+                  label="Reset"
+                  severity="warn"
+                  size="small"
+                  [text]="true"
+                  (onClick)="onResetPassword(user, $event)"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  label="Delete"
+                  severity="danger"
+                  size="small"
+                  [text]="true"
+                  (onClick)="onDeleteUser(user, $event)"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </p-card>
+
+  <!-- Edit User Dialog -->
+  <app-edit-user-dialog
+    [visible]="showEditDialog()"
+    [user]="selectedUser()"
+    (saved)="onSaveUser($event)"
+    (cancelled)="showEditDialog.set(false); selectedUser.set(null)"
+  />
+
+  <!-- Reset Password Dialog -->
+  <app-reset-password-dialog
+    [visible]="showResetPasswordDialog()"
+    [userName]="selectedUser()?.name || ''"
+    (saved)="onSavePassword($event)"
+    (cancelled)="showResetPasswordDialog.set(false); selectedUser.set(null)"
+  />
+
+  <!-- Delete Confirmation Dialog -->
+  <app-confirm-dialog
+    [visible]="showDeleteDialog()"
+    [header]="'Delete User'"
+    [message]="'Are you sure you want to delete ' + (userToDelete()?.name || 'this user') + '? This action cannot be undone.'"
+    [confirmLabel]="'Delete'"
+    [severity]="'danger'"
+    (confirmed)="confirmDelete()"
+    (cancelled)="showDeleteDialog.set(false); userToDelete.set(null)"
+  />
+</div>
