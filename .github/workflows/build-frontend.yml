@@ -1,0 +1,35 @@
+name: Build Frontend
+
+on:
+  push:
+    branches:
+      - master
+      - "Add-*"
+    paths:
+      - "MegabinFE/**"
+      - ".github/workflows/build-frontend.yml"
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "MegabinFE/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: MegabinFE
+        run: npm ci
+
+      - name: Build
+        working-directory: MegabinFE
+        run: npm run build

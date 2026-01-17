@@ -1,0 +1,64 @@
+<p-button severity="success" (click)="showDialog()" label="Update User Details" />
+<p-dialog
+  header="Update User Details"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <div class="flex flex-col gap-4 mb-4">
+    <div class="flex flex-col gap-2">
+      <label for="name" class="font-semibold">Name</label>
+      <input
+        [(ngModel)]="User().name"
+        type="text"
+        pInputText
+        id="name"
+        class="w-full"
+        autocomplete="off"
+        placeholder="Enter user name"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="email" class="font-semibold">Email</label>
+      <input
+        [(ngModel)]="User().email"
+        type="email"
+        pInputText
+        id="email"
+        class="w-full"
+        autocomplete="off"
+        placeholder="Enter email address"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="role" class="font-semibold">Role</label>
+      <p-autoComplete
+        [(ngModel)]="User().role"
+        [suggestions]="filteredRoles()"
+        (completeMethod)="filterRoles($event)"
+        field="label"
+        optionValue="value"
+        [dropdown]="true"
+        placeholder="Select or type a role"
+        inputId="role"
+        styleClass="w-full"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="phoneNumber" class="font-semibold">Phone Number</label>
+      <input
+        [(ngModel)]="User().phoneNumber"
+        type="tel"
+        pInputText
+        id="phoneNumber"
+        class="w-full"
+        autocomplete="off"
+        placeholder="Enter phone number"
+      />
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="visible.set(false)" />
+    <p-button label="Update User Details" severity="success" (click)="updateUserDetails()" />
+  </div>
+</p-dialog>

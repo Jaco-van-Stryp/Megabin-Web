@@ -8,6 +8,6 @@ namespace Megabin_Web.DTOs.Users
         public required string Name { get; set; }
         public required string Email { get; set; }
         public required UserRoles Role { get; set; }
-        public required int TotalBins { get; set; }
+        public required string PhoneNumber { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace Megabin_Web.Entities
         public required string PhoneNumber { get; set; }
         public required string PasswordHash { get; set; }
         public required UserRoles Role { get; set; } = UserRoles.Customer;
-        public required int TotalBins { get; set; }
         public ICollection<Addresses> Addresss { get; set; } = new List<Addresses>();
         public ICollection<APIUsageTracker> ApiUsageTracker { get; set; } =
             new List<APIUsageTracker>();

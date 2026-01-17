@@ -1,0 +1,52 @@
+name: Format Backend
+
+on:
+  push:
+    branches:
+      - master
+      - "Add-*"
+    paths:
+      - "Megabin Web/**"
+      - ".github/workflows/format-backend.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format-backend:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install CSharpier
+        run: dotnet tool install -g csharpier
+
+      - name: Run CSharpier
+        run: dotnet csharpier "Megabin Web"
+        continue-on-error: true
+
+      - name: Check for changes
+        id: verify-changes
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit formatted changes
+        if: github.event_name == 'push' && steps.verify-changes.outputs.changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: auto-format backend [skip ci]"
+          git push
