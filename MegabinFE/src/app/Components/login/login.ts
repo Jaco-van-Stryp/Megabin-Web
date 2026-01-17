@@ -9,7 +9,7 @@ import { RippleModule } from 'primeng/ripple';
 import { AuthService } from '../../services/api/auth.service';
 import { AuthTokenService } from '../../services/auth-token.service';
 import { LoginRequest } from '../../services/model/loginRequest';
-import { LoginResponse } from '../../services';
+import { LoginResponse, UserRoles } from '../../services';
 
 @Component({
   selector: 'app-login',
@@ -50,17 +50,14 @@ export class Login {
           this.authTokenService.setAuthData(loginResponse);
           this.isLoading.set(false);
 
-          // Redirect based on user role
-          // UserRoles: 'customer', 'driver', 'admin'
-          if (loginResponse.role === 'admin') {
+          if (loginResponse.role === UserRoles.Admin) {
             this.router.navigate(['/admin']);
-          } else if (loginResponse.role === 'driver') {
-            // TODO: Driver dashboard not yet implemented
-            this.router.navigate(['/autocomplete']);
+          } else if (loginResponse.role === UserRoles.Driver) {
+            this.router.navigate(['/driver']);
+          } else if (loginResponse.role === UserRoles.Customer) {
+            this.router.navigate(['/customer']);
           } else {
-            // Customer
-            // TODO: Customer dashboard not yet implemented
-            this.router.navigate(['/autocomplete']);
+            this.errorMessage.set('Unknown user role');
           }
         } else {
           this.errorMessage.set('Invalid response from server');

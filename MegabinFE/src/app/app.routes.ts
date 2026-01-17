@@ -18,28 +18,6 @@ export const routes: Routes = [
     path: 'admin',
     loadComponent: () =>
       import('./Components/admin/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard),
-    children: [
-      {
-        path: '',
-        redirectTo: 'users',
-        pathMatch: 'full',
-      },
-      {
-        path: 'users',
-        loadComponent: () =>
-          import('./Components/admin/user-list/user-list').then((m) => m.UserList),
-      },
-      {
-        path: 'users/:userId',
-        loadComponent: () =>
-          import('./Components/admin/user-detail/user-detail').then((m) => m.UserDetail),
-      },
-      {
-        path: 'users/:userId/addresses/:addressId',
-        loadComponent: () =>
-          import('./Components/admin/address-detail/address-detail').then((m) => m.AddressDetail),
-      },
-    ],
   },
   {
     path: '',
