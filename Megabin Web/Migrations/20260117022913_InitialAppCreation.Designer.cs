@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Megabin_Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260112030518_initialMigration")]
-    partial class initialMigration
+    [Migration("20260117022913_InitialAppCreation")]
+    partial class InitialAppCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,28 @@ namespace Megabin_Web.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Megabin_Web.Entities.APIUsageTracker", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ExternalApiName")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("APIUsageTrackers");
+                });
 
             modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
                 {
@@ -41,9 +63,8 @@ namespace Megabin_Web.Migrations
                     b.Property<double>("Long")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TotalBins")
                         .HasColumnType("integer");
@@ -169,6 +190,10 @@ namespace Megabin_Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
@@ -179,6 +204,15 @@ namespace Megabin_Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Megabin_Web.Entities.APIUsageTracker", b =>
+                {
+                    b.HasOne("Megabin_Web.Entities.Users", "User")
+                        .WithMany("ApiUsageTracker")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
@@ -241,6 +275,8 @@ namespace Megabin_Web.Migrations
             modelBuilder.Entity("Megabin_Web.Entities.Users", b =>
                 {
                     b.Navigation("Addresss");
+
+                    b.Navigation("ApiUsageTracker");
                 });
 #pragma warning restore 612, 618
         }

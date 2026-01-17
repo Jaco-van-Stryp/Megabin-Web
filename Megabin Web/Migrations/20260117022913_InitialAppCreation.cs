@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Megabin_Web.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class InitialAppCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,6 +18,7 @@ namespace Megabin_Web.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false),
                     TotalBins = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -36,7 +37,7 @@ namespace Megabin_Web.Migrations
                     Long = table.Column<double>(type: "double precision", nullable: false),
                     Lat = table.Column<double>(type: "double precision", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false)
+                    Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,6 +48,25 @@ namespace Megabin_Web.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "APIUsageTrackers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ExternalApiName = table.Column<int>(type: "integer", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_APIUsageTrackers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_APIUsageTrackers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -129,6 +149,11 @@ namespace Megabin_Web.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_APIUsageTrackers_UserId",
+                table: "APIUsageTrackers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Drivers_HomeAddressID",
                 table: "Drivers",
                 column: "HomeAddressID");
@@ -152,6 +177,9 @@ namespace Megabin_Web.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "APIUsageTrackers");
+
             migrationBuilder.DropTable(
                 name: "Drivers");
 

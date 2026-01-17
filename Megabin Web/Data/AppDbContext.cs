@@ -13,5 +13,6 @@ namespace Megabin_Web.Data
         public DbSet<ScheduleContract> ScheduledContract { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Driver> Drivers { get; set; }
+        public DbSet<APIUsageTracker> APIUsageTrackers { get; set; }
     }
 }

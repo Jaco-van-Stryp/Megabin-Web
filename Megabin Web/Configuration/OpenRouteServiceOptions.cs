@@ -6,10 +6,16 @@ namespace Megabin_Web.Configuration
     public class OpenRouteServiceOptions
     {
         /// <summary>
-        /// The base URL of the self-hosted OpenRouteService instance.
-        /// Default: http://localhost:8082
+        /// The base URL of the OpenRouteService instance.
+        /// Default: https://api.openrouteservice.org (cloud API)
         /// </summary>
-        public string BaseUrl { get; set; } = "http://localhost:8082";
+        public string BaseUrl { get; set; } = "https://api.openrouteservice.org";
+
+        /// <summary>
+        /// API key for OpenRouteService cloud API authentication.
+        /// Required for cloud API access. Should be stored in User Secrets for security.
+        /// </summary>
+        public string ApiKey { get; set; } = string.Empty;
 
         /// <summary>
         /// HTTP request timeout in seconds for OpenRouteService API calls.

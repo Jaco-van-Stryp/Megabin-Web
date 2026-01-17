@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Megabin_Web.Extensions;
 
 namespace Megabin_Web.Controllers
 {
@@ -13,20 +13,16 @@ namespace Megabin_Web.Controllers
         /// <summary>
         /// Gets the current authenticated user's ID from JWT claims.
         /// </summary>
-        protected Guid? CurrentUserId =>
-            User.FindFirst(ClaimTypes.NameIdentifier)?.Value is string id
-                ? Guid.Parse(id)
-                : null;
+        protected Guid? CurrentUserId => User.GetUserId();
 
         /// <summary>
         /// Gets the current authenticated user's role from JWT claims.
         /// </summary>
-        protected string? CurrentUserRole =>
-            User.FindFirst(ClaimTypes.Role)?.Value;
+        protected string? CurrentUserRole => User.GetUserRole();
 
         /// <summary>
         /// Gets a value indicating whether the current request is authenticated.
         /// </summary>
-        protected bool IsAuthenticated => User.Identity?.IsAuthenticated ?? false;
+        protected bool IsAuthenticated => User.IsAuthenticated();
     }
 }

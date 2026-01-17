@@ -22,6 +22,28 @@ namespace Megabin_Web.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Megabin_Web.Entities.APIUsageTracker", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ExternalApiName")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("APIUsageTrackers");
+                });
+
             modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
                 {
                     b.Property<Guid>("Id")
@@ -38,9 +60,8 @@ namespace Megabin_Web.Migrations
                     b.Property<double>("Long")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TotalBins")
                         .HasColumnType("integer");
@@ -182,6 +203,15 @@ namespace Megabin_Web.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Megabin_Web.Entities.APIUsageTracker", b =>
+                {
+                    b.HasOne("Megabin_Web.Entities.Users", "User")
+                        .WithMany("ApiUsageTracker")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
                 {
                     b.HasOne("Megabin_Web.Entities.Users", "User")
@@ -242,6 +272,8 @@ namespace Megabin_Web.Migrations
             modelBuilder.Entity("Megabin_Web.Entities.Users", b =>
                 {
                     b.Navigation("Addresss");
+
+                    b.Navigation("ApiUsageTracker");
                 });
 #pragma warning restore 612, 618
         }

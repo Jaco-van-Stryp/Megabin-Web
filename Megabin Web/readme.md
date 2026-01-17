@@ -28,6 +28,5 @@ Users can see notes and once garbage has been collected for the frequency as wel
 
 No tracking, No reports, nothing special for admins, they simply manage user accounts, and can create addresses / Schedule Contracts on behalf of users AND approve user requests based on external payments.
 
-Simple app - Use an External API for route planning.
+Simple app - Use an External API for route planning and Auto Complete
 
-Complex part is if you have multiple drivers in the same area, where do they go to.

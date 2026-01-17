@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 using Megabin_Web.Configuration;
 using Megabin_Web.DTOs.OpenRouteService;
@@ -9,26 +9,26 @@ using Microsoft.Extensions.Options;
 namespace Megabin_Web.Services
 {
     /// <summary>
-    /// Implementation of OpenRouteService integration for geocoding and vehicle routing optimization.
-    /// Uses self-hosted ORS instance for address verification and daily collection route planning.
+    /// Implementation of multi-vehicle route optimization using OpenRouteService VROOM engine.
+    /// Uses OpenRouteService cloud API for daily collection route planning with capacity constraints.
     /// </summary>
-    public class OpenRouteService : IOpenRouteService
+    public class RouteOptimizationService : IRouteOptimizationService
     {
         private readonly HttpClient _httpClient;
         private readonly OpenRouteServiceOptions _options;
-        private readonly ILogger<OpenRouteService> _logger;
+        private readonly ILogger<RouteOptimizationService> _logger;
         private readonly JsonSerializerOptions _jsonOptions;
 
         /// <summary>
-        /// Initializes a new instance of the OpenRouteService.
+        /// Initializes a new instance of the RouteOptimizationService.
         /// </summary>
         /// <param name="httpClient">HTTP client for making requests to OpenRouteService API.</param>
         /// <param name="options">Configuration options for ORS base URL and timeout.</param>
         /// <param name="logger">Logger for debugging and monitoring optimization operations.</param>
-        public OpenRouteService(
+        public RouteOptimizationService(
             HttpClient httpClient,
             IOptions<OpenRouteServiceOptions> options,
-            ILogger<OpenRouteService> logger
+            ILogger<RouteOptimizationService> logger
         )
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -38,6 +38,12 @@ namespace Megabin_Web.Services
             _httpClient.BaseAddress = new Uri(_options.BaseUrl);
             _httpClient.Timeout = TimeSpan.FromSeconds(_options.TimeoutSeconds);
 
+            // Add API key to Authorization header for cloud API
+            if (!string.IsNullOrWhiteSpace(_options.ApiKey))
+            {
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _options.ApiKey);
+            }
+
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -46,203 +52,7 @@ namespace Megabin_Web.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Location?> GeocodeAddressAsync(
-            string address,
-            string country = "ZA",
-            CancellationToken cancellationToken = default
-        )
-        {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                _logger.LogWarning("GeocodeAddressAsync called with empty address");
-                return null;
-            }
-
-            try
-            {
-                _logger.LogInformation(
-                    "Geocoding address: {Address} in country: {Country}",
-                    address,
-                    country
-                );
-
-                var requestUrl =
-                    $"/geocode/search?text={Uri.EscapeDataString(address)}&boundary.country={country}&size=1";
-                var response = await _httpClient.GetAsync(requestUrl, cancellationToken);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError(
-                        "Geocoding API returned status {StatusCode} for address: {Address}",
-                        response.StatusCode,
-                        address
-                    );
-                    return null;
-                }
-
-                var content = await response.Content.ReadAsStringAsync(cancellationToken);
-                var geocodingResponse = JsonSerializer.Deserialize<GeocodingResponse>(
-                    content,
-                    _jsonOptions
-                );
-
-                if (geocodingResponse?.Features == null || geocodingResponse.Features.Count == 0)
-                {
-                    _logger.LogWarning(
-                        "No geocoding results found for address: {Address}",
-                        address
-                    );
-                    return null;
-                }
-
-                var feature = geocodingResponse.Features[0];
-                if (feature.Geometry?.Coordinates == null || feature.Geometry.Coordinates.Count < 2)
-                {
-                    _logger.LogWarning(
-                        "Invalid geometry in geocoding result for address: {Address}",
-                        address
-                    );
-                    return null;
-                }
-
-                var location = new Location(
-                    feature.Geometry.Coordinates[0], // Longitude
-                    feature.Geometry.Coordinates[1] // Latitude
-                );
-
-                _logger.LogInformation(
-                    "Successfully geocoded address: {Address} to {Longitude}, {Latitude}",
-                    address,
-                    location.Longitude,
-                    location.Latitude
-                );
-
-                return location;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error geocoding address: {Address}", address);
-                throw new InvalidOperationException($"Failed to geocode address: {address}", ex);
-            }
-        }
-
-        /// <inheritdoc/>
-        public async Task<List<AddressSuggestion>> AutocompleteAddressAsync(
-            string partialAddress,
-            string country = "ZA",
-            int maxResults = 10,
-            CancellationToken cancellationToken = default
-        )
-        {
-            if (string.IsNullOrWhiteSpace(partialAddress))
-            {
-                _logger.LogWarning("AutocompleteAddressAsync called with empty partial address");
-                return new List<AddressSuggestion>();
-            }
-
-            if (partialAddress.Length < 2)
-            {
-                _logger.LogDebug(
-                    "AutocompleteAddressAsync called with short input: {Length} characters",
-                    partialAddress.Length
-                );
-                return new List<AddressSuggestion>();
-            }
-
-            // Clamp maxResults to valid range
-            maxResults = Math.Clamp(maxResults, 1, 20);
-
-            try
-            {
-                _logger.LogInformation(
-                    "Autocomplete address search: {PartialAddress} in country: {Country}, max results: {MaxResults}",
-                    partialAddress,
-                    country,
-                    maxResults
-                );
-
-                var requestUrl =
-                    $"/geocode/autocomplete?text={Uri.EscapeDataString(partialAddress)}&boundary.country={country}&size={maxResults}";
-                var response = await _httpClient.GetAsync(requestUrl, cancellationToken);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError(
-                        "Autocomplete API returned status {StatusCode} for input: {PartialAddress}",
-                        response.StatusCode,
-                        partialAddress
-                    );
-                    return new List<AddressSuggestion>();
-                }
-
-                var content = await response.Content.ReadAsStringAsync(cancellationToken);
-                var autocompleteResponse = JsonSerializer.Deserialize<AutocompleteResponse>(
-                    content,
-                    _jsonOptions
-                );
-
-                if (autocompleteResponse?.Features == null || autocompleteResponse.Features.Count == 0)
-                {
-                    _logger.LogDebug(
-                        "No autocomplete results found for input: {PartialAddress}",
-                        partialAddress
-                    );
-                    return new List<AddressSuggestion>();
-                }
-
-                var suggestions = new List<AddressSuggestion>();
-
-                foreach (var feature in autocompleteResponse.Features)
-                {
-                    if (
-                        feature.Geometry?.Coordinates == null
-                        || feature.Geometry.Coordinates.Count < 2
-                    )
-                    {
-                        _logger.LogDebug("Skipping feature with invalid geometry");
-                        continue;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(feature.Properties?.Label))
-                    {
-                        _logger.LogDebug("Skipping feature with no label");
-                        continue;
-                    }
-
-                    var suggestion = new AddressSuggestion(
-                        feature.Properties.Label,
-                        new Location(
-                            feature.Geometry.Coordinates[0], // Longitude
-                            feature.Geometry.Coordinates[1] // Latitude
-                        ),
-                        feature.Properties.Region,
-                        feature.Properties.Locality,
-                        feature.Properties.Country
-                    );
-
-                    suggestions.Add(suggestion);
-                }
-
-                _logger.LogInformation(
-                    "Autocomplete returned {Count} suggestions for: {PartialAddress}",
-                    suggestions.Count,
-                    partialAddress
-                );
-
-                return suggestions;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during autocomplete for input: {PartialAddress}", partialAddress);
-                throw new InvalidOperationException(
-                    $"Failed to autocomplete address: {partialAddress}",
-                    ex
-                );
-            }
-        }
-
-        /// <inheritdoc/>
-        public async Task<DailyOptimizationResult> OptimizeDailyCollectionsAsync(
+        public async Task<DailyOptimizationResult> OptimizeMultiVehicleRoutesAsync(
             IReadOnlyList<CollectionJob> jobs,
             IReadOnlyList<DriverVehicle> vehicles,
             IReadOnlyList<DepotLocation> depots,
@@ -251,7 +61,7 @@ namespace Megabin_Web.Services
         {
             if (jobs == null || jobs.Count == 0)
             {
-                _logger.LogWarning("OptimizeDailyCollectionsAsync called with no jobs");
+                _logger.LogWarning("OptimizeMultiVehicleRoutesAsync called with no jobs");
                 return new DailyOptimizationResult(
                     new List<DriverRoute>(),
                     new List<CollectionJob>(),
@@ -262,7 +72,7 @@ namespace Megabin_Web.Services
 
             if (vehicles == null || vehicles.Count == 0)
             {
-                _logger.LogWarning("OptimizeDailyCollectionsAsync called with no vehicles");
+                _logger.LogWarning("OptimizeMultiVehicleRoutesAsync called with no vehicles");
                 return new DailyOptimizationResult(new List<DriverRoute>(), jobs.ToList(), 0, 0);
             }
 
@@ -277,7 +87,7 @@ namespace Megabin_Web.Services
             try
             {
                 _logger.LogInformation(
-                    "Starting daily optimization: {JobCount} jobs, {VehicleCount} vehicles, {DepotCount} depots",
+                    "Starting route optimization: {JobCount} jobs, {VehicleCount} vehicles, {DepotCount} depots",
                     jobs.Count,
                     vehicles.Count,
                     depots.Count
@@ -317,8 +127,8 @@ namespace Megabin_Web.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during daily optimization");
-                throw new InvalidOperationException("Failed to optimize daily collections", ex);
+                _logger.LogError(ex, "Error during route optimization");
+                throw new InvalidOperationException("Failed to optimize routes", ex);
             }
         }
 

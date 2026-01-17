@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Megabin_Web.Configuration;
 using Megabin_Web.Interfaces;
 using Megabin_Web.Services;
@@ -59,10 +61,28 @@ builder.Services.AddDbContext<Megabin_Web.Data.AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+// Hangfire - Background job processing
+builder.Services.AddHangfire(configuration =>
+    configuration
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UsePostgreSqlStorage(options =>
+            options.UseNpgsqlConnection(
+                builder.Configuration.GetConnectionString("DefaultConnection")
+            )
+        )
+);
+
+builder.Services.AddHangfireServer();
+
 // Configs.
 builder.Services.Configure<OpenRouteServiceOptions>(
     builder.Configuration.GetSection("OpenRouteService")
 );
+
+builder.Services.Configure<MapboxOptions>(builder.Configuration.GetSection("Mapbox"));
+builder.Services.Configure<APILimitOptions>(builder.Configuration.GetSection("APILimits"));
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
 var jwtOptions =
@@ -88,12 +108,28 @@ builder
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddHttpClient<IOpenRouteService, OpenRouteService>();
+// HTTP clients for external services
+builder.Services.AddHttpClient<IRouteOptimizationService, RouteOptimizationService>();
+builder.Services.AddHttpClient<IMapboxService, MapboxService>();
+
+// Application services
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAPILimitationService, APILimitationService>();
+
+// Background jobs
+builder.Services.AddScoped<RouteOptimizationBackgroundJob>();
 
 var app = builder.Build();
+
+// Run database migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<Megabin_Web.Data.AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -103,11 +139,25 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
     });
 }
+
+// Hangfire Dashboard
+app.UseHangfireDashboard(
+    "/hangfire",
+    new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } }
+);
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Configure recurring jobs
+RecurringJob.AddOrUpdate<RouteOptimizationBackgroundJob>(
+    "daily-route-optimization",
+    job => job.OptimizeRoutesAsync(),
+    Cron.Daily(2) // Run daily at 2 AM
+);
 
 app.Run();
