@@ -58,17 +58,8 @@
 
   <ng-template #footer>
     <div class="flex justify-end gap-2">
-      <p-button
-        label="Cancel"
-        [text]="true"
-        severity="secondary"
-        (onClick)="onCancel()"
-      />
-      <p-button
-        label="Save"
-        (onClick)="onSave()"
-        [disabled]="!name() || !email()"
-      />
+      <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="onCancel()" />
+      <p-button label="Save" (onClick)="onSave()" [disabled]="!name() || !email()" />
     </div>
   </ng-template>
 </p-dialog>

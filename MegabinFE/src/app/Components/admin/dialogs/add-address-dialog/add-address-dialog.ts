@@ -17,11 +17,10 @@ import { AddressSuggestion } from '../../../../services/model/addressSuggestion'
     TextareaModule,
     FloatLabelModule,
     FormsModule,
-    Autocomplete
+    Autocomplete,
   ],
   templateUrl: './add-address-dialog.html',
   styleUrls: ['./add-address-dialog.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddAddressDialog {
   visible = input<boolean>(false);
@@ -46,7 +45,7 @@ export class AddAddressDialog {
     this.saved.emit({
       address,
       totalBins: this.totalBins(),
-      addressNotes: this.addressNotes()
+      addressNotes: this.addressNotes(),
     });
 
     // Reset form

@@ -25,15 +25,15 @@ export class Register {
   email = signal('');
   password = signal('');
   confirmPassword = signal('');
-  role = signal<UserRoles>(UserRoles.NUMBER_0);
+  role = signal<UserRoles>(UserRoles.Customer);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
 
   roleOptions = [
-    { label: 'Customer', value: UserRoles.NUMBER_0 },
-    { label: 'Driver', value: UserRoles.NUMBER_1 },
-    { label: 'Admin', value: UserRoles.NUMBER_2 },
+    { label: 'Customer', value: UserRoles.Customer },
+    { label: 'Driver', value: UserRoles.Driver },
+    { label: 'Admin', value: UserRoles.Admin },
   ];
 
   onRegister(): void {
@@ -73,10 +73,10 @@ export class Register {
           this.isLoading.set(false);
 
           // Redirect based on user role
-          // UserRoles: 0 = Customer, 1 = Driver, 2 = Admin
-          if (loginResponse.role === 2) {
+          // UserRoles: 'customer', 'driver', 'admin'
+          if (loginResponse.role === 'admin') {
             this.router.navigate(['/admin']);
-          } else if (loginResponse.role === 1) {
+          } else if (loginResponse.role === 'driver') {
             // TODO: Driver dashboard not yet implemented
             this.router.navigate(['/autocomplete']);
           } else {

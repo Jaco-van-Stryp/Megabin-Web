@@ -7,16 +7,9 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-reset-password-dialog',
-  imports: [
-    DialogModule,
-    ButtonModule,
-    PasswordModule,
-    FloatLabelModule,
-    FormsModule
-  ],
+  imports: [DialogModule, ButtonModule, PasswordModule, FloatLabelModule, FormsModule],
   templateUrl: './reset-password-dialog.html',
   styleUrls: ['./reset-password-dialog.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordDialog {
   visible = input<boolean>(false);

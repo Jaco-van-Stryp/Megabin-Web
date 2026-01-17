@@ -1,4 +1,11 @@
-import { Component, inject, signal, computed, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -32,11 +39,10 @@ import { ConfirmDialog } from '../dialogs/confirm-dialog/confirm-dialog';
     CardModule,
     EditUserDialog,
     ResetPasswordDialog,
-    ConfirmDialog
+    ConfirmDialog,
   ],
   templateUrl: './user-list.html',
   styleUrls: ['./user-list.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserList implements OnInit {
   private router = inject(Router);
@@ -54,11 +60,14 @@ export class UserList implements OnInit {
     const query = this.searchQuery().toLowerCase();
     if (!query) return this.adminState.users();
 
-    return this.adminState.users().filter(user =>
-      user.name?.toLowerCase().includes(query) ||
-      user.email?.toLowerCase().includes(query) ||
-      this.getRoleLabel(user.role).toLowerCase().includes(query)
-    );
+    return this.adminState
+      .users()
+      .filter(
+        (user) =>
+          user.name?.toLowerCase().includes(query) ||
+          user.email?.toLowerCase().includes(query) ||
+          this.getRoleLabel(user.role).toLowerCase().includes(query),
+      );
   });
 
   ngOnInit(): void {
@@ -87,7 +96,12 @@ export class UserList implements OnInit {
     this.showDeleteDialog.set(true);
   }
 
-  async onSaveUser(data: { name: string; email: string; role: UserRoles; totalBins: number }): Promise<void> {
+  async onSaveUser(data: {
+    name: string;
+    email: string;
+    role: UserRoles;
+    totalBins: number;
+  }): Promise<void> {
     const user = this.selectedUser();
     if (!user) return;
 
@@ -96,7 +110,7 @@ export class UserList implements OnInit {
       name: data.name,
       email: data.email,
       role: data.role,
-      totalBins: data.totalBins
+      totalBins: data.totalBins,
     });
 
     if (success) {
@@ -130,19 +144,19 @@ export class UserList implements OnInit {
   }
 
   getRoleLabel(role: UserRoles): string {
-    const labels = {
-      [UserRoles.NUMBER_0]: 'Customer',
-      [UserRoles.NUMBER_1]: 'Driver',
-      [UserRoles.NUMBER_2]: 'Admin'
+    const labels: { [key: string]: string } = {
+      [UserRoles.Customer]: 'Customer',
+      [UserRoles.Driver]: 'Driver',
+      [UserRoles.Admin]: 'Admin',
     };
     return labels[role] || 'Unknown';
   }
 
   getRoleSeverity(role: UserRoles): 'success' | 'info' | 'warn' {
-    const severities = {
-      [UserRoles.NUMBER_0]: 'info' as const,
-      [UserRoles.NUMBER_1]: 'warn' as const,
-      [UserRoles.NUMBER_2]: 'success' as const
+    const severities: { [key: string]: 'success' | 'info' | 'warn' } = {
+      [UserRoles.Customer]: 'info' as const,
+      [UserRoles.Driver]: 'warn' as const,
+      [UserRoles.Admin]: 'success' as const,
     };
     return severities[role] || 'info';
   }

@@ -19,8 +19,8 @@ import { MessageService } from 'primeng/api';
 
 export interface ScheduleContract {
   id: string;
-  frequency: number;
-  dayOfWeek: number;
+  frequency: Frequency;
+  dayOfWeek: DayOfWeek;
   startingDate: string;
   lastCollected: string | null;
   active: boolean;
@@ -433,8 +433,8 @@ export class AdminStateService {
 
     const updateSchedule: UpdateScheduleContract = {
       contractId: scheduleId,
-      frequency: schedule.frequency as Frequency,
-      dayOfWeek: schedule.dayOfWeek as DayOfWeek,
+      frequency: schedule.frequency,
+      dayOfWeek: schedule.dayOfWeek,
       active: false,
       approvedExternally: schedule.approvedExternally,
     };

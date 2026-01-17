@@ -24,7 +24,6 @@ import { LoginResponse } from '../../services';
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {
   private readonly authService = inject(AuthService);
@@ -33,7 +32,6 @@ export class Login {
 
   email = signal('');
   password = signal('');
-  rememberMe = signal(false);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
 
@@ -53,10 +51,10 @@ export class Login {
           this.isLoading.set(false);
 
           // Redirect based on user role
-          // UserRoles: 0 = Customer, 1 = Driver, 2 = Admin
-          if (loginResponse.role === 2) {
+          // UserRoles: 'customer', 'driver', 'admin'
+          if (loginResponse.role === 'admin') {
             this.router.navigate(['/admin']);
-          } else if (loginResponse.role === 1) {
+          } else if (loginResponse.role === 'driver') {
             // TODO: Driver dashboard not yet implemented
             this.router.navigate(['/autocomplete']);
           } else {

@@ -18,11 +18,10 @@ import { UserRoles } from '../../../../services/model/userRoles';
     InputNumberModule,
     SelectModule,
     FloatLabelModule,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './edit-user-dialog.html',
   styleUrls: ['./edit-user-dialog.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditUserDialog {
   visible = input<boolean>(false);
@@ -33,13 +32,13 @@ export class EditUserDialog {
 
   name = signal<string>('');
   email = signal<string>('');
-  role = signal<UserRoles>(UserRoles.NUMBER_0);
+  role = signal<UserRoles>(UserRoles.Customer);
   totalBins = signal<number>(0);
 
   roleOptions = [
-    { label: 'Customer', value: UserRoles.NUMBER_0 },
-    { label: 'Driver', value: UserRoles.NUMBER_1 },
-    { label: 'Admin', value: UserRoles.NUMBER_2 }
+    { label: 'Customer', value: UserRoles.Customer },
+    { label: 'Driver', value: UserRoles.Driver },
+    { label: 'Admin', value: UserRoles.Admin },
   ];
 
   constructor() {
@@ -66,7 +65,7 @@ export class EditUserDialog {
       name: this.name(),
       email: this.email(),
       role: this.role(),
-      totalBins: this.totalBins()
+      totalBins: this.totalBins(),
     });
   }
 

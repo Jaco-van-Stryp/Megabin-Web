@@ -10,16 +10,15 @@ import { AdminStateService } from '../../../services/admin-state.service';
   imports: [RouterOutlet, BreadcrumbModule, ToastModule],
   templateUrl: './admin-dashboard.html',
   styleUrls: ['./admin-dashboard.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboard {
   adminState = inject(AdminStateService);
 
   // Convert breadcrumbs to PrimeNG MenuItem format
   menuItems = computed<MenuItem[]>(() =>
-    this.adminState.breadcrumbs().map(item => ({
+    this.adminState.breadcrumbs().map((item) => ({
       label: item.label,
-      routerLink: item.route
-    }))
+      routerLink: item.route,
+    })),
   );
 }

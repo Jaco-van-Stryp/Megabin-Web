@@ -44,16 +44,20 @@ export class AddressDetail implements OnInit {
   showStatusChangeDialog = signal<boolean>(false);
   selectedSchedule = signal<ScheduleContract | null>(null);
   scheduleToDelete = signal<ScheduleContract | null>(null);
-  targetStatus = signal<AddressStatus>(AddressStatus.NUMBER_0);
+  targetStatus = signal<AddressStatus>(AddressStatus.PendingAddressCompletion);
 
   currentAddress = computed(() => this.adminState.selectedAddress());
 
   addressStatuses = [
-    { value: AddressStatus.NUMBER_0, label: 'Pending Completion', icon: 'pi-clock' },
-    { value: AddressStatus.NUMBER_1, label: 'Bin Requested', icon: 'pi-shopping-cart' },
-    { value: AddressStatus.NUMBER_2, label: 'Pending Payment', icon: 'pi-dollar' },
-    { value: AddressStatus.NUMBER_3, label: 'Pending Delivery', icon: 'pi-truck' },
-    { value: AddressStatus.NUMBER_4, label: 'Bin Delivered', icon: 'pi-check-circle' },
+    {
+      value: AddressStatus.PendingAddressCompletion,
+      label: 'Pending Completion',
+      icon: 'pi-clock',
+    },
+    { value: AddressStatus.BinRequested, label: 'Bin Requested', icon: 'pi-shopping-cart' },
+    { value: AddressStatus.PendingBinPayment, label: 'Pending Payment', icon: 'pi-dollar' },
+    { value: AddressStatus.PendingBinDelivery, label: 'Pending Delivery', icon: 'pi-truck' },
+    { value: AddressStatus.BinDelivered, label: 'Bin Delivered', icon: 'pi-check-circle' },
   ];
 
   currentStatusIndex = computed(() => {
@@ -170,27 +174,27 @@ export class AddressDetail implements OnInit {
     }
   }
 
-  getFrequencyLabel(frequency: number): string {
-    const labels = {
-      [Frequency.NUMBER_0]: 'Daily',
-      [Frequency.NUMBER_1]: 'Weekly',
-      [Frequency.NUMBER_2]: 'Bi-Weekly',
-      [Frequency.NUMBER_3]: 'Monthly',
-      [Frequency.NUMBER_4]: 'Yearly',
-      [Frequency.NUMBER_5]: 'One-Time',
+  getFrequencyLabel(frequency: Frequency): string {
+    const labels: { [key: string]: string } = {
+      [Frequency.Daily]: 'Daily',
+      [Frequency.Weekly]: 'Weekly',
+      [Frequency.BiWeekly]: 'Bi-Weekly',
+      [Frequency.Monthly]: 'Monthly',
+      [Frequency.Yearly]: 'Yearly',
+      [Frequency.OneTime]: 'One-Time',
     };
     return labels[frequency] || 'Unknown';
   }
 
-  getDayLabel(day: number): string {
-    const labels = {
-      [DayOfWeek.NUMBER_0]: 'Monday',
-      [DayOfWeek.NUMBER_1]: 'Tuesday',
-      [DayOfWeek.NUMBER_2]: 'Wednesday',
-      [DayOfWeek.NUMBER_3]: 'Thursday',
-      [DayOfWeek.NUMBER_4]: 'Friday',
-      [DayOfWeek.NUMBER_5]: 'Saturday',
-      [DayOfWeek.NUMBER_6]: 'Sunday',
+  getDayLabel(day: DayOfWeek): string {
+    const labels: { [key: string]: string } = {
+      [DayOfWeek.Monday]: 'Monday',
+      [DayOfWeek.Tuesday]: 'Tuesday',
+      [DayOfWeek.Wednesday]: 'Wednesday',
+      [DayOfWeek.Thursday]: 'Thursday',
+      [DayOfWeek.Friday]: 'Friday',
+      [DayOfWeek.Saturday]: 'Saturday',
+      [DayOfWeek.Sunday]: 'Sunday',
     };
     return labels[day] || 'Unknown';
   }

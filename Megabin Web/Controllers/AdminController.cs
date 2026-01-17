@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Megabin_Web.Controllers
 {
-    //TODO - Add this back but fix the bug
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : BaseController
     {
         private readonly AppDbContext _dbContext;

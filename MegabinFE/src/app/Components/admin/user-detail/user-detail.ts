@@ -65,23 +65,23 @@ export class UserDetail implements OnInit {
   }
 
   getStatusLabel(status: AddressStatus): string {
-    const labels = {
-      [AddressStatus.NUMBER_0]: 'Pending Completion',
-      [AddressStatus.NUMBER_1]: 'Bin Requested',
-      [AddressStatus.NUMBER_2]: 'Pending Payment',
-      [AddressStatus.NUMBER_3]: 'Pending Delivery',
-      [AddressStatus.NUMBER_4]: 'Bin Delivered',
+    const labels: { [key: string]: string } = {
+      [AddressStatus.PendingAddressCompletion]: 'Pending Completion',
+      [AddressStatus.BinRequested]: 'Bin Requested',
+      [AddressStatus.PendingBinPayment]: 'Pending Payment',
+      [AddressStatus.PendingBinDelivery]: 'Pending Delivery',
+      [AddressStatus.BinDelivered]: 'Bin Delivered',
     };
     return labels[status] || 'Unknown';
   }
 
   getStatusSeverity(status: AddressStatus): 'success' | 'info' | 'warn' | 'secondary' {
-    const severities = {
-      [AddressStatus.NUMBER_0]: 'secondary' as const,
-      [AddressStatus.NUMBER_1]: 'info' as const,
-      [AddressStatus.NUMBER_2]: 'warn' as const,
-      [AddressStatus.NUMBER_3]: 'warn' as const,
-      [AddressStatus.NUMBER_4]: 'success' as const,
+    const severities: { [key: string]: 'success' | 'info' | 'warn' | 'secondary' } = {
+      [AddressStatus.PendingAddressCompletion]: 'secondary' as const,
+      [AddressStatus.BinRequested]: 'info' as const,
+      [AddressStatus.PendingBinPayment]: 'warn' as const,
+      [AddressStatus.PendingBinDelivery]: 'warn' as const,
+      [AddressStatus.BinDelivered]: 'success' as const,
     };
     return severities[status] || 'secondary';
   }

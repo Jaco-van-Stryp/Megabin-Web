@@ -5,7 +5,7 @@ import { LoginResponse } from './model/loginResponse';
  * Service for managing authentication tokens and user state
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthTokenService {
   private readonly AUTH_KEY = 'auth_data';
@@ -20,7 +20,7 @@ export class AuthTokenService {
       userId: auth.userId,
       name: auth.name,
       email: auth.email,
-      role: auth.role
+      role: auth.role,
     };
   });
   readonly token = computed(() => this.authDataSignal()?.token ?? null);

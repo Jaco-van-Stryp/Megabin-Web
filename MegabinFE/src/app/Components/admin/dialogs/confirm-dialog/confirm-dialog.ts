@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
   imports: [DialogModule, ButtonModule],
   templateUrl: './confirm-dialog.html',
   styleUrls: ['./confirm-dialog.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmDialog {
   visible = input<boolean>(false);

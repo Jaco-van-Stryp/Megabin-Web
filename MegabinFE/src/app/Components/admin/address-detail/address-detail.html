@@ -6,27 +6,22 @@
         <div class="p-6 pb-0">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h2 class="text-2xl font-semibold  ">Address Details</h2>
-              <p class=" dark: mt-1">{{ currentAddress()!.address }}</p>
+              <h2 class="text-2xl font-semibold">Address Details</h2>
+              <p class="dark: mt-1">{{ currentAddress()!.address }}</p>
             </div>
-            <p-button
-              icon="pi pi-arrow-left"
-              [text]="true"
-              label="Back"
-              (onClick)="goBack()"
-            />
+            <p-button icon="pi pi-arrow-left" [text]="true" label="Back" (onClick)="goBack()" />
           </div>
         </div>
       </ng-template>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <p class="text-sm  dark:">Total Bins</p>
+          <p class="text-sm dark:">Total Bins</p>
           <p class="text-lg font-semibold">{{ currentAddress()!.totalBins }}</p>
         </div>
         @if (currentAddress()!.addressNotes) {
           <div>
-            <p class="text-sm  dark:">Notes</p>
+            <p class="text-sm dark:">Notes</p>
             <p class="text-lg">{{ currentAddress()!.addressNotes }}</p>
           </div>
         }
@@ -67,12 +62,8 @@
     <ng-template #header>
       <div class="p-6 pb-0">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl font-semibold  ">Collection Schedules</h3>
-          <p-button
-            icon="pi pi-plus"
-            label="Add Schedule"
-            (onClick)="onAddSchedule()"
-          />
+          <h3 class="text-xl font-semibold">Collection Schedules</h3>
+          <p-button icon="pi pi-plus" label="Add Schedule" (onClick)="onAddSchedule()" />
         </div>
       </div>
     </ng-template>
@@ -84,13 +75,9 @@
       </div>
     } @else if (adminState.addressSchedules().length === 0) {
       <div class="text-center py-12">
-        <i class="pi pi-calendar text-6xl  mb-4"></i>
-        <p class=" dark: text-lg mb-4">No schedules configured</p>
-        <p-button
-          icon="pi pi-plus"
-          label="Add First Schedule"
-          (onClick)="onAddSchedule()"
-        />
+        <i class="pi pi-calendar text-6xl mb-4"></i>
+        <p class="dark: text-lg mb-4">No schedules configured</p>
+        <p-button icon="pi pi-plus" label="Add First Schedule" (onClick)="onAddSchedule()" />
       </div>
     } @else {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -126,13 +113,13 @@
 
             <div class="space-y-3">
               <div class="flex items-center gap-2">
-                <i class="pi pi-calendar "></i>
+                <i class="pi pi-calendar"></i>
                 <span class="font-medium">{{ getDayLabel(schedule.dayOfWeek) }}</span>
               </div>
 
               <div class="flex items-center gap-2 text-sm">
-                <i class="pi pi-clock "></i>
-                <span class=" dark:">
+                <i class="pi pi-clock"></i>
+                <span class="dark:">
                   Started: {{ schedule.startingDate | date: 'mediumDate' }}
                 </span>
               </div>
@@ -140,15 +127,25 @@
               @if (schedule.lastCollected) {
                 <div class="flex items-center gap-2 text-sm">
                   <i class="pi pi-check text-green-500"></i>
-                  <span class=" dark:">
+                  <span class="dark:">
                     Last: {{ schedule.lastCollected | date: 'mediumDate' }}
                   </span>
                 </div>
               }
 
               <div class="flex items-center gap-2">
-                <i [class]="schedule.approvedExternally ? 'pi pi-check-circle text-green-500' : 'pi pi-exclamation-circle text-orange-500'"></i>
-                <span class="text-sm" [class.text-green-600]="schedule.approvedExternally" [class.text-orange-600]="!schedule.approvedExternally">
+                <i
+                  [class]="
+                    schedule.approvedExternally
+                      ? 'pi pi-check-circle text-green-500'
+                      : 'pi pi-exclamation-circle text-orange-500'
+                  "
+                ></i>
+                <span
+                  class="text-sm"
+                  [class.text-green-600]="schedule.approvedExternally"
+                  [class.text-orange-600]="!schedule.approvedExternally"
+                >
                   {{ schedule.approvedExternally ? 'Approved' : 'Pending Approval' }}
                 </span>
               </div>

@@ -55,7 +55,10 @@
 
         <div>
           @if (errorMessage()) {
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <div
+              class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+              role="alert"
+            >
               <span class="block sm:inline">{{ errorMessage() }}</span>
             </div>
           }
@@ -94,17 +97,6 @@
           ></p-password>
 
           <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-            <div class="flex items-center">
-              <p-checkbox
-                [ngModel]="rememberMe()"
-                (ngModelChange)="rememberMe.set($event)"
-                id="rememberme1"
-                binary
-                class="mr-2"
-                [disabled]="isLoading()"
-              ></p-checkbox>
-              <label for="rememberme1">Remember me</label>
-            </div>
             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
               >Forgot password?</span
             >
@@ -119,7 +111,9 @@
 
           <div class="text-center mt-8">
             <span class="text-muted-color">Don't have an account? </span>
-            <a routerLink="/register" class="font-medium no-underline cursor-pointer text-primary">Create Account</a>
+            <a routerLink="/register" class="font-medium no-underline cursor-pointer text-primary"
+              >Create Account</a
+            >
           </div>
         </div>
       </div>

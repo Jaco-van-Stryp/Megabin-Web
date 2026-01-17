@@ -17,42 +17,46 @@ import { ScheduleContract } from '../../../../services/admin-state.service';
     SelectModule,
     CheckboxModule,
     FloatLabelModule,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './edit-schedule-dialog.html',
   styleUrls: ['./edit-schedule-dialog.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditScheduleDialog {
   visible = input<boolean>(false);
   schedule = input<ScheduleContract | null>(null);
   isEditMode = input<boolean>(false);
 
-  saved = output<{ frequency: Frequency; dayOfWeek: DayOfWeek; active: boolean; approvedExternally: boolean }>();
+  saved = output<{
+    frequency: Frequency;
+    dayOfWeek: DayOfWeek;
+    active: boolean;
+    approvedExternally: boolean;
+  }>();
   cancelled = output<void>();
 
-  frequency = signal<Frequency>(Frequency.NUMBER_1);
-  dayOfWeek = signal<DayOfWeek>(DayOfWeek.NUMBER_0);
+  frequency = signal<Frequency>(Frequency.Weekly);
+  dayOfWeek = signal<DayOfWeek>(DayOfWeek.Monday);
   active = signal<boolean>(true);
   approvedExternally = signal<boolean>(true);
 
   frequencyOptions = [
-    { label: 'Daily', value: Frequency.NUMBER_0 },
-    { label: 'Weekly', value: Frequency.NUMBER_1 },
-    { label: 'Bi-Weekly', value: Frequency.NUMBER_2 },
-    { label: 'Monthly', value: Frequency.NUMBER_3 },
-    { label: 'Yearly', value: Frequency.NUMBER_4 },
-    { label: 'One-Time', value: Frequency.NUMBER_5 }
+    { label: 'Daily', value: Frequency.Daily },
+    { label: 'Weekly', value: Frequency.Weekly },
+    { label: 'Bi-Weekly', value: Frequency.BiWeekly },
+    { label: 'Monthly', value: Frequency.Monthly },
+    { label: 'Yearly', value: Frequency.Yearly },
+    { label: 'One-Time', value: Frequency.OneTime },
   ];
 
   dayOfWeekOptions = [
-    { label: 'Monday', value: DayOfWeek.NUMBER_0 },
-    { label: 'Tuesday', value: DayOfWeek.NUMBER_1 },
-    { label: 'Wednesday', value: DayOfWeek.NUMBER_2 },
-    { label: 'Thursday', value: DayOfWeek.NUMBER_3 },
-    { label: 'Friday', value: DayOfWeek.NUMBER_4 },
-    { label: 'Saturday', value: DayOfWeek.NUMBER_5 },
-    { label: 'Sunday', value: DayOfWeek.NUMBER_6 }
+    { label: 'Monday', value: DayOfWeek.Monday },
+    { label: 'Tuesday', value: DayOfWeek.Tuesday },
+    { label: 'Wednesday', value: DayOfWeek.Wednesday },
+    { label: 'Thursday', value: DayOfWeek.Thursday },
+    { label: 'Friday', value: DayOfWeek.Friday },
+    { label: 'Saturday', value: DayOfWeek.Saturday },
+    { label: 'Sunday', value: DayOfWeek.Sunday },
   ];
 
   constructor() {
@@ -60,14 +64,14 @@ export class EditScheduleDialog {
     effect(() => {
       const currentSchedule = this.schedule();
       if (currentSchedule && this.isEditMode()) {
-        this.frequency.set(currentSchedule.frequency as Frequency);
-        this.dayOfWeek.set(currentSchedule.dayOfWeek as DayOfWeek);
+        this.frequency.set(currentSchedule.frequency);
+        this.dayOfWeek.set(currentSchedule.dayOfWeek);
         this.active.set(currentSchedule.active);
         this.approvedExternally.set(currentSchedule.approvedExternally);
       } else if (!this.isEditMode()) {
         // Reset to defaults for add mode
-        this.frequency.set(Frequency.NUMBER_1);
-        this.dayOfWeek.set(DayOfWeek.NUMBER_0);
+        this.frequency.set(Frequency.Weekly);
+        this.dayOfWeek.set(DayOfWeek.Monday);
         this.active.set(true);
         this.approvedExternally.set(true);
       }
@@ -79,7 +83,7 @@ export class EditScheduleDialog {
       frequency: this.frequency(),
       dayOfWeek: this.dayOfWeek(),
       active: this.active(),
-      approvedExternally: this.approvedExternally()
+      approvedExternally: this.approvedExternally(),
     });
   }
 

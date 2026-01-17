@@ -34,36 +34,20 @@
     </p-floatlabel>
 
     <div class="flex items-center gap-2">
-      <p-checkbox
-        inputId="active"
-        [(ngModel)]="active"
-        [binary]="true"
-      />
+      <p-checkbox inputId="active" [(ngModel)]="active" [binary]="true" />
       <label for="active" class="cursor-pointer">Active</label>
     </div>
 
     <div class="flex items-center gap-2">
-      <p-checkbox
-        inputId="approvedExternally"
-        [(ngModel)]="approvedExternally"
-        [binary]="true"
-      />
+      <p-checkbox inputId="approvedExternally" [(ngModel)]="approvedExternally" [binary]="true" />
       <label for="approvedExternally" class="cursor-pointer">Approved Externally</label>
     </div>
   </div>
 
   <ng-template #footer>
     <div class="flex justify-end gap-2">
-      <p-button
-        label="Cancel"
-        [text]="true"
-        severity="secondary"
-        (onClick)="onCancel()"
-      />
-      <p-button
-        [label]="isEditMode() ? 'Update' : 'Add'"
-        (onClick)="onSave()"
-      />
+      <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="onCancel()" />
+      <p-button [label]="isEditMode() ? 'Update' : 'Add'" (onClick)="onSave()" />
     </div>
   </ng-template>
 </p-dialog>
