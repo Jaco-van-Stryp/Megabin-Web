@@ -1,0 +1,75 @@
+name: Auto-format Code
+
+on:
+  push:
+    branches:
+      - master
+      - 'Add-*'  # Match your feature branch naming pattern
+    paths:
+      - '**.cs'
+      - '**.ts'
+      - '**.html'
+      - '**.css'
+      - '**.scss'
+      - '**.json'
+      - '**.js'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    # Skip if commit message contains [skip ci] to prevent infinite loops
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # Frontend formatting
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Run Prettier
+        run: npm run prettier:write
+        continue-on-error: true
+
+      # Backend formatting
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install CSharpier
+        run: dotnet tool install -g csharpier
+
+      - name: Run CSharpier
+        run: dotnet csharpier "Megabin Web"
+        continue-on-error: true
+
+      # Commit and push if changes were made
+      - name: Check for changes
+        id: verify-changes
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit formatted changes
+        if: steps.verify-changes.outputs.changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: auto-format code [skip ci]"
+          git push
