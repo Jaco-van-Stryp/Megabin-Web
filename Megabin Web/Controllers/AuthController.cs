@@ -29,7 +29,7 @@ namespace Megabin_Web.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace Megabin_Web.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<ActionResult<LoginResponse>> Register(RegisterRequest request)
         {
             if (!ModelState.IsValid)
             {

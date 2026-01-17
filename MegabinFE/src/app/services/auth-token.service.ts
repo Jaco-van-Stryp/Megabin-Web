@@ -1,5 +1,5 @@
-import { Injectable, signal } from '@angular/core';
-import { GetUser } from './model/getUser';
+import { Injectable, signal, computed } from '@angular/core';
+import { LoginResponse } from './model/loginResponse';
 
 /**
  * Service for managing authentication tokens and user state
@@ -8,63 +8,43 @@ import { GetUser } from './model/getUser';
   providedIn: 'root'
 })
 export class AuthTokenService {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_KEY = 'user_info';
+  private readonly AUTH_KEY = 'auth_data';
 
-  private userSignal = signal<GetUser | null>(this.loadUserFromStorage());
-  private tokenSignal = signal<string | null>(this.loadTokenFromStorage());
+  private authDataSignal = signal<LoginResponse | null>(this.loadAuthFromStorage());
 
-  readonly user = this.userSignal.asReadonly();
-  readonly token = this.tokenSignal.asReadonly();
-  readonly isAuthenticated = signal(this.loadTokenFromStorage() !== null);
+  readonly authData = this.authDataSignal.asReadonly();
+  readonly user = computed(() => {
+    const auth = this.authDataSignal();
+    if (!auth) return null;
+    return {
+      userId: auth.userId,
+      name: auth.name,
+      email: auth.email,
+      role: auth.role
+    };
+  });
+  readonly token = computed(() => this.authDataSignal()?.token ?? null);
+  readonly isAuthenticated = computed(() => this.authDataSignal()?.token != null);
 
-  private loadTokenFromStorage(): string | null {
+  private loadAuthFromStorage(): LoginResponse | null {
     if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem(this.TOKEN_KEY);
+      const auth = localStorage.getItem(this.AUTH_KEY);
+      return auth ? JSON.parse(auth) : null;
     }
     return null;
   }
 
-  private loadUserFromStorage(): GetUser | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const user = localStorage.getItem(this.USER_KEY);
-      return user ? JSON.parse(user) : null;
-    }
-    return null;
-  }
-
-  setToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
-    this.tokenSignal.set(token);
-    this.isAuthenticated.set(true);
+  setAuthData(loginResponse: LoginResponse): void {
+    localStorage.setItem(this.AUTH_KEY, JSON.stringify(loginResponse));
+    this.authDataSignal.set(loginResponse);
   }
 
   getToken(): string | null {
-    return this.tokenSignal();
-  }
-
-  removeToken(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    this.tokenSignal.set(null);
-    this.isAuthenticated.set(false);
-  }
-
-  setUser(user: GetUser): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    this.userSignal.set(user);
-  }
-
-  getUser(): GetUser | null {
-    return this.userSignal();
-  }
-
-  removeUser(): void {
-    localStorage.removeItem(this.USER_KEY);
-    this.userSignal.set(null);
+    return this.token();
   }
 
   logout(): void {
-    this.removeToken();
-    this.removeUser();
+    localStorage.removeItem(this.AUTH_KEY);
+    this.authDataSignal.set(null);
   }
 }

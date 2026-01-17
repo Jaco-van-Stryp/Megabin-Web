@@ -9,6 +9,7 @@ import { RippleModule } from 'primeng/ripple';
 import { AuthService } from '../../services/api/auth.service';
 import { AuthTokenService } from '../../services/auth-token.service';
 import { LoginRequest } from '../../services/model/loginRequest';
+import { LoginResponse } from '../../services';
 
 @Component({
   selector: 'app-login',
@@ -45,26 +46,14 @@ export class Login {
       password: this.password()
     };
 
-    this.authService.apiAuthLoginPost(loginRequest, 'response').subscribe({
-      next: (response) => {
-        const token = response.headers.get('Authorization')?.replace('Bearer ', '');
-
-        if (token) {
-          this.authTokenService.setToken(token);
-
-          this.authService.apiAuthMeGet().subscribe({
-            next: (user) => {
-              this.authTokenService.setUser(user);
-              this.router.navigate(['/']);
-            },
-            error: (err) => {
-              console.error('Failed to fetch user info:', err);
-              this.errorMessage.set('Failed to fetch user information');
-              this.isLoading.set(false);
-            }
-          });
+    this.authService.apiAuthLoginPost(loginRequest).subscribe({
+      next: (loginResponse: LoginResponse) => {
+        if (loginResponse.token && loginResponse.userId) {
+          this.authTokenService.setAuthData(loginResponse);
+          this.isLoading.set(false);
+          this.router.navigate(['/']);
         } else {
-          this.errorMessage.set('No authentication token received');
+          this.errorMessage.set('Invalid response from server');
           this.isLoading.set(false);
         }
       },

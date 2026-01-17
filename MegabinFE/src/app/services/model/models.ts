@@ -8,6 +8,7 @@ export * from './getAddress';
 export * from './getUser';
 export * from './location';
 export * from './loginRequest';
+export * from './loginResponse';
 export * from './registerRequest';
 export * from './resetPassword';
 export * from './updateAddress';

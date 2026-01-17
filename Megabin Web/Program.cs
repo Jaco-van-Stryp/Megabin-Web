@@ -108,6 +108,17 @@ builder
 
 builder.Services.AddAuthorization();
 
+// CORS - Allow all origins
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // HTTP clients for external services
 builder.Services.AddHttpClient<IRouteOptimizationService, RouteOptimizationService>();
 builder.Services.AddHttpClient<IMapboxService, MapboxService>();
@@ -147,6 +158,8 @@ app.UseHangfireDashboard(
 );
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
