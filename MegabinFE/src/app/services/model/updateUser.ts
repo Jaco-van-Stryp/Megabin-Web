@@ -15,7 +15,7 @@ export interface UpdateUser {
     name: string | null;
     email: string | null;
     role: UserRoles;
-    totalBins: number;
+    phoneNumber: string | null;
 }
 export namespace UpdateUser {
 }

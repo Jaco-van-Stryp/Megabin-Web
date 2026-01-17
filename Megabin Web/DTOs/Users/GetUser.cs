@@ -7,6 +7,7 @@ namespace Megabin_Web.DTOs.Users
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Email { get; set; }
+        public required string PhoneNumber { get; set; }
         public required UserRoles Role { get; set; }
     }
 }

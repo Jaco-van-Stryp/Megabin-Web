@@ -14,6 +14,7 @@ export interface GetUser {
     id: string;
     name: string | null;
     email: string | null;
+    phoneNumber: string | null;
     role: UserRoles;
 }
 export namespace GetUser {

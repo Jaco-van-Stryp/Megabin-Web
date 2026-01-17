@@ -73,10 +73,7 @@ namespace Megabin_Web.Services
             string phoneNumber
         )
         {
-            _logger.LogDebug(
-                "Registering new user with email {Email}",
-                email
-            );
+            _logger.LogDebug("Registering new user with email {Email}", email);
 
             // Check if user already exists
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -100,7 +97,6 @@ namespace Megabin_Web.Services
                 Name = name,
                 Email = email,
                 PasswordHash = passwordHash,
-                TotalBins = 0,
                 PhoneNumber = phoneNumber,
                 Role = UserRoles.Customer,
             };

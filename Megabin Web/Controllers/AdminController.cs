@@ -35,6 +35,7 @@ namespace Megabin_Web.Controllers
                         Name = user.Name,
                         Email = user.Email,
                         Role = user.Role,
+                        PhoneNumber = user.PhoneNumber,
                     }
                 );
             }
@@ -64,6 +65,7 @@ namespace Megabin_Web.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 Role = user.Role,
+                PhoneNumber = user.PhoneNumber,
             };
             return Ok(userDto);
         }
@@ -78,7 +80,7 @@ namespace Megabin_Web.Controllers
             user.Name = updateUser.Name;
             user.Email = updateUser.Email;
             user.Role = updateUser.Role;
-            user.TotalBins = updateUser.TotalBins;
+            user.PhoneNumber = updateUser.PhoneNumber;
 
             await _dbContext.SaveChangesAsync();
             return Ok();
