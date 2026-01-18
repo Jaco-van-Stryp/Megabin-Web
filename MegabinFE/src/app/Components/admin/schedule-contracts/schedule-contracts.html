@@ -1,0 +1,105 @@
+<p-table
+  #dt
+  [value]="scheduleContracts()"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="['frequency', 'dayOfWeek']"
+  [scrollable]="true"
+  scrollHeight="80vh"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-end">
+      <p-iconField iconPosition="left" class="w-full">
+        <p-inputIcon>
+          <i class="pi pi-search"></i>
+        </p-inputIcon>
+        <input
+          pInputText
+          type="text"
+          (input)="dt.filterGlobal($event.target.value, 'contains')"
+          placeholder="Search Schedule Contracts"
+          class="w-full"
+        />
+      </p-iconField>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="w-5">
+        <app-add-schedule-contract [addressId]="addressId()"></app-add-schedule-contract>
+      </th>
+      <th pSortableColumn="frequency">
+        Frequency
+        <p-sortIcon field="frequency"></p-sortIcon>
+      </th>
+      <th pSortableColumn="dayOfWeek">
+        Day of Week
+        <p-sortIcon field="dayOfWeek"></p-sortIcon>
+      </th>
+      <th pSortableColumn="startingDate">
+        Starting Date
+        <p-sortIcon field="startingDate"></p-sortIcon>
+      </th>
+      <th pSortableColumn="lastCollected">
+        Last Collected
+        <p-sortIcon field="lastCollected"></p-sortIcon>
+      </th>
+      <th pSortableColumn="active">
+        Active
+        <p-sortIcon field="active"></p-sortIcon>
+      </th>
+      <th pSortableColumn="approvedExternally">
+        Approved
+        <p-sortIcon field="approvedExternally"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-contract>
+    <tr (click)="clickScheduleContract(contract.id); $event.stopPropagation()">
+      <td class="w-5">
+        <app-update-schedule-contract [contract]="contract" />
+      </td>
+      <td>
+        @switch (contract.frequency) {
+          @case ('daily') {
+            <p-tag severity="info" value="Daily"></p-tag>
+          }
+          @case ('weekly') {
+            <p-tag severity="success" value="Weekly"></p-tag>
+          }
+          @case ('biWeekly') {
+            <p-tag severity="warn" value="Bi-Weekly"></p-tag>
+          }
+          @case ('monthly') {
+            <p-tag severity="contrast" value="Monthly"></p-tag>
+          }
+          @case ('yearly') {
+            <p-tag severity="secondary" value="Yearly"></p-tag>
+          }
+          @case ('oneTime') {
+            <p-tag severity="danger" value="One Time"></p-tag>
+          }
+          @default {
+            <p-tag severity="danger" value="Unknown"></p-tag>
+          }
+        }
+      </td>
+      <td>{{ contract.dayOfWeek }}</td>
+      <td>{{ contract.startingDate | date: 'short' }}</td>
+      <td>{{ contract.lastCollected ? (contract.lastCollected | date: 'short') : 'Never' }}</td>
+      <td>
+        @if (contract.active) {
+          <p-tag severity="success" value="Active"></p-tag>
+        } @else {
+          <p-tag severity="danger" value="Inactive"></p-tag>
+        }
+      </td>
+      <td>
+        @if (contract.approvedExternally) {
+          <p-tag severity="success" value="Approved"></p-tag>
+        } @else {
+          <p-tag severity="warn" value="Pending"></p-tag>
+        }
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

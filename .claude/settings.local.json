@@ -6,7 +6,9 @@
       "Bash(npm run build:*)",
       "Bash(find:*)",
       "Bash(dotnet build:*)",
-      "Bash(gh pr view:*)"
+      "Bash(gh pr view:*)",
+      "Bash(ng generate component:*)",
+      "Bash(ls:*)"
     ]
   }
 }

@@ -1,0 +1,40 @@
+<p-button
+  icon="pi pi-plus"
+  pTooltip="Add Schedule Contract"
+  severity="primary"
+  (click)="showDialog()"
+/>
+<p-dialog header="Add Schedule Contract" [modal]="true" [(visible)]="visible">
+  <div class="flex flex-col gap-4 mb-4">
+    <div class="flex flex-col gap-2">
+      <label for="frequency" class="font-semibold">Frequency</label>
+      <p-autoComplete
+        [(ngModel)]="scheduleContract().frequency"
+        [suggestions]="filteredFrequencies()"
+        (completeMethod)="filterFrequencies($event)"
+        field="label"
+        optionValue="value"
+        [dropdown]="true"
+        placeholder="Select frequency"
+        inputId="frequency"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="dayOfWeek" class="font-semibold">Day of Week</label>
+      <p-autoComplete
+        [(ngModel)]="scheduleContract().dayOfWeek"
+        [suggestions]="filteredDaysOfWeek()"
+        (completeMethod)="filterDaysOfWeek($event)"
+        field="label"
+        optionValue="value"
+        [dropdown]="true"
+        placeholder="Select day of week"
+        inputId="dayOfWeek"
+      />
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="visible.set(false)" />
+    <p-button label="Add Schedule Contract" severity="success" (click)="createScheduleContract()" />
+  </div>
+</p-dialog>

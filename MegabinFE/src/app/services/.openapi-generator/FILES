@@ -17,6 +17,7 @@ model/createScheduleContract.ts
 model/dayOfWeek.ts
 model/frequency.ts
 model/getAddress.ts
+model/getScheduleContract.ts
 model/getUser.ts
 model/location.ts
 model/loginRequest.ts

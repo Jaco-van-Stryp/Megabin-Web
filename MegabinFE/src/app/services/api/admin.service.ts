@@ -25,6 +25,8 @@ import { CreateScheduleContract } from '../model/createScheduleContract';
 // @ts-ignore
 import { GetAddress } from '../model/getAddress';
 // @ts-ignore
+import { GetScheduleContract } from '../model/getScheduleContract';
+// @ts-ignore
 import { GetUser } from '../model/getUser';
 // @ts-ignore
 import { ResetPassword } from '../model/resetPassword';
@@ -479,10 +481,10 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<GetScheduleContract>>;
+    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<GetScheduleContract>>>;
+    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<GetScheduleContract>>>;
+    public apiAdminGetScheduledContractsAddressIdGet(addressId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (addressId === null || addressId === undefined) {
             throw new Error('Required parameter addressId was null or undefined when calling apiAdminGetScheduledContractsAddressIdGet.');
         }
@@ -500,6 +502,9 @@ export class AdminService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -530,7 +535,7 @@ export class AdminService {
         }
 
         let localVarPath = `/api/Admin/GetScheduledContracts/${this.configuration.encodeParam({name: "addressId", value: addressId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<GetScheduleContract>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

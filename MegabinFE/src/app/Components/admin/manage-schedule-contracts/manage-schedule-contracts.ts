@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { ScheduleContracts } from '../schedule-contracts/schedule-contracts';
 
 @Component({
   selector: 'app-manage-schedule-contracts',
-  imports: [],
+  imports: [ScheduleContracts],
   templateUrl: './manage-schedule-contracts.html',
-  styles: ``,
 })
-export class ManageScheduleContracts {}
+export class ManageScheduleContracts {
+  addressId = input.required<string>();
+}

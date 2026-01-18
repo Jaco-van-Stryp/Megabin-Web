@@ -1,0 +1,58 @@
+<p-button
+  icon="pi pi-pencil"
+  pTooltip="Edit Schedule Contract"
+  severity="help"
+  (click)="showDialog()"
+/>
+<p-dialog header="Update Schedule Contract" [modal]="true" [(visible)]="visible">
+  <div class="flex flex-col gap-4 mb-4">
+    <div class="flex flex-col gap-2">
+      <label for="frequency" class="font-semibold">Frequency</label>
+      <p-autoComplete
+        [(ngModel)]="contract().frequency"
+        [suggestions]="filteredFrequencies()"
+        (completeMethod)="filterFrequencies($event)"
+        field="label"
+        optionValue="value"
+        [dropdown]="true"
+        placeholder="Select frequency"
+        inputId="frequency"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="dayOfWeek" class="font-semibold">Day of Week</label>
+      <p-autoComplete
+        [(ngModel)]="contract().dayOfWeek"
+        [suggestions]="filteredDaysOfWeek()"
+        (completeMethod)="filterDaysOfWeek($event)"
+        field="label"
+        optionValue="value"
+        [dropdown]="true"
+        placeholder="Select day of week"
+        inputId="dayOfWeek"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label class="font-semibold">Active</label>
+      <div class="flex align-items-center gap-2">
+        <input type="checkbox" [(ngModel)]="contract().active" id="active" />
+        <label for="active">Contract is active</label>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label class="font-semibold">Approved Externally</label>
+      <div class="flex align-items-center gap-2">
+        <input type="checkbox" [(ngModel)]="contract().approvedExternally" id="approved" />
+        <label for="approved">Approved by external payment</label>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="visible.set(false)" />
+    <p-button
+      label="Update Schedule Contract"
+      severity="success"
+      (click)="updateScheduleContract()"
+    />
+  </div>
+</p-dialog>
