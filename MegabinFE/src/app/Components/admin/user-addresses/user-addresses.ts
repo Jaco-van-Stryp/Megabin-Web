@@ -8,6 +8,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { Button } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { ManageAddress } from '../manage-address/manage-address';
+import { AddAddress } from "../add-address/add-address";
 
 @Component({
   selector: 'app-user-addresses',
@@ -20,7 +21,8 @@ import { ManageAddress } from '../manage-address/manage-address';
     Button,
     TooltipModule,
     ManageAddress,
-  ],
+    AddAddress
+],
   templateUrl: './user-addresses.html',
 })
 export class UserAddresses implements OnInit {
