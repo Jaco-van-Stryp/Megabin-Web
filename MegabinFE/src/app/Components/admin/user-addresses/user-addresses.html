@@ -45,9 +45,9 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-address>
-    <tr (click)="clickAddress(address.id)">
+    <tr (click)="clickAddress(address.id); $event.stopPropagation()">
       <td class="w-5">
-        <p-button icon="pi pi-pencil" pTooltip="Edit Address" severity="help" />
+        <app-manage-address [address]="address" />
       </td>
       <td>{{ address.address }}</td>
       <td>{{ address.totalBins }}</td>

@@ -14,10 +14,12 @@
     (completeMethod)="onSearch($event)"
     (onSelect)="onSelect($event)"
     (onClear)="onClear()"
+    fluid
     class="w-full"
+    required
   >
     <ng-template let-suggestion pTemplate="item">
-      <div class="suggestion-item py-2 px-3 cursor-pointer">
+      <div class="suggestion-item py-2 px-3 cursor-pointer w-50">
         <div class="font-medium">{{ suggestion.label }}</div>
         <div class="text-sm">
           @if (suggestion.locality || suggestion.region || suggestion.country) {

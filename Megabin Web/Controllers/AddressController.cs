@@ -95,6 +95,7 @@ namespace Megabin_Web.Controllers
                         AddressNotes = address.AddressNotes ?? string.Empty,
                         TotalBins = address.TotalBins,
                         AddressStatus = address.Status,
+                        Location = new Location(address.Long, address.Lat),
                     }
                 );
             }

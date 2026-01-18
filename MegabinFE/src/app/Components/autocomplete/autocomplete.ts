@@ -8,7 +8,6 @@ import { AddressSuggestion } from '../../services/model/addressSuggestion';
   selector: 'app-autocomplete',
   imports: [AutoComplete, FormsModule],
   templateUrl: './autocomplete.html',
-  styleUrl: './autocomplete.css',
 })
 export class Autocomplete {
   placeholder = input<string>('Enter address...');

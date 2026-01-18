@@ -8,6 +8,17 @@ on:
     paths:
       - "MegabinFE/**"
       - ".github/workflows/build-frontend.yml"
+  pull_request:
+    branches:
+      - master
+      - "Add-*"
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - "MegabinFE/**"
+      - ".github/workflows/build-frontend.yml"
 
 jobs:
   build-frontend:

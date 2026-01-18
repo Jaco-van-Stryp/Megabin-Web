@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { AddressStatus } from './addressStatus';
+import { Location } from './location';
 
 
 export interface GetAddress { 
@@ -16,6 +17,7 @@ export interface GetAddress {
     addressNotes: string | null;
     totalBins: number;
     addressStatus: AddressStatus;
+    location: Location;
 }
 export namespace GetAddress {
 }

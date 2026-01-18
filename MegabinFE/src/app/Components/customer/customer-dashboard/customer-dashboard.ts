@@ -4,6 +4,5 @@ import { Component } from '@angular/core';
   selector: 'app-customer-dashboard',
   imports: [],
   templateUrl: './customer-dashboard.html',
-  styleUrl: './customer-dashboard.css',
 })
 export class CustomerDashboard {}

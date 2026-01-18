@@ -4,6 +4,5 @@ import { Component } from '@angular/core';
   selector: 'app-driver-dashboard',
   imports: [],
   templateUrl: './driver-dashboard.html',
-  styleUrl: './driver-dashboard.css',
 })
 export class DriverDashboard {}
