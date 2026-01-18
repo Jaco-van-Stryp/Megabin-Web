@@ -1,5 +1,6 @@
 ﻿using Megabin_Web.Data;
 using Megabin_Web.DTOs.Addresses;
+using Megabin_Web.DTOs.Routing;
 using Megabin_Web.DTOs.ScheduleContracts;
 using Megabin_Web.DTOs.Users;
 using Megabin_Web.Interfaces;
@@ -92,7 +93,7 @@ namespace Megabin_Web.Controllers
             // Load user with all related entities
             var user = await _dbContext
                 .Users.Include(u => u.Addresss)
-                .ThenInclude(a => a.Schedules)
+                    .ThenInclude(a => a.Schedules)
                 .Include(u => u.ApiUsageTracker)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
@@ -170,6 +171,8 @@ namespace Megabin_Web.Controllers
             address.TotalBins = updateUserAddress.TotalBins;
             address.AddressNotes = updateUserAddress.AddressNotes;
             address.Status = updateUserAddress.Status;
+            address.Long = updateUserAddress.Location.Longitude;
+            address.Lat = updateUserAddress.Location.Latitude;
             await _dbContext.SaveChangesAsync();
             return Ok();
         }
@@ -193,6 +196,7 @@ namespace Megabin_Web.Controllers
                         AddressNotes = address.AddressNotes ?? string.Empty,
                         TotalBins = address.TotalBins,
                         AddressStatus = address.Status,
+                        Location = new Location(address.Long, address.Lat),
                     }
                 );
             }

@@ -1,1 +1,61 @@
-<p>manage-address works!</p>
+<p-button icon="pi pi-pencil" pTooltip="Edit Address" severity="help" (click)="showDialog()" />
+<p-dialog header="Update Address Details" [modal]="true" [(visible)]="visible">
+  <div class="flex flex-col gap-4 mb-4">
+    <div class="flex flex-col gap-2">
+      <app-autocomplete
+        label="Enter new address"
+        placeholder="Enter new address"
+        (addressSelected)="setAddress($event)"
+      ></app-autocomplete>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="totalBins" class="font-semibold">Total Bins</label>
+      <input
+        [(ngModel)]="address().totalBins"
+        type="number"
+        pInputText
+        id="totalBins"
+        class="w-full"
+        autocomplete="off"
+        placeholder="Enter total bins"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="status" class="font-semibold">Status</label>
+      <p-autoComplete
+        [(ngModel)]="address().addressStatus"
+        [suggestions]="filteredStatus()"
+        (completeMethod)="filterStatus($event)"
+        field="label"
+        optionValue="value"
+        [dropdown]="true"
+        placeholder="Select or type a status"
+        inputId="status"
+        styleClass="w-full"
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="addressNotes" class="font-semibold">Notes</label>
+      <input
+        [(ngModel)]="address().addressNotes"
+        type="text"
+        pInputText
+        id="addressNotes"
+        class="w-full"
+        autocomplete="off"
+        placeholder="Enter address notes"
+      />
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="visible.set(false)" />
+    <p-button label="Update Address Details" severity="success" (click)="updateAddressDetails()" />
+    @if (!isReadyForDelivery()) {
+      <p-button
+        label="Manage Collection Schedules"
+        severity="contrast"
+        (click)="manageCollectionSchedules()"
+      />
+    }
+  </div>
+</p-dialog>

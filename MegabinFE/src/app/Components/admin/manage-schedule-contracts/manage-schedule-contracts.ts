@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './manage-schedule-contracts.html',
   styles: ``,
 })
-export class ManageScheduleContracts {
-
-}
+export class ManageScheduleContracts {}

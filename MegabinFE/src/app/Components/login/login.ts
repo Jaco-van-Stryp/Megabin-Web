@@ -23,7 +23,6 @@ import { LoginResponse, UserRoles } from '../../services';
     RippleModule,
   ],
   templateUrl: './login.html',
-  styleUrls: ['./login.css'],
 })
 export class Login {
   private readonly authService = inject(AuthService);

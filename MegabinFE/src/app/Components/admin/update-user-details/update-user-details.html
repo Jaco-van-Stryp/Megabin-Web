@@ -1,10 +1,5 @@
 <p-button severity="success" (click)="showDialog()" label="Update User Details" />
-<p-dialog
-  header="Update User Details"
-  [modal]="true"
-  [(visible)]="visible"
-  [style]="{ width: '25rem' }"
->
+<p-dialog header="Update User Details" [modal]="true" [(visible)]="visible">
   <div class="flex flex-col gap-4 mb-4">
     <div class="flex flex-col gap-2">
       <label for="name" class="font-semibold">Name</label>

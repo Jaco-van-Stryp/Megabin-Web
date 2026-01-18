@@ -7,6 +7,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Button } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { ManageAddress } from '../manage-address/manage-address';
 
 @Component({
   selector: 'app-user-addresses',
@@ -18,6 +19,7 @@ import { TooltipModule } from 'primeng/tooltip';
     InputIconModule,
     Button,
     TooltipModule,
+    ManageAddress,
   ],
   templateUrl: './user-addresses.html',
 })

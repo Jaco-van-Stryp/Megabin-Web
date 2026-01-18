@@ -1,5 +1,5 @@
 <p-button severity="danger" (click)="showDialog()" label="Delete User" />
-<p-dialog header="Are you sure?" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+<p-dialog header="Are you sure?" [modal]="true" [(visible)]="visible">
   <div class="flex justify-end gap-2">
     <p-button label="Cancel" severity="secondary" (click)="visible.set(false)" />
     <p-button label="Delete User {{ User().name }}" severity="danger" (click)="deleteUser()" />

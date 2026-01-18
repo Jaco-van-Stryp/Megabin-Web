@@ -1,4 +1,5 @@
-﻿using Megabin_Web.Enums;
+﻿using Megabin_Web.DTOs.Routing;
+using Megabin_Web.Enums;
 
 namespace Megabin_Web.DTOs.Addresses
 {
@@ -9,5 +10,6 @@ namespace Megabin_Web.DTOs.Addresses
         public required string AddressNotes { get; set; }
         public required int TotalBins { get; set; }
         public required AddressStatus AddressStatus { get; set; }
+        public required Location Location { get; set; }
     }
 }
