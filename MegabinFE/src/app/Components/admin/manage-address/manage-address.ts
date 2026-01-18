@@ -68,7 +68,7 @@ export class ManageAddress {
   }
 
   updateAddressDetails() {
-    var updateAddress: UpdateAddress = {
+    const updateAddress: UpdateAddress = {
       addressId: this.address().id,
       totalBins: this.address().totalBins,
       addressNotes: this.address().addressNotes,

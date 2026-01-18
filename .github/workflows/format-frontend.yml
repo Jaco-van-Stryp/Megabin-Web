@@ -8,6 +8,17 @@ on:
     paths:
       - "MegabinFE/**"
       - ".github/workflows/format-frontend.yml"
+  pull_request:
+    branches:
+      - master
+      - "Add-*"
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - "MegabinFE/**"
+      - ".github/workflows/format-frontend.yml"
 
 permissions:
   contents: write

@@ -45,7 +45,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-address>
-    <tr (click)="clickAddress(address.id)">
+    <tr (click)="clickAddress(address.id); $event.stopPropagation()">
       <td class="w-5">
         <app-manage-address [address]="address" />
       </td>
