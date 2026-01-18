@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
   selector: 'app-admin-dashboard',
   imports: [TableModule, TagModule, UserTable],
   templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css',
 })
 export class AdminDashboard {
   adminService = inject(AdminService);

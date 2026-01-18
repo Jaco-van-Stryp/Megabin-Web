@@ -14,7 +14,6 @@ import { UserRoles } from '../../services/model/userRoles';
   selector: 'app-register',
   imports: [ButtonModule, InputTextModule, PasswordModule, SelectModule, FormsModule, RouterModule],
   templateUrl: './register.html',
-  styleUrl: './register.css',
 })
 export class Register {
   private readonly authService = inject(AuthService);
