@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { AddressSuggestion } from './addressSuggestion';
+import { AddressStatus } from './addressStatus';
 
 
 export interface CreateAddress { 
@@ -15,5 +16,9 @@ export interface CreateAddress {
     address: AddressSuggestion;
     totalBins: number;
     addressNotes?: string | null;
+    status: AddressStatus;
 }
+export namespace CreateAddress {
+}
+
 

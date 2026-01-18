@@ -25,7 +25,7 @@
   <ng-template pTemplate="header">
     <tr>
       <th class="w-5">
-        <p-button icon="pi pi-plus" pTooltip="Add Address" severity="primary" />
+        <app-add-address [userId]="userId()"></app-add-address>
       </th>
       <th pSortableColumn="address">
         Address

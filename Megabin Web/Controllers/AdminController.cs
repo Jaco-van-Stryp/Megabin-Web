@@ -152,6 +152,7 @@ namespace Megabin_Web.Controllers
                 AddressNotes = addUserAddress.AddressNotes,
                 UserId = user.Id,
                 User = user,
+                Status = addUserAddress.Status,
             };
 
             user.Addresss.Add(newAddress);

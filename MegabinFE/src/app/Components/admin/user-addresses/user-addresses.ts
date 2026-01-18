@@ -5,9 +5,9 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { Button } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { ManageAddress } from '../manage-address/manage-address';
+import { AddAddress } from '../add-address/add-address';
 
 @Component({
   selector: 'app-user-addresses',
@@ -17,9 +17,9 @@ import { ManageAddress } from '../manage-address/manage-address';
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    Button,
     TooltipModule,
     ManageAddress,
+    AddAddress,
   ],
   templateUrl: './user-addresses.html',
 })
