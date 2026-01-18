@@ -25,6 +25,13 @@ export const routes: Routes = [
       import('./Components/admin/manage-user/manage-user').then((m) => m.ManageUser),
   },
   {
+    path: 'admin/manage-schedule-contracts/:addressId',
+    loadComponent: () =>
+      import('./Components/admin/manage-schedule-contracts/manage-schedule-contracts').then(
+        (m) => m.ManageScheduleContracts,
+      ),
+  },
+  {
     path: '',
     redirectTo: '/login',
     pathMatch: 'full',

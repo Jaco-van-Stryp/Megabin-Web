@@ -95,7 +95,7 @@ export class ManageAddress {
     });
   }
 
-  manageCollectionSchedules() {
-    this.routerService.navigate(['/admin/manage-collection-schedules', this.address().id]);
+  manageScheduleContracts() {
+    this.routerService.navigate(['/admin/manage-schedule-contracts', this.address().id]);
   }
 }
