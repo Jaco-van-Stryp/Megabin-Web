@@ -6,6 +6,7 @@ export * from './createScheduleContract';
 export * from './dayOfWeek';
 export * from './frequency';
 export * from './getAddress';
+export * from './getScheduleContract';
 export * from './getUser';
 export * from './location';
 export * from './loginRequest';

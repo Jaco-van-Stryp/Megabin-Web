@@ -228,10 +228,21 @@ namespace Megabin_Web.Controllers
         }
 
         [HttpGet("GetScheduledContracts/{addressId}")]
-        public async Task<ActionResult> GetScheduledContracts(Guid addressId)
+        public async Task<ActionResult<List<GetScheduleContract>>> GetScheduledContracts(Guid addressId)
         {
             var contracts = await _dbContext
                 .ScheduledContract.Where(x => x.AddressesId == addressId)
+                .Select(c => new GetScheduleContract
+                {
+                    Id = c.Id,
+                    Frequency = c.Frequency,
+                    DayOfWeek = c.DayOfWeek,
+                    StartingDate = c.StartingDate,
+                    LastCollected = c.LastCollected,
+                    Active = c.Active,
+                    ApprovedExternally = c.ApprovedExternally,
+                    AddressesId = c.AddressesId
+                })
                 .ToListAsync();
 
             if (contracts == null || contracts.Count == 0)
