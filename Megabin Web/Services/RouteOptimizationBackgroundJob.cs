@@ -76,9 +76,9 @@ namespace Megabin_Web.Services
                     dayOfWeek
                 );
 
-                // Get all active drivers with their home addresses
+                // Get all active drivers with their user information
                 var drivers = await dbContext
-                    .Drivers.Include(d => d.HomeAddressLabel) //TODO this no longer works because we changed logic for drivers
+                    .Drivers.Include(d => d.User)
                     .Where(d => d.Active)
                     .ToListAsync();
 

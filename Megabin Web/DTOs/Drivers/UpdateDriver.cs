@@ -1,6 +1,6 @@
 ﻿namespace Megabin_Web.DTOs.Drivers
 {
-    public class CreateDriver
+    public class UpdateDriver
     {
         public required int VehicleCapacity { get; set; } // Max stops before depot
         public required string LicenseNumber { get; set; }

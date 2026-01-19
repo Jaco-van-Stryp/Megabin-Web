@@ -91,8 +91,9 @@
             ></app-autocomplete>
             @if (driverProfile()!.homeAddressLabel) {
               <p class="text-sm text-gray-600">
-                Selected: {{ driverProfile()!.homeAddressLabel }}
-                ({{ driverProfile()!.homeAddressLat }}, {{ driverProfile()!.homeAddressLong }})
+                Selected: {{ driverProfile()!.homeAddressLabel }} ({{
+                  driverProfile()!.homeAddressLat
+                }}, {{ driverProfile()!.homeAddressLong }})
               </p>
             }
           </div>
@@ -105,8 +106,9 @@
             ></app-autocomplete>
             @if (driverProfile()!.dropoffLocationLabel) {
               <p class="text-sm text-gray-600">
-                Selected: {{ driverProfile()!.dropoffLocationLabel }}
-                ({{ driverProfile()!.dropoffLocationLat }}, {{ driverProfile()!.dropoffLocationLong }})
+                Selected: {{ driverProfile()!.dropoffLocationLabel }} ({{
+                  driverProfile()!.dropoffLocationLat
+                }}, {{ driverProfile()!.dropoffLocationLong }})
               </p>
             }
           </div>

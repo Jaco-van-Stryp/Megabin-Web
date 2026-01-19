@@ -62,8 +62,6 @@ export class UpdateUserDetails {
   }
 
   onRoleChange(newRole: UserRoles) {
-    const prevRole = this.previousRole();
-
     // Update the current role signal
     this.currentRole.set(newRole);
     // Also update the User object for saving
@@ -72,12 +70,8 @@ export class UpdateUserDetails {
     // If user role is Driver, fetch driver profile
     if (newRole === UserRoles.Driver) {
       this.fetchDriverProfile();
-    } else if (prevRole === UserRoles.Driver && newRole !== UserRoles.Driver) {
-      // Role changed FROM Driver to something else - disable driver
-      this.disableDriver();
     }
-
-    this.previousRole.set(newRole);
+    // Note: disableDriver() is now called in updateUserDetails() after successful save
   }
 
   fetchDriverProfile() {
@@ -111,18 +105,21 @@ export class UpdateUserDetails {
     };
   }
 
-  disableDriver() {
+  disableDriver(onSuccess?: () => void) {
     this.adminService.apiAdminDisableDriverPost(this.User().id).subscribe({
       next: () => {
         this.driverProfile.set(null);
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Driver Disabled',
-          detail: 'Driver profile has been disabled',
-        });
+        if (onSuccess) {
+          onSuccess();
+        }
       },
       error: (error) => {
         console.error('Error disabling driver:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to disable driver profile',
+        });
       },
     });
   }
@@ -169,16 +166,30 @@ export class UpdateUserDetails {
 
     this.adminService.apiAdminUpdateUserPost(updateRequest).subscribe({
       next: () => {
-        // If user is a driver, handle driver profile update/create
-        if (this.isDriver() && this.driverProfile()) {
+        // Check if role changed FROM Driver to non-Driver
+        if (this.previousRole() === UserRoles.Driver && !this.isDriver()) {
+          // Disable driver profile after successful user update
+          this.disableDriver(() => {
+            this.visible.set(false);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'User updated and driver profile disabled successfully',
+            });
+            this.previousRole.set(this.currentRole());
+          });
+        } else if (this.isDriver() && this.driverProfile()) {
+          // If user is a driver, handle driver profile update/create
           this.saveDriverProfile();
         } else {
+          // Just close and show success
           this.visible.set(false);
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
             detail: 'User details updated successfully',
           });
+          this.previousRole.set(this.currentRole());
         }
       },
       error: (error) => {
@@ -220,6 +231,7 @@ export class UpdateUserDetails {
             summary: 'Success',
             detail: 'User and driver details updated successfully',
           });
+          this.previousRole.set(this.currentRole());
         },
         error: (error) => {
           this.messageService.add({
@@ -252,6 +264,7 @@ export class UpdateUserDetails {
             summary: 'Success',
             detail: 'User and driver details created successfully',
           });
+          this.previousRole.set(this.currentRole());
         },
         error: (error) => {
           this.messageService.add({
