@@ -13,10 +13,12 @@ model/addressStatus.ts
 model/addressSuggestion.ts
 model/createAddress.ts
 model/createAddressResponse.ts
+model/createDriver.ts
 model/createScheduleContract.ts
 model/dayOfWeek.ts
 model/frequency.ts
 model/getAddress.ts
+model/getDriver.ts
 model/getScheduleContract.ts
 model/getUser.ts
 model/location.ts
@@ -26,6 +28,7 @@ model/models.ts
 model/registerRequest.ts
 model/resetPassword.ts
 model/updateAddress.ts
+model/updateDriver.ts
 model/updateScheduleContract.ts
 model/updateUser.ts
 model/userRoles.ts

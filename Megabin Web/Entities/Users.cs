@@ -13,5 +13,8 @@ namespace Megabin_Web.Entities
         public ICollection<Addresses> Addresss { get; set; } = new List<Addresses>();
         public ICollection<APIUsageTracker> ApiUsageTracker { get; set; } =
             new List<APIUsageTracker>();
+
+        // Users can also have a driver profile if they are drivers
+        public Driver? DriverProfile { get; set; }
     }
 }

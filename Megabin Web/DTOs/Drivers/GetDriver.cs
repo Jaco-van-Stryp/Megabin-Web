@@ -1,8 +1,8 @@
-﻿namespace Megabin_Web.Entities
+﻿namespace Megabin_Web.DTOs.Drivers
 {
-    public class Driver
+    public class GetDriver
     {
-        public Guid Id { get; set; }
+        public Guid DriverId { get; set; }
         public required string HomeAddressLabel { get; set; }
         public required double HomeAddressLong { get; set; }
         public required double HomeAddressLat { get; set; }
@@ -13,6 +13,5 @@
         public required string LicenseNumber { get; set; }
         public required bool Active { get; set; }
         public required Guid UserId { get; set; }
-        public required Users User { get; set; }
     }
 }

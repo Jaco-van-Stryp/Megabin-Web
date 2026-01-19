@@ -28,7 +28,8 @@
     <div class="flex flex-col gap-2">
       <label for="role" class="font-semibold">Role</label>
       <p-autoComplete
-        [(ngModel)]="User().role"
+        [(ngModel)]="currentRole"
+        (ngModelChange)="onRoleChange($event)"
         [suggestions]="filteredRoles()"
         (completeMethod)="filterRoles($event)"
         field="label"
@@ -51,6 +52,67 @@
         placeholder="Enter phone number"
       />
     </div>
+
+    @if (isDriver() && driverProfile()) {
+      <div class="border-t pt-4 mt-4">
+        <h3 class="text-lg font-semibold mb-3">Driver Details</h3>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2">
+            <label for="licenseNumber" class="font-semibold">License Number</label>
+            <input
+              [(ngModel)]="driverProfile()!.licenseNumber"
+              type="text"
+              pInputText
+              id="licenseNumber"
+              class="w-full"
+              autocomplete="off"
+              placeholder="Enter license number"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="vehicleCapacity" class="font-semibold">Vehicle Capacity</label>
+            <p-inputNumber
+              [(ngModel)]="driverProfile()!.vehicleCapacity"
+              inputId="vehicleCapacity"
+              [min]="1"
+              [max]="100"
+              placeholder="Max stops before depot"
+              styleClass="w-full"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <app-autocomplete
+              label="Home Address"
+              placeholder="Enter driver's home address"
+              (addressSelected)="setHomeAddress($event)"
+            ></app-autocomplete>
+            @if (driverProfile()!.homeAddressLabel) {
+              <p class="text-sm text-gray-600">
+                Selected: {{ driverProfile()!.homeAddressLabel }}
+                ({{ driverProfile()!.homeAddressLat }}, {{ driverProfile()!.homeAddressLong }})
+              </p>
+            }
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <app-autocomplete
+              label="Dropoff Location (Depot)"
+              placeholder="Enter dropoff/depot location"
+              (addressSelected)="setDropoffLocation($event)"
+            ></app-autocomplete>
+            @if (driverProfile()!.dropoffLocationLabel) {
+              <p class="text-sm text-gray-600">
+                Selected: {{ driverProfile()!.dropoffLocationLabel }}
+                ({{ driverProfile()!.dropoffLocationLat }}, {{ driverProfile()!.dropoffLocationLong }})
+              </p>
+            }
+          </div>
+        </div>
+      </div>
+    }
   </div>
   <div class="flex justify-end gap-2">
     <p-button label="Cancel" severity="secondary" (click)="visible.set(false)" />
