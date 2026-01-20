@@ -30,3 +30,21 @@ No tracking, No reports, nothing special for admins, they simply manage user acc
 
 Simple app - Use an External API for route planning and Auto Complete
 
+------------------
+
+When a customer is set as a driver in the front end - it should show additional detail in that update field requiring you to fill in their details, two endpoints will be sent.
+
+We also need a depo table to manage those and we need to be able to manage them in the admin panel.
+
+The hangfire job will manually trigger at 2am in the mornings but admin should be able to manually requeue work with a warning that existing work might get overwritten. (mostly for testing)
+
+Users need to have a screen where they can view and manage their own details, this will be basic to start with. Just address creation with schedule creation.
+
+These things will be in states, that the admin can manage.
+
+Most of the communication for now happens outside the app, and drivers simply get routes to drive to.
+
+------------------
+
+
+

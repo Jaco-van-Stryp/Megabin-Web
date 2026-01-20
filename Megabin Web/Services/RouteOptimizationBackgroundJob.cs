@@ -30,7 +30,10 @@ namespace Megabin_Web.Services
         /// </summary>
         public async Task OptimizeRoutesAsync()
         {
-            _logger.LogInformation("Starting daily route optimization job at {Time}", DateTime.UtcNow);
+            _logger.LogInformation(
+                "Starting daily route optimization job at {Time}",
+                DateTime.UtcNow
+            );
 
             try
             {
@@ -73,9 +76,9 @@ namespace Megabin_Web.Services
                     dayOfWeek
                 );
 
-                // Get all active drivers with their home addresses
+                // Get all active drivers with their user information
                 var drivers = await dbContext
-                    .Drivers.Include(d => d.HomeAddress)
+                    .Drivers.Include(d => d.User)
                     .Where(d => d.Active)
                     .ToListAsync();
 
@@ -111,7 +114,7 @@ namespace Megabin_Web.Services
                 var vehicles = drivers
                     .Select(d => new DriverVehicle(
                         d.Id.ToString(),
-                        new Location(d.HomeAddress.Long, d.HomeAddress.Lat),
+                        new Location(d.HomeAddressLong, d.HomeAddressLat),
                         d.VehicleCapacity
                     ))
                     .ToList();
