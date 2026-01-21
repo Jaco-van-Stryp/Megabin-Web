@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Megabin_Web.Extensions;
+﻿using Megabin_Web.Shared.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Megabin_Web.Controllers
 {

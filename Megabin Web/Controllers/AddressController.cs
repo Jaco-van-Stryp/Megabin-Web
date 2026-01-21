@@ -1,9 +1,12 @@
-﻿using Megabin_Web.Data;
-using Megabin_Web.DTOs.Addresses;
-using Megabin_Web.DTOs.Routing;
-using Megabin_Web.Entities;
-using Megabin_Web.Enums;
-using Megabin_Web.Interfaces;
+﻿using Megabin_Web.Entities;
+using Megabin_Web.Features.Address.CreateAddress;
+using Megabin_Web.Shared.Domain.Data;
+using Megabin_Web.Shared.Domain.Entities;
+using Megabin_Web.Shared.Domain.Enums;
+using Megabin_Web.Shared.DTOs.Addresses;
+using Megabin_Web.Shared.DTOs.Routing;
+using Megabin_Web.Shared.Infrastructure.APILimitationService;
+using Megabin_Web.Shared.Infrastructure.MapBoxService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +47,7 @@ namespace Megabin_Web.Controllers
         }
 
         [HttpPost("CreateAddress")]
-        public async Task<ActionResult<Location>> CreateAddress(CreateAddress address)
+        public async Task<ActionResult<Location>> CreateAddress(CreateAddressDto address)
         {
             var user = await _dbContext
                 .Users.Include(a => a.Addresss)

@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using Megabin_Web.Configuration;
-using Megabin_Web.DTOs.Auth;
-using Megabin_Web.Interfaces;
+using Megabin_Web.Shared.DTOs.Auth;
+using Megabin_Web.Shared.Infrastructure.AuthService;
+using Megabin_Web.Shared.Infrastructure.JWTTokenService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

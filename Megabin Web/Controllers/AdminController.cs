@@ -1,11 +1,12 @@
-﻿using Megabin_Web.Data;
-using Megabin_Web.DTOs.Addresses;
-using Megabin_Web.DTOs.Drivers;
-using Megabin_Web.DTOs.Routing;
-using Megabin_Web.DTOs.ScheduleContracts;
-using Megabin_Web.DTOs.Users;
+﻿using Megabin_Web.DTOs.Routing;
 using Megabin_Web.Entities;
-using Megabin_Web.Interfaces;
+using Megabin_Web.Features.Address.CreateAddress;
+using Megabin_Web.Shared.Domain.Data;
+using Megabin_Web.Shared.DTOs.Addresses;
+using Megabin_Web.Shared.DTOs.Drivers;
+using Megabin_Web.Shared.DTOs.ScheduleContracts;
+using Megabin_Web.Shared.DTOs.Users;
+using Megabin_Web.Shared.Infrastructure.OpenRouteService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -144,8 +145,8 @@ namespace Megabin_Web.Controllers
         }
 
         [HttpPost("AddUserAddress")]
-        public async Task<ActionResult<CreateAddressResponse>> AddUserAddress(
-            CreateAddress addUserAddress
+        public async Task<ActionResult<CreateAddressResponseDto>> AddUserAddress(
+            CreateAddressDto addUserAddress
         )
         {
             var user = await _dbContext
@@ -168,7 +169,7 @@ namespace Megabin_Web.Controllers
 
             user.Addresss.Add(newAddress);
             await _dbContext.SaveChangesAsync();
-            var res = new CreateAddressResponse { AddressId = newAddress.Id };
+            var res = new CreateAddressResponseDto { AddressId = newAddress.Id };
             return Ok(res);
         }
 
