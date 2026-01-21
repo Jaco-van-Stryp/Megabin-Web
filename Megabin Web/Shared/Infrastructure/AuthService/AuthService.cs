@@ -1,6 +1,8 @@
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Domain.Entities;
 using Megabin_Web.Shared.Domain.Enums;
+using Megabin_Web.Shared.Infrastructure.PasswordService;
+using Megabin_Web.Shared.Infrastructure.WhatsAppService;
 using Microsoft.EntityFrameworkCore;
 
 namespace Megabin_Web.Shared.Infrastructure.AuthService

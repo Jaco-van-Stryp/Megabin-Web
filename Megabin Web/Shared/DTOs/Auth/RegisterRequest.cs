@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Megabin_Web.Enums;
 
 namespace Megabin_Web.Shared.DTOs.Auth
 {

@@ -1,4 +1,3 @@
-using Megabin_Web.Entities;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Domain.Entities;
 using Megabin_Web.Shared.DTOs.Routing;

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Domain.Entities;
+using Megabin_Web.Shared.Infrastructure.CurrentUserService;
 using Megabin_Web.Shared.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,7 @@ namespace Megabin_Web.Features.Address.CreateAddress
 {
     public class CreateAddressHandler(
         AppDbContext _dbContext,
-        IHttpContextAccessor _httpContextAccessor
+        ICurrentUserService currentUserService
     ) : IRequestHandler<CreateAddressCommand, CreateAddressResponseDto>
     {
         public async Task<CreateAddressResponseDto> Handle(
@@ -18,9 +19,7 @@ namespace Megabin_Web.Features.Address.CreateAddress
         {
             var user = await _dbContext
                 .Users.Include(a => a.Addresss)
-                .FirstOrDefaultAsync(x =>
-                    x.Id == _httpContextAccessor.HttpContext!.User.GetUserId()
-                );
+                .FirstOrDefaultAsync(x => x.Id == currentUserService.GetUserId());
 
             // Check if the user exists
             if (user == null)

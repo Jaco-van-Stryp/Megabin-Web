@@ -1,12 +1,13 @@
-﻿using Megabin_Web.DTOs.Routing;
-using Megabin_Web.Entities;
-using Megabin_Web.Features.Address.CreateAddress;
+﻿using Megabin_Web.Features.Address.CreateAddress;
 using Megabin_Web.Shared.Domain.Data;
+using Megabin_Web.Shared.Domain.Entities;
 using Megabin_Web.Shared.DTOs.Addresses;
 using Megabin_Web.Shared.DTOs.Drivers;
+using Megabin_Web.Shared.DTOs.Routing;
 using Megabin_Web.Shared.DTOs.ScheduleContracts;
 using Megabin_Web.Shared.DTOs.Users;
 using Megabin_Web.Shared.Infrastructure.OpenRouteService;
+using Megabin_Web.Shared.Infrastructure.PasswordService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -146,7 +147,7 @@ namespace Megabin_Web.Controllers
 
         [HttpPost("AddUserAddress")]
         public async Task<ActionResult<CreateAddressResponseDto>> AddUserAddress(
-            CreateAddressDto addUserAddress
+            CreateAddressCommand addUserAddress
         )
         {
             var user = await _dbContext
@@ -155,7 +156,7 @@ namespace Megabin_Web.Controllers
             if (user == null)
                 return NotFound();
 
-            var newAddress = new Entities.Addresses
+            var newAddress = new Addresses
             {
                 Address = addUserAddress.Address.Label,
                 Lat = addUserAddress.Address.Location.Latitude,
@@ -225,7 +226,7 @@ namespace Megabin_Web.Controllers
             if (address == null)
                 return NotFound();
             _dbContext.ScheduledContract.Add(
-                new Entities.ScheduleContract
+                new Shared.Domain.Entities.ScheduleContract
                 {
                     AddressesId = createSchedule.AddressId,
                     Addresses = address,

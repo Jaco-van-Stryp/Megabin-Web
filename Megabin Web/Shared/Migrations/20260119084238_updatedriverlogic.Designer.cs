@@ -13,7 +13,7 @@ namespace Megabin_Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260119084238_updatedriverlogic")]
-    partial class updatedriverlogic
+    partial class UpdateDriverLogic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
