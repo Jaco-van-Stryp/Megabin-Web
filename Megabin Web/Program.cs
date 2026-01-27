@@ -4,6 +4,8 @@ using System.Text.Json.Serialization;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Megabin_Web.Features.Address;
+using Megabin_Web.Features.Admin;
+using Megabin_Web.Features.Auth;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.APILimitationService;
 using Megabin_Web.Shared.Infrastructure.AuthService;
@@ -21,7 +23,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -152,15 +153,15 @@ builder.Services.AddMediatR(cfg =>
 // Background jobs
 builder.Services.AddScoped<RouteOptimizationBackgroundJob>();
 
-builder
-    .Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(
-            new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.CamelCase)
-        );
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
+// Configure JSON serialization for minimal APIs
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.CamelCase)
+    );
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
+
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
@@ -194,8 +195,10 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+// Map feature endpoints
 app.MapAddressEndpoints();
+app.MapAdminEndpoints();
+app.MapAuthEndpoints();
 
 // Configure recurring jobs
 RecurringJob.AddOrUpdate<RouteOptimizationBackgroundJob>(
