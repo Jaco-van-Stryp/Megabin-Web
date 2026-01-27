@@ -6,9 +6,9 @@ using Hangfire.PostgreSql;
 using Megabin_Web.Features.Address;
 using Megabin_Web.Features.Admin;
 using Megabin_Web.Features.Auth;
+using Megabin_Web.Features.RouteOptimization;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.APILimitationService;
-using Megabin_Web.Shared.Infrastructure.AuthService;
 using Megabin_Web.Shared.Infrastructure.CurrentUserService;
 using Megabin_Web.Shared.Infrastructure.HangfireAuthorizationFilter;
 using Megabin_Web.Shared.Infrastructure.JWTTokenService;
@@ -140,7 +140,6 @@ builder.Services.AddHttpClient<IWhatsAppService, WhatsAppService>();
 // Application services
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAPILimitationService, APILimitationService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
@@ -148,6 +147,10 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.LicenseKey = builder.Configuration.GetSection("MediatR:LicenseKey").Value;
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+
+    // Register pipeline behaviors (order matters - they execute in registration order)
+    cfg.AddOpenBehavior(typeof(Megabin_Web.Shared.Infrastructure.MediatR.LoggingBehavior<,>));
+    cfg.AddOpenBehavior(typeof(Megabin_Web.Shared.Infrastructure.MediatR.ErrorHandlingBehavior<,>));
 });
 
 // Background jobs
@@ -182,6 +185,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Global exception handling middleware (should be first)
+app.UseMiddleware<Megabin_Web.Shared.Infrastructure.Middleware.GlobalExceptionHandlingMiddleware>();
+
 // Hangfire Dashboard
 app.UseHangfireDashboard(
     "/hangfire",
@@ -199,6 +205,7 @@ app.UseAuthorization();
 app.MapAddressEndpoints();
 app.MapAdminEndpoints();
 app.MapAuthEndpoints();
+app.MapRouteOptimizationEndpoints();
 
 // Configure recurring jobs
 RecurringJob.AddOrUpdate<RouteOptimizationBackgroundJob>(

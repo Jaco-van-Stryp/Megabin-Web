@@ -1,21 +1,19 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Domain.Enums;
 using Megabin_Web.Shared.DTOs.WhatsApp;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
 {
     /// <summary>
-    /// Implementation of WhatsApp messaging service using Facebook Graph API.
-    /// Sends text and template messages to users via WhatsApp Business API.
+    /// Pure integration service for WhatsApp messaging using Facebook Graph API.
+    /// Sends text and template messages via WhatsApp Business API.
+    /// Contains no database access or business logic.
     /// </summary>
     public class WhatsAppService : IWhatsAppService
     {
-        private readonly AppDbContext _dbContext;
         private readonly HttpClient _httpClient;
         private readonly WhatsAppOptions _options;
         private readonly ILogger<WhatsAppService> _logger;
@@ -24,18 +22,15 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
         /// <summary>
         /// Initializes a new instance of the WhatsAppService.
         /// </summary>
-        /// <param name="dbContext">Database context for accessing user data.</param>
         /// <param name="httpClient">HTTP client for making requests to Facebook Graph API.</param>
         /// <param name="options">Configuration options for WhatsApp API credentials.</param>
         /// <param name="logger">Logger for debugging and monitoring operations.</param>
         public WhatsAppService(
-            AppDbContext dbContext,
             HttpClient httpClient,
             IOptions<WhatsAppOptions> options,
             ILogger<WhatsAppService> logger
         )
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -56,7 +51,7 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
 
         /// <inheritdoc/>
         public async Task<string?> SendTextMessageAsync(
-            Guid userId,
+            string phoneNumber,
             string message,
             bool previewUrl = false,
             CancellationToken cancellationToken = default
@@ -68,36 +63,23 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
                 return null;
             }
 
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                _logger.LogWarning("SendTextMessageAsync called with empty phone number");
+                return null;
+            }
+
             try
             {
-                // Get user's phone number from database
-                var user = await _dbContext.Users.FirstOrDefaultAsync(
-                    x => x.Id == userId,
-                    cancellationToken
-                );
-
-                if (user == null)
-                {
-                    _logger.LogWarning("User not found with ID: {UserId}", userId);
-                    return null;
-                }
-
-                if (string.IsNullOrWhiteSpace(user.PhoneNumber))
-                {
-                    _logger.LogWarning("User {UserId} has no phone number", userId);
-                    return null;
-                }
-
                 _logger.LogInformation(
-                    "Sending WhatsApp text message to user {UserId} ({PhoneNumber})",
-                    userId,
-                    user.PhoneNumber
+                    "Sending WhatsApp text message to {PhoneNumber}",
+                    phoneNumber
                 );
 
                 // Create request payload
                 var request = new SendMessageRequest
                 {
-                    To = user.PhoneNumber,
+                    To = phoneNumber,
                     Type = WhatsAppMessageType.Text,
                     Text = new TextContent { Body = message, PreviewUrl = previewUrl },
                 };
@@ -108,8 +90,8 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
             {
                 _logger.LogError(
                     ex,
-                    "Error sending WhatsApp text message to user {UserId}",
-                    userId
+                    "Error sending WhatsApp text message to {PhoneNumber}",
+                    phoneNumber
                 );
                 return null; // Silently fail and return null on error
             }
@@ -117,7 +99,7 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
 
         /// <inheritdoc/>
         public async Task<string?> SendTemplateMessageAsync(
-            Guid userId,
+            string phoneNumber,
             string templateName,
             string languageCode = "en_US",
             CancellationToken cancellationToken = default
@@ -129,37 +111,24 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
                 return null;
             }
 
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                _logger.LogWarning("SendTemplateMessageAsync called with empty phone number");
+                return null;
+            }
+
             try
             {
-                // Get user's phone number from database
-                var user = await _dbContext.Users.FirstOrDefaultAsync(
-                    x => x.Id == userId,
-                    cancellationToken
-                );
-
-                if (user == null)
-                {
-                    _logger.LogWarning("User not found with ID: {UserId}", userId);
-                    return null;
-                }
-
-                if (string.IsNullOrWhiteSpace(user.PhoneNumber))
-                {
-                    _logger.LogWarning("User {UserId} has no phone number", userId);
-                    return null;
-                }
-
                 _logger.LogInformation(
-                    "Sending WhatsApp template message '{TemplateName}' to user {UserId} ({PhoneNumber})",
+                    "Sending WhatsApp template message '{TemplateName}' to {PhoneNumber}",
                     templateName,
-                    userId,
-                    user.PhoneNumber
+                    phoneNumber
                 );
 
                 // Create request payload
                 var request = new SendMessageRequest
                 {
-                    To = user.PhoneNumber,
+                    To = phoneNumber,
                     Type = WhatsAppMessageType.Template,
                     Template = new TemplateContent
                     {
@@ -174,11 +143,11 @@ namespace Megabin_Web.Shared.Infrastructure.WhatsAppService
             {
                 _logger.LogError(
                     ex,
-                    "Error sending WhatsApp template message to user {UserId}",
-                    userId
+                    "Error sending WhatsApp template message to {PhoneNumber}",
+                    phoneNumber
                 );
                 throw new InvalidOperationException(
-                    $"Failed to send WhatsApp template message to user {userId}",
+                    $"Failed to send WhatsApp template message to {phoneNumber}",
                     ex
                 );
             }

@@ -1,13 +1,11 @@
-using Megabin_Web.Shared.Domain.Data;
-using Megabin_Web.Shared.Domain.Entities;
-using Megabin_Web.Shared.DTOs.Routing;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
+using Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes;
 
 namespace Megabin_Web.Shared.Infrastructure.OpenRouteService
 {
     /// <summary>
-    /// Background job for daily route optimization.
-    /// Runs once per day to optimize collection routes for all drivers.
+    /// Background job wrapper for daily route optimization.
+    /// Delegates to the OptimizeDailyRoutes feature handler via MediatR.
     /// </summary>
     public class RouteOptimizationBackgroundJob
     {
@@ -30,7 +28,7 @@ namespace Megabin_Web.Shared.Infrastructure.OpenRouteService
         public async Task OptimizeRoutesAsync()
         {
             _logger.LogInformation(
-                "Starting daily route optimization job at {Time}",
+                "Starting daily route optimization background job at {Time}",
                 DateTime.UtcNow
             );
 
@@ -38,143 +36,20 @@ namespace Megabin_Web.Shared.Infrastructure.OpenRouteService
             {
                 // Create a new scope for dependency injection
                 using var scope = _serviceProvider.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var routeOptimizer =
-                    scope.ServiceProvider.GetRequiredService<IRouteOptimizationService>();
+                var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
 
-                var today = DateTime.Today;
-                var dayOfWeek = today.DayOfWeek.ToString();
-
-                // Get all active schedule contracts that need collection today
-                // Based on their frequency and day of week
-
-                //Convert dayofweek to enum
-                var dayOfWeekEnum = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayOfWeek);
-
-                var activeContracts = await dbContext
-                    .ScheduledContract.Include(sc => sc.Addresses)
-                    .Where(sc =>
-                        sc.Active
-                        && sc.ApprovedExternally
-                        && (DayOfWeek)sc.DayOfWeek == dayOfWeekEnum
-                    )
-                    .ToListAsync();
-
-                if (activeContracts.Count == 0)
-                {
-                    _logger.LogInformation(
-                        "No active schedule contracts found for {DayOfWeek}",
-                        dayOfWeek
-                    );
-                    return;
-                }
+                // Delegate to the feature handler
+                var command = new OptimizeDailyRoutesCommand(DateTime.Today);
+                await mediator.Send(command);
 
                 _logger.LogInformation(
-                    "Found {Count} active schedule contracts for {DayOfWeek}",
-                    activeContracts.Count,
-                    dayOfWeek
-                );
-
-                // Get all active drivers with their user information
-                var drivers = await dbContext
-                    .Drivers.Include(d => d.User)
-                    .Where(d => d.Active)
-                    .ToListAsync();
-
-                if (drivers.Count == 0)
-                {
-                    _logger.LogWarning("No active drivers found. Cannot optimize routes.");
-                    return;
-                }
-
-                _logger.LogInformation("Found {Count} active drivers", drivers.Count);
-
-                // TODO: Get depot locations from configuration or database
-                // For now, using a placeholder depot in Johannesburg
-                var depots = new List<DepotLocation>
-                {
-                    new DepotLocation(
-                        "depot-1",
-                        new Location(28.0473, -26.2041), // Johannesburg placeholder
-                        "Main Depot, Johannesburg"
-                    ),
-                };
-
-                // Build collection jobs from schedule contracts
-                var jobs = activeContracts
-                    .Select(sc => new CollectionJob(
-                        sc.Id.ToString(),
-                        new Location(sc.Addresses.Long, sc.Addresses.Lat),
-                        sc.Addresses.Address
-                    ))
-                    .ToList();
-
-                // Build driver vehicles
-                var vehicles = drivers
-                    .Select(d => new DriverVehicle(
-                        d.Id.ToString(),
-                        new Location(d.HomeAddressLong, d.HomeAddressLat),
-                        d.VehicleCapacity
-                    ))
-                    .ToList();
-
-                // Optimize routes
-                _logger.LogInformation(
-                    "Calling route optimization for {JobCount} jobs and {DriverCount} drivers",
-                    jobs.Count,
-                    drivers.Count
-                );
-
-                var result = await routeOptimizer.OptimizeMultiVehicleRoutesAsync(
-                    jobs,
-                    vehicles,
-                    depots
-                );
-
-                _logger.LogInformation(
-                    "Route optimization complete: {RouteCount} routes created, {UnassignedCount} unassigned jobs, Total distance: {Distance}m",
-                    result.Routes.Count,
-                    result.UnassignedJobs.Count,
-                    result.TotalDistanceMeters
-                );
-
-                // Save optimized routes to database as ScheduledCollections
-                foreach (var route in result.Routes)
-                {
-                    var driverId = Guid.Parse(route.DriverId);
-                    var driver = drivers.First(d => d.Id == driverId);
-
-                    // Create scheduled collections for each stop in the route
-                    foreach (var stop in route.Stops.Where(s => s.Type == StopType.Collection))
-                    {
-                        var scheduleContractId = Guid.Parse(stop.JobId!);
-
-                        var scheduledCollection = new ScheduledCollections
-                        {
-                            Id = Guid.NewGuid(),
-                            ScheduledFor = today,
-                            UserId = driverId, // This is actually the driver ID
-                            User = driver.User,
-                            Collected = false,
-                            Notes =
-                                $"Route order: {route.Stops.IndexOf(stop) + 1}/{route.Stops.Count}",
-                        };
-
-                        dbContext.ScheduledCollections.Add(scheduledCollection);
-                    }
-                }
-
-                await dbContext.SaveChangesAsync();
-
-                _logger.LogInformation(
-                    "Daily route optimization job completed successfully at {Time}. Created {Count} scheduled collections.",
-                    DateTime.UtcNow,
-                    result.Routes.Sum(r => r.Stops.Count(s => s.Type == StopType.Collection))
+                    "Daily route optimization background job completed successfully at {Time}",
+                    DateTime.UtcNow
                 );
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during daily route optimization job");
+                _logger.LogError(ex, "Error during daily route optimization background job");
                 throw; // Re-throw to mark job as failed in Hangfire
             }
         }

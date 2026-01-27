@@ -18,7 +18,9 @@ namespace Megabin_Web.Features.Admin.ResetUserPassword
                 throw new KeyNotFoundException($"User with ID {request.UserId} not found");
             }
 
-            await passwordService.ResetPassword(request.UserId, request.NewPassword);
+            // Hash the new password and update the user
+            user.PasswordHash = passwordService.HashPassword(request.NewPassword);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -1,7 +1,8 @@
 namespace Megabin_Web.Shared.Infrastructure.PasswordService
 {
     /// <summary>
-    /// Provides password hashing and verification using BCrypt.
+    /// Provides pure password hashing and verification using BCrypt.
+    /// Contains no database access or business logic.
     /// </summary>
     public interface IPasswordService
     {
@@ -19,7 +20,5 @@ namespace Megabin_Web.Shared.Infrastructure.PasswordService
         /// <param name="passwordHash">The BCrypt hash to verify against.</param>
         /// <returns>True if the password matches the hash; otherwise, false.</returns>
         bool VerifyPassword(string password, string passwordHash);
-
-        Task ResetPassword(Guid UserId, string NewPassword);
     }
 }
