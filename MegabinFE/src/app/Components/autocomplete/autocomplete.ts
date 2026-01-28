@@ -1,6 +1,7 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AutoComplete, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AddressService } from '../../services/api/address.service';
 import { AddressSuggestion } from '../../services/model/addressSuggestion';
 
@@ -31,7 +32,7 @@ export class Autocomplete {
       next: (results: AddressSuggestion[]) => {
         this.suggestions.set(results);
       },
-      error: (error: any) => {
+      error: (error: HttpErrorResponse) => {
         console.error('Error fetching address suggestions:', error);
         this.suggestions.set([]);
       },
