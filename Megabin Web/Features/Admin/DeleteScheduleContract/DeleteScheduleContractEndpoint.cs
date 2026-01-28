@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Megabin_Web.Features.Admin.DeleteScheduleContract
 {
@@ -10,16 +11,16 @@ namespace Megabin_Web.Features.Admin.DeleteScheduleContract
         {
             app.MapPost(
                 "DeleteScheduleContract",
-                async (Guid contractId, ISender sender) =>
+                async Task<Results<Ok, NotFound<string>>> (Guid contractId, ISender sender) =>
                 {
                     try
                     {
                         await sender.Send(new DeleteScheduleContractCommand(contractId));
-                        return Results.Ok();
+                        return TypedResults.Ok();
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

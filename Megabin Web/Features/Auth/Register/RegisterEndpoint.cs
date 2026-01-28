@@ -1,5 +1,6 @@
 using MediatR;
 using Megabin_Web.Shared.DTOs.Auth;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Megabin_Web.Features.Auth.Register
@@ -10,7 +11,7 @@ namespace Megabin_Web.Features.Auth.Register
         {
             app.MapPost(
                 "register",
-                async ([FromBody] RegisterRequest request, ISender sender) =>
+                async Task<Results<Created<LoginResponse>, BadRequest<ErrorResponse>>> ([FromBody] RegisterRequest request, ISender sender) =>
                 {
                     try
                     {
@@ -21,11 +22,11 @@ namespace Megabin_Web.Features.Auth.Register
                             request.PhoneNumber
                         );
                         var result = await sender.Send(command);
-                        return Results.Created("/api/Auth/me", result);
+                        return TypedResults.Created("/api/Auth/me", result);
                     }
                     catch (InvalidOperationException ex)
                     {
-                        return Results.BadRequest(
+                        return TypedResults.BadRequest(
                             new ErrorResponse(ex.Message, StatusCodes.Status400BadRequest)
                         );
                     }

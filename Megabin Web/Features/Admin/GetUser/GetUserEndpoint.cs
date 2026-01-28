@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Megabin_Web.Features.Admin.GetUser
 {
@@ -8,16 +9,16 @@ namespace Megabin_Web.Features.Admin.GetUser
         {
             app.MapGet(
                 "GetUser/{userId}",
-                async (Guid userId, ISender sender) =>
+                async Task<Results<Ok<Shared.DTOs.Users.GetUser>, NotFound<string>>> (Guid userId, ISender sender) =>
                 {
                     try
                     {
                         var result = await sender.Send(new GetUserQuery(userId));
-                        return Results.Ok(result);
+                        return TypedResults.Ok(result);
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

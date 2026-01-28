@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Megabin_Web.Shared.DTOs.Routing;
 
 namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
 {
@@ -10,17 +12,17 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
         {
             app.MapPost(
                 "OptimizeDailyRoutes",
-                async (DateTime? targetDate, ISender sender) =>
+                async Task<Results<Ok<DailyOptimizationResult>, BadRequest<string>>> (DateTime? targetDate, ISender sender) =>
                 {
                     try
                     {
                         var command = new OptimizeDailyRoutesCommand(targetDate);
                         var result = await sender.Send(command);
-                        return Results.Ok(result);
+                        return TypedResults.Ok(result);
                     }
                     catch (InvalidOperationException ex)
                     {
-                        return Results.BadRequest(ex.Message);
+                        return TypedResults.BadRequest(ex.Message);
                     }
                 }
             );

@@ -19,11 +19,11 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { AddressSuggestion } from '../model/addressSuggestion';
 // @ts-ignore
-import { CreateAddress } from '../model/createAddress';
+import { CreateAddressCommand } from '../model/createAddressCommand';
+// @ts-ignore
+import { CreateAddressResponseDto } from '../model/createAddressResponseDto';
 // @ts-ignore
 import { GetAddress } from '../model/getAddress';
-// @ts-ignore
-import { Location } from '../model/location';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -101,12 +101,12 @@ export class AddressService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAddressAutoCompleteAddressGet(address: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AddressSuggestion>>;
-    public apiAddressAutoCompleteAddressGet(address: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AddressSuggestion>>>;
-    public apiAddressAutoCompleteAddressGet(address: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AddressSuggestion>>>;
-    public apiAddressAutoCompleteAddressGet(address: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiAddressAutocompleteAddressGet(address: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AddressSuggestion>>;
+    public apiAddressAutocompleteAddressGet(address: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AddressSuggestion>>>;
+    public apiAddressAutocompleteAddressGet(address: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AddressSuggestion>>>;
+    public apiAddressAutocompleteAddressGet(address: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (address === null || address === undefined) {
-            throw new Error('Required parameter address was null or undefined when calling apiAddressAutoCompleteAddressGet.');
+            throw new Error('Required parameter address was null or undefined when calling apiAddressAutocompleteAddressGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -122,9 +122,7 @@ export class AddressService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'text/plain',
-                'application/json',
-                'text/json'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -154,7 +152,7 @@ export class AddressService {
             }
         }
 
-        let localVarPath = `/api/Address/AutoComplete/${this.configuration.encodeParam({name: "address", value: address, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/api/Address/autocomplete/${this.configuration.encodeParam({name: "address", value: address, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<Array<AddressSuggestion>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -169,14 +167,17 @@ export class AddressService {
     }
 
     /**
-     * @param createAddress 
+     * @param createAddressCommand 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAddressCreateAddressPost(createAddress?: CreateAddress, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<Location>;
-    public apiAddressCreateAddressPost(createAddress?: CreateAddress, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Location>>;
-    public apiAddressCreateAddressPost(createAddress?: CreateAddress, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Location>>;
-    public apiAddressCreateAddressPost(createAddress?: CreateAddress, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiAddressCreateAddressPost(createAddressCommand: CreateAddressCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CreateAddressResponseDto>;
+    public apiAddressCreateAddressPost(createAddressCommand: CreateAddressCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CreateAddressResponseDto>>;
+    public apiAddressCreateAddressPost(createAddressCommand: CreateAddressCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CreateAddressResponseDto>>;
+    public apiAddressCreateAddressPost(createAddressCommand: CreateAddressCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (createAddressCommand === null || createAddressCommand === undefined) {
+            throw new Error('Required parameter createAddressCommand was null or undefined when calling apiAddressCreateAddressPost.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -191,9 +192,7 @@ export class AddressService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'text/plain',
-                'application/json',
-                'text/json'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -214,9 +213,7 @@ export class AddressService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
-            'application/json',
-            'text/json',
-            'application/*+json'
+            'application/json'
         ];
         const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
         if (httpContentTypeSelected !== undefined) {
@@ -235,10 +232,10 @@ export class AddressService {
         }
 
         let localVarPath = `/api/Address/CreateAddress`;
-        return this.httpClient.request<Location>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CreateAddressResponseDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: createAddress,
+                body: createAddressCommand,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -322,10 +319,10 @@ export class AddressService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAddressGetAllAddressesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<GetAddress>>;
-    public apiAddressGetAllAddressesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<GetAddress>>>;
-    public apiAddressGetAllAddressesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<GetAddress>>>;
-    public apiAddressGetAllAddressesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiAddressGetAllAddressesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<GetAddress>>;
+    public apiAddressGetAllAddressesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<GetAddress>>>;
+    public apiAddressGetAllAddressesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<GetAddress>>>;
+    public apiAddressGetAllAddressesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -340,9 +337,7 @@ export class AddressService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'text/plain',
-                'application/json',
-                'text/json'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }

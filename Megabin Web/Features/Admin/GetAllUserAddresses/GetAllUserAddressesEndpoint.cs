@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Megabin_Web.Shared.DTOs.Addresses;
 
 namespace Megabin_Web.Features.Admin.GetAllUserAddresses
 {
@@ -10,16 +12,16 @@ namespace Megabin_Web.Features.Admin.GetAllUserAddresses
         {
             app.MapGet(
                 "GetAllUserAddresses/{userId}",
-                async (Guid userId, ISender sender) =>
+                async Task<Results<Ok<List<GetAddress>>, NotFound<string>>> (Guid userId, ISender sender) =>
                 {
                     try
                     {
                         var result = await sender.Send(new GetAllUserAddressesQuery(userId));
-                        return Results.Ok(result);
+                        return TypedResults.Ok(result);
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

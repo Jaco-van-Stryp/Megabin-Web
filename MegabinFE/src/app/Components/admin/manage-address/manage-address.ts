@@ -4,7 +4,7 @@ import {
   AddressSuggestion,
   AdminService,
   GetAddress,
-  UpdateAddress,
+  UpdateUserAddressCommand,
 } from '../../../services';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -68,7 +68,7 @@ export class ManageAddress {
   }
 
   updateAddressDetails() {
-    const updateAddress: UpdateAddress = {
+    const updateAddress: UpdateUserAddressCommand = {
       addressId: this.address().id,
       totalBins: this.address().totalBins,
       addressNotes: this.address().addressNotes,

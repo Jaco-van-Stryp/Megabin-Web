@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Megabin_Web.Features.Admin.DisableDriver
 {
@@ -10,16 +11,16 @@ namespace Megabin_Web.Features.Admin.DisableDriver
         {
             app.MapPost(
                 "DisableDriver",
-                async (Guid userId, ISender sender) =>
+                async Task<Results<Ok, NotFound<string>>> (Guid userId, ISender sender) =>
                 {
                     try
                     {
                         await sender.Send(new DisableDriverCommand(userId));
-                        return Results.Ok();
+                        return TypedResults.Ok();
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

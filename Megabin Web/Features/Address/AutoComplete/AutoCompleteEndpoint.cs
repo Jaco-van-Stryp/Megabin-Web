@@ -13,7 +13,7 @@ namespace Megabin_Web.Features.Address.AutoComplete
                 async (string address, ISender sender) =>
                 {
                     var result = await sender.Send(new AutoCompleteQuery(address));
-                    return Results.Ok(result);
+                    return TypedResults.Ok(result);
                 }
             );
         }

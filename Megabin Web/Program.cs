@@ -36,6 +36,9 @@ builder.Services.AddSwaggerGen(opt =>
         new OpenApiServer { Url = "http://localhost:5250", Description = "Development HTTP" }
     );
 
+    // Add schema filter to convert enums to strings (matching runtime JSON serialization)
+    opt.SchemaFilter<Megabin_Web.Shared.Infrastructure.Swagger.EnumSchemaFilter>();
+
     opt.AddSecurityDefinition(
         "Bearer",
         new OpenApiSecurityScheme

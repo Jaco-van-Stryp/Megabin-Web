@@ -27,11 +27,11 @@ export class Autocomplete {
       return;
     }
 
-    this.addressService.apiAddressAutoCompleteAddressGet(query).subscribe({
-      next: (results) => {
+    this.addressService.apiAddressAutocompleteAddressGet(query).subscribe({
+      next: (results: AddressSuggestion[]) => {
         this.suggestions.set(results);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching address suggestions:', error);
         this.suggestions.set([]);
       },

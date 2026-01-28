@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Megabin_Web.Features.Address.CreateAddress;
 
 namespace Megabin_Web.Features.Admin.AddUserAddress
 {
@@ -10,16 +12,16 @@ namespace Megabin_Web.Features.Admin.AddUserAddress
         {
             app.MapPost(
                 "AddUserAddress",
-                async (AddUserAddressCommand command, ISender sender) =>
+                async Task<Results<Ok<CreateAddressResponseDto>, NotFound<string>>> (AddUserAddressCommand command, ISender sender) =>
                 {
                     try
                     {
                         var result = await sender.Send(command);
-                        return Results.Ok(result);
+                        return TypedResults.Ok(result);
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

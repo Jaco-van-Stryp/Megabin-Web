@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Megabin_Web.Features.Admin.UpdateUserAddress
 {
@@ -10,16 +11,16 @@ namespace Megabin_Web.Features.Admin.UpdateUserAddress
         {
             app.MapPost(
                 "UpdateUserAddress",
-                async (UpdateUserAddressCommand command, ISender sender) =>
+                async Task<Results<Ok, NotFound<string>>> (UpdateUserAddressCommand command, ISender sender) =>
                 {
                     try
                     {
                         await sender.Send(command);
-                        return Results.Ok();
+                        return TypedResults.Ok();
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

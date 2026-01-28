@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
-import { AdminService, CreateScheduleContract, DayOfWeek, Frequency } from '../../../services';
+import { AdminService, AddScheduleContractCommand, DayOfWeek, Frequency } from '../../../services';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
@@ -16,7 +16,7 @@ export class AddScheduleContract implements OnInit {
   adminService = inject(AdminService);
   addressId = input.required<string>();
   messageService = inject(MessageService);
-  scheduleContract = signal<CreateScheduleContract>({} as CreateScheduleContract);
+  scheduleContract = signal<AddScheduleContractCommand>({} as AddScheduleContractCommand);
   visible = signal(false);
   routerService = inject(Router);
 

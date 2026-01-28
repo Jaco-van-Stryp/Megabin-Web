@@ -9,14 +9,14 @@
  */
 
 
-export type Frequency = 'daily' | 'weekly' | 'biWeekly' | 'monthly' | 'yearly' | 'oneTime';
+export type Frequency = 'Daily' | 'Weekly' | 'BiWeekly' | 'Monthly' | 'Yearly' | 'OneTime';
 
 export const Frequency = {
-    Daily: 'daily' as Frequency,
-    Weekly: 'weekly' as Frequency,
-    BiWeekly: 'biWeekly' as Frequency,
-    Monthly: 'monthly' as Frequency,
-    Yearly: 'yearly' as Frequency,
-    OneTime: 'oneTime' as Frequency
+    Daily: 'Daily' as Frequency,
+    Weekly: 'Weekly' as Frequency,
+    BiWeekly: 'BiWeekly' as Frequency,
+    Monthly: 'Monthly' as Frequency,
+    Yearly: 'Yearly' as Frequency,
+    OneTime: 'OneTime' as Frequency
 };
 

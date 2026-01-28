@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Megabin_Web.Features.Admin.CreateDriver
 {
@@ -10,20 +11,20 @@ namespace Megabin_Web.Features.Admin.CreateDriver
         {
             app.MapPost(
                 "CreateDriver",
-                async (CreateDriverCommand command, ISender sender) =>
+                async Task<Results<Ok, NotFound<string>, BadRequest<string>>> (CreateDriverCommand command, ISender sender) =>
                 {
                     try
                     {
                         await sender.Send(command);
-                        return Results.Ok();
+                        return TypedResults.Ok();
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                     catch (InvalidOperationException ex)
                     {
-                        return Results.BadRequest(ex.Message);
+                        return TypedResults.BadRequest(ex.Message);
                     }
                 }
             );

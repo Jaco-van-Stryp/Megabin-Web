@@ -11,7 +11,7 @@ namespace Megabin_Web.Features.Admin.GetAllUsers
                     async (ISender sender) =>
                     {
                         var result = await sender.Send(new GetAllUsersQuery());
-                        return Results.Ok(result);
+                        return TypedResults.Ok(result);
                     }
                 )
                 .WithTags("Admin")

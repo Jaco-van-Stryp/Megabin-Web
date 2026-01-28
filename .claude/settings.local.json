@@ -8,7 +8,9 @@
       "Bash(dotnet build:*)",
       "Bash(gh pr view:*)",
       "Bash(ng generate component:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)"
     ]
   }
 }

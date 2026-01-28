@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Megabin_Web.Features.Admin.ResetUserPassword
 {
@@ -10,16 +11,16 @@ namespace Megabin_Web.Features.Admin.ResetUserPassword
         {
             app.MapPost(
                 "ResetUserPassword",
-                async (ResetUserPasswordCommand command, ISender sender) =>
+                async Task<Results<Ok, NotFound<string>>> (ResetUserPasswordCommand command, ISender sender) =>
                 {
                     try
                     {
                         await sender.Send(command);
-                        return Results.Ok();
+                        return TypedResults.Ok();
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );

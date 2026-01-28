@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Megabin_Web.Shared.DTOs.ScheduleContracts;
 
 namespace Megabin_Web.Features.Admin.GetScheduledContracts
 {
@@ -10,16 +12,16 @@ namespace Megabin_Web.Features.Admin.GetScheduledContracts
         {
             app.MapGet(
                 "GetScheduledContracts/{addressId}",
-                async (Guid addressId, ISender sender) =>
+                async Task<Results<Ok<List<GetScheduleContract>>, NotFound<string>>> (Guid addressId, ISender sender) =>
                 {
                     try
                     {
                         var result = await sender.Send(new GetScheduledContractsQuery(addressId));
-                        return Results.Ok(result);
+                        return TypedResults.Ok(result);
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        return Results.NotFound(ex.Message);
+                        return TypedResults.NotFound(ex.Message);
                     }
                 }
             );
