@@ -3,8 +3,8 @@ import {
   AddressStatus,
   AddressSuggestion,
   AdminService,
-  CreateAddress,
-  CreateAddressResponse,
+  CreateAddressCommand,
+  CreateAddressResponseDto,
   GetUser,
 } from '../../../services';
 import { ButtonModule } from 'primeng/button';
@@ -32,7 +32,7 @@ export class AddAddress implements OnInit {
   adminService = inject(AdminService);
   userId = input.required<string>();
   messageService = inject(MessageService);
-  address = signal<CreateAddress>({} as CreateAddress);
+  address = signal<CreateAddressCommand>({} as CreateAddressCommand);
   visible = signal(false);
   routerService = inject(Router);
 
@@ -50,7 +50,7 @@ export class AddAddress implements OnInit {
 
   createAddress() {
     this.adminService.apiAdminAddUserAddressPost(this.address()).subscribe({
-      next: (response: CreateAddressResponse) => {
+      next: (response: CreateAddressResponseDto) => {
         console.log('Address created successfully:', response);
         this.visible.set(false);
         this.messageService.add({

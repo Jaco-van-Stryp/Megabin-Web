@@ -7,11 +7,11 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocompl
 import {
   AdminService,
   AddressSuggestion,
-  CreateDriver,
+  CreateDriverCommand,
   GetDriver,
   GetUser,
-  UpdateDriver,
-  UpdateUser,
+  UpdateDriverCommand,
+  UpdateUserCommand,
   UserRoles,
 } from '../../../services';
 import { MessageService } from 'primeng/api';
@@ -156,7 +156,7 @@ export class UpdateUserDetails {
   }
 
   updateUserDetails() {
-    const updateRequest: UpdateUser = {
+    const updateRequest: UpdateUserCommand = {
       userId: this.User().id,
       name: this.User().name,
       email: this.User().email,
@@ -210,7 +210,7 @@ export class UpdateUserDetails {
     // If driver has an ID, it exists - call update
     // Otherwise, it's new - call create
     if (driver.driverId) {
-      const updateRequest: UpdateDriver = {
+      const updateRequest: UpdateDriverCommand = {
         userId: driver.userId,
         homeAddressLabel: driver.homeAddressLabel,
         homeAddressLong: driver.homeAddressLong,
@@ -243,7 +243,7 @@ export class UpdateUserDetails {
         },
       });
     } else {
-      const createRequest: CreateDriver = {
+      const createRequest: CreateDriverCommand = {
         userId: driver.userId,
         homeAddressLabel: driver.homeAddressLabel,
         homeAddressLong: driver.homeAddressLong,

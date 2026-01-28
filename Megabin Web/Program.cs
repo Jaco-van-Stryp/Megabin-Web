@@ -3,9 +3,19 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Megabin_Web.Configuration;
-using Megabin_Web.Interfaces;
-using Megabin_Web.Services;
+using Megabin_Web.Features.Address;
+using Megabin_Web.Features.Admin;
+using Megabin_Web.Features.Auth;
+using Megabin_Web.Features.RouteOptimization;
+using Megabin_Web.Shared.Domain.Data;
+using Megabin_Web.Shared.Infrastructure.APILimitationService;
+using Megabin_Web.Shared.Infrastructure.CurrentUserService;
+using Megabin_Web.Shared.Infrastructure.HangfireAuthorizationFilter;
+using Megabin_Web.Shared.Infrastructure.JWTTokenService;
+using Megabin_Web.Shared.Infrastructure.MapBoxService;
+using Megabin_Web.Shared.Infrastructure.OpenRouteService;
+using Megabin_Web.Shared.Infrastructure.PasswordService;
+using Megabin_Web.Shared.Infrastructure.WhatsAppService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +23,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -26,6 +35,9 @@ builder.Services.AddSwaggerGen(opt =>
     opt.AddServer(
         new OpenApiServer { Url = "http://localhost:5250", Description = "Development HTTP" }
     );
+
+    // Add schema filter to convert enums to strings (matching runtime JSON serialization)
+    opt.SchemaFilter<Megabin_Web.Shared.Infrastructure.Swagger.EnumSchemaFilter>();
 
     opt.AddSecurityDefinition(
         "Bearer",
@@ -59,7 +71,7 @@ builder.Services.AddSwaggerGen(opt =>
 });
 
 // PostgreSQL
-builder.Services.AddDbContext<Megabin_Web.Data.AppDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
@@ -131,28 +143,38 @@ builder.Services.AddHttpClient<IWhatsAppService, WhatsAppService>();
 // Application services
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAPILimitationService, APILimitationService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.LicenseKey = builder.Configuration.GetSection("MediatR:LicenseKey").Value;
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+
+    // Register pipeline behaviors (order matters - they execute in registration order)
+    cfg.AddOpenBehavior(typeof(Megabin_Web.Shared.Infrastructure.MediatR.LoggingBehavior<,>));
+    cfg.AddOpenBehavior(typeof(Megabin_Web.Shared.Infrastructure.MediatR.ErrorHandlingBehavior<,>));
+});
 
 // Background jobs
 builder.Services.AddScoped<RouteOptimizationBackgroundJob>();
 
-builder
-    .Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(
-            new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.CamelCase)
-        );
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
+// Configure JSON serialization for minimal APIs
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.CamelCase)
+    );
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Run database migrations on startup
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<Megabin_Web.Data.AppDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
 }
 
@@ -165,6 +187,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
     });
 }
+
+// Global exception handling middleware (should be first)
+app.UseMiddleware<Megabin_Web.Shared.Infrastructure.Middleware.GlobalExceptionHandlingMiddleware>();
 
 // Hangfire Dashboard
 app.UseHangfireDashboard(
@@ -179,7 +204,11 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+// Map feature endpoints
+app.MapAddressEndpoints();
+app.MapAdminEndpoints();
+app.MapAuthEndpoints();
+app.MapRouteOptimizationEndpoints();
 
 // Configure recurring jobs
 RecurringJob.AddOrUpdate<RouteOptimizationBackgroundJob>(

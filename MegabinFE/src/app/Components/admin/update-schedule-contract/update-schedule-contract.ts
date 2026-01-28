@@ -4,7 +4,7 @@ import {
   DayOfWeek,
   Frequency,
   GetScheduleContract,
-  UpdateScheduleContract as UpdateScheduleContractDTO,
+  UpdateScheduleContractCommand as UpdateScheduleContractDTO,
 } from '../../../services';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';

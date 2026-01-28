@@ -85,9 +85,9 @@ export class Register {
 
           // Redirect based on user role
           // UserRoles: 'customer', 'driver', 'admin'
-          if (loginResponse.role === 'admin') {
+          if (loginResponse.role === 'Admin') {
             this.router.navigate(['/admin']);
-          } else if (loginResponse.role === 'driver') {
+          } else if (loginResponse.role === 'Driver') {
             // TODO: Driver dashboard not yet implemented
             this.router.navigate(['/autocomplete']);
           } else {

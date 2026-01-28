@@ -9,13 +9,13 @@
  */
 
 
-export type AddressStatus = 'pendingAddressCompletion' | 'binRequested' | 'pendingBinPayment' | 'pendingBinDelivery' | 'binDelivered';
+export type AddressStatus = 'PendingAddressCompletion' | 'BinRequested' | 'PendingBinPayment' | 'PendingBinDelivery' | 'BinDelivered';
 
 export const AddressStatus = {
-    PendingAddressCompletion: 'pendingAddressCompletion' as AddressStatus,
-    BinRequested: 'binRequested' as AddressStatus,
-    PendingBinPayment: 'pendingBinPayment' as AddressStatus,
-    PendingBinDelivery: 'pendingBinDelivery' as AddressStatus,
-    BinDelivered: 'binDelivered' as AddressStatus
+    PendingAddressCompletion: 'PendingAddressCompletion' as AddressStatus,
+    BinRequested: 'BinRequested' as AddressStatus,
+    PendingBinPayment: 'PendingBinPayment' as AddressStatus,
+    PendingBinDelivery: 'PendingBinDelivery' as AddressStatus,
+    BinDelivered: 'BinDelivered' as AddressStatus
 };
 
