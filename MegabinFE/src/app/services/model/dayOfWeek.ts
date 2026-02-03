@@ -9,15 +9,15 @@
  */
 
 
-export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export const DayOfWeek = {
-    Monday: 'Monday' as DayOfWeek,
-    Tuesday: 'Tuesday' as DayOfWeek,
-    Wednesday: 'Wednesday' as DayOfWeek,
-    Thursday: 'Thursday' as DayOfWeek,
-    Friday: 'Friday' as DayOfWeek,
-    Saturday: 'Saturday' as DayOfWeek,
-    Sunday: 'Sunday' as DayOfWeek
+    Monday: 'monday' as DayOfWeek,
+    Tuesday: 'tuesday' as DayOfWeek,
+    Wednesday: 'wednesday' as DayOfWeek,
+    Thursday: 'thursday' as DayOfWeek,
+    Friday: 'friday' as DayOfWeek,
+    Saturday: 'saturday' as DayOfWeek,
+    Sunday: 'sunday' as DayOfWeek
 };
 

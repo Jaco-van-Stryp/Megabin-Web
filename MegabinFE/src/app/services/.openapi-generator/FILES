@@ -5,6 +5,7 @@ api/address.service.ts
 api/admin.service.ts
 api/api.ts
 api/auth.service.ts
+api/customer.service.ts
 api/routeOptimization.service.ts
 configuration.ts
 encoder.ts
@@ -18,6 +19,9 @@ model/collectionJob.ts
 model/createAddressCommand.ts
 model/createAddressResponseDto.ts
 model/createDriverCommand.ts
+model/customerCreateAddressCommand.ts
+model/customerCreateAddressResponseDto.ts
+model/customerScheduleContractDto.ts
 model/dailyOptimizationResult.ts
 model/dayOfWeek.ts
 model/driverRoute.ts
@@ -33,10 +37,13 @@ model/loginResponse.ts
 model/models.ts
 model/profileResponse.ts
 model/registerRequest.ts
+model/requestScheduleContractCommand.ts
+model/requestScheduleContractResponseDto.ts
 model/resetUserPasswordCommand.ts
 model/routeStop.ts
 model/stopType.ts
 model/updateDriverCommand.ts
+model/updateProfileCommand.ts
 model/updateScheduleContractCommand.ts
 model/updateUserAddressCommand.ts
 model/updateUserCommand.ts

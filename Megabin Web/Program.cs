@@ -6,6 +6,7 @@ using Hangfire.PostgreSql;
 using Megabin_Web.Features.Address;
 using Megabin_Web.Features.Admin;
 using Megabin_Web.Features.Auth;
+using Megabin_Web.Features.Customer;
 using Megabin_Web.Features.RouteOptimization;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.APILimitationService;
@@ -208,6 +209,7 @@ app.UseAuthorization();
 app.MapAddressEndpoints();
 app.MapAdminEndpoints();
 app.MapAuthEndpoints();
+app.MapCustomerEndpoints();
 app.MapRouteOptimizationEndpoints();
 
 // Configure recurring jobs

@@ -9,11 +9,11 @@
  */
 
 
-export type UserRoles = 'Admin' | 'Driver' | 'Customer';
+export type UserRoles = 'admin' | 'driver' | 'customer';
 
 export const UserRoles = {
-    Admin: 'Admin' as UserRoles,
-    Driver: 'Driver' as UserRoles,
-    Customer: 'Customer' as UserRoles
+    Admin: 'admin' as UserRoles,
+    Driver: 'driver' as UserRoles,
+    Customer: 'customer' as UserRoles
 };
 

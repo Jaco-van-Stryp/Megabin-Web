@@ -10,7 +10,9 @@
       "Bash(ng generate component:*)",
       "Bash(ls:*)",
       "Bash(curl:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(npm run generate:*)"
     ]
   }
 }

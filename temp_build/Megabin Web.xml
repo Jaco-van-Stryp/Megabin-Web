@@ -1,0 +1,1051 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Megabin Web</name>
+    </assembly>
+    <members>
+        <member name="T:Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes.OptimizeDailyRoutesCommand">
+            <summary>
+            Command to optimize routes for a specific date.
+            If no date is provided, optimizes for today.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes.OptimizeDailyRoutesCommand.#ctor(System.Nullable{System.DateTime})">
+            <summary>
+            Command to optimize routes for a specific date.
+            If no date is provided, optimizes for today.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Auth.ErrorResponse">
+            <summary>
+            Standardized error response for API operations.
+            </summary>
+            <param name="Message">The human-readable error message.</param>
+            <param name="StatusCode">The HTTP status code.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Auth.ErrorResponse.#ctor(System.String,System.Int32)">
+            <summary>
+            Standardized error response for API operations.
+            </summary>
+            <param name="Message">The human-readable error message.</param>
+            <param name="StatusCode">The HTTP status code.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.ErrorResponse.Message">
+            <summary>The human-readable error message.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.ErrorResponse.StatusCode">
+            <summary>The HTTP status code.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Auth.LoginRequest">
+            <summary>
+            Request payload for user login authentication.
+            </summary>
+            <param name="Email">The user's email address used as login identifier.</param>
+            <param name="Password">The user's password in plain text (transmitted over HTTPS only).</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Auth.LoginRequest.#ctor(System.String,System.String)">
+            <summary>
+            Request payload for user login authentication.
+            </summary>
+            <param name="Email">The user's email address used as login identifier.</param>
+            <param name="Password">The user's password in plain text (transmitted over HTTPS only).</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginRequest.Email">
+            <summary>The user's email address used as login identifier.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginRequest.Password">
+            <summary>The user's password in plain text (transmitted over HTTPS only).</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Auth.LoginResponse">
+            <summary>
+            Response payload for successful login authentication.
+            </summary>
+            <param name="Token">The JWT access token for authenticated requests.</param>
+            <param name="UserId">The authenticated user's unique identifier.</param>
+            <param name="Name">The user's full name.</param>
+            <param name="Email">The user's email address.</param>
+            <param name="Role">The user's role (Admin, User, or Driver).</param>
+            <param name="ExpiresAt">The UTC timestamp when the token expires.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Auth.LoginResponse.#ctor(System.String,System.Guid,System.String,System.String,Megabin_Web.Shared.Domain.Enums.UserRoles,System.DateTime)">
+            <summary>
+            Response payload for successful login authentication.
+            </summary>
+            <param name="Token">The JWT access token for authenticated requests.</param>
+            <param name="UserId">The authenticated user's unique identifier.</param>
+            <param name="Name">The user's full name.</param>
+            <param name="Email">The user's email address.</param>
+            <param name="Role">The user's role (Admin, User, or Driver).</param>
+            <param name="ExpiresAt">The UTC timestamp when the token expires.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginResponse.Token">
+            <summary>The JWT access token for authenticated requests.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginResponse.UserId">
+            <summary>The authenticated user's unique identifier.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginResponse.Name">
+            <summary>The user's full name.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginResponse.Email">
+            <summary>The user's email address.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginResponse.Role">
+            <summary>The user's role (Admin, User, or Driver).</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Auth.LoginResponse.ExpiresAt">
+            <summary>The UTC timestamp when the token expires.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Mapbox.GeocodingResponse">
+            <summary>
+            Response from Mapbox Geocoding API.
+            Internal DTO for deserializing Mapbox's API response.
+            Documentation: https://docs.mapbox.com/api/search/geocoding/
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Mapbox.Feature">
+            <summary>
+            Individual geocoding result feature.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Mapbox.Properties">
+            <summary>
+            Properties of a feature (can contain additional metadata).
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Mapbox.Geometry">
+            <summary>
+            Geometry information for a feature.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Mapbox.Context">
+            <summary>
+            Context provides hierarchical address components (region, country, etc.).
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.OpenRouteService.AutocompleteResponse">
+            <summary>
+            Internal model for OpenRouteService autocomplete API responses.
+            Maps to ORS /geocode/autocomplete endpoint response format.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.OpenRouteService.GeocodingResponse">
+            <summary>
+            Internal model for OpenRouteService geocoding API responses.
+            Maps to ORS /geocode/search endpoint response format.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.OpenRouteService.VroomRequest">
+            <summary>
+            Internal model for OpenRouteService VROOM optimization API request.
+            Maps to ORS /optimization endpoint request format.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.OpenRouteService.VroomResponse">
+            <summary>
+            Internal model for OpenRouteService VROOM optimization API response.
+            Maps to ORS /optimization endpoint response format.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion">
+            <summary>
+            Represents a single address suggestion from autocomplete search.
+            Used for providing address options to users as they type.
+            </summary>
+            <param name="Label">Full human-readable address label for display (e.g., "123 Main Street, Johannesburg, Gauteng, South Africa").</param>
+            <param name="Location">Geographic coordinates of the address.</param>
+            <param name="Region">Administrative region/province (e.g., "Gauteng"). Null if not available.</param>
+            <param name="Locality">City or locality name (e.g., "Johannesburg"). Null if not available.</param>
+            <param name="Country">Country name (e.g., "South Africa"). Null if not available.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion.#ctor(System.String,Megabin_Web.Shared.DTOs.Routing.Location,System.String,System.String,System.String)">
+            <summary>
+            Represents a single address suggestion from autocomplete search.
+            Used for providing address options to users as they type.
+            </summary>
+            <param name="Label">Full human-readable address label for display (e.g., "123 Main Street, Johannesburg, Gauteng, South Africa").</param>
+            <param name="Location">Geographic coordinates of the address.</param>
+            <param name="Region">Administrative region/province (e.g., "Gauteng"). Null if not available.</param>
+            <param name="Locality">City or locality name (e.g., "Johannesburg"). Null if not available.</param>
+            <param name="Country">Country name (e.g., "South Africa"). Null if not available.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion.Label">
+            <summary>Full human-readable address label for display (e.g., "123 Main Street, Johannesburg, Gauteng, South Africa").</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion.Location">
+            <summary>Geographic coordinates of the address.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion.Region">
+            <summary>Administrative region/province (e.g., "Gauteng"). Null if not available.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion.Locality">
+            <summary>City or locality name (e.g., "Johannesburg"). Null if not available.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.AddressSuggestion.Country">
+            <summary>Country name (e.g., "South Africa"). Null if not available.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.CollectionJob">
+            <summary>
+            Represents a single rubbish collection job for a specific address.
+            </summary>
+            <param name="Id">Unique identifier for this collection job. Links to ScheduledCollection.Id or Address.Id.</param>
+            <param name="Location">Geographic coordinates of the collection address.</param>
+            <param name="Address">Human-readable address string for driver display and navigation.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.CollectionJob.#ctor(System.String,Megabin_Web.Shared.DTOs.Routing.Location,System.String)">
+            <summary>
+            Represents a single rubbish collection job for a specific address.
+            </summary>
+            <param name="Id">Unique identifier for this collection job. Links to ScheduledCollection.Id or Address.Id.</param>
+            <param name="Location">Geographic coordinates of the collection address.</param>
+            <param name="Address">Human-readable address string for driver display and navigation.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.CollectionJob.Id">
+            <summary>Unique identifier for this collection job. Links to ScheduledCollection.Id or Address.Id.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.CollectionJob.Location">
+            <summary>Geographic coordinates of the collection address.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.CollectionJob.Address">
+            <summary>Human-readable address string for driver display and navigation.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult">
+            <summary>
+            Represents the complete result of daily collection route optimization across all drivers.
+            </summary>
+            <param name="Routes">Optimized routes for each driver, including ordered stops and metrics.</param>
+            <param name="UnassignedJobs">Collection jobs that could not be assigned to any driver due to capacity or routing constraints.</param>
+            <param name="TotalDistanceMeters">Aggregate distance across all driver routes in meters.</param>
+            <param name="TotalDurationSeconds">Aggregate estimated duration across all driver routes in seconds.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult.#ctor(System.Collections.Generic.List{Megabin_Web.Shared.DTOs.Routing.DriverRoute},System.Collections.Generic.List{Megabin_Web.Shared.DTOs.Routing.CollectionJob},System.Double,System.Double)">
+            <summary>
+            Represents the complete result of daily collection route optimization across all drivers.
+            </summary>
+            <param name="Routes">Optimized routes for each driver, including ordered stops and metrics.</param>
+            <param name="UnassignedJobs">Collection jobs that could not be assigned to any driver due to capacity or routing constraints.</param>
+            <param name="TotalDistanceMeters">Aggregate distance across all driver routes in meters.</param>
+            <param name="TotalDurationSeconds">Aggregate estimated duration across all driver routes in seconds.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult.Routes">
+            <summary>Optimized routes for each driver, including ordered stops and metrics.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult.UnassignedJobs">
+            <summary>Collection jobs that could not be assigned to any driver due to capacity or routing constraints.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult.TotalDistanceMeters">
+            <summary>Aggregate distance across all driver routes in meters.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult.TotalDurationSeconds">
+            <summary>Aggregate estimated duration across all driver routes in seconds.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.DepotLocation">
+            <summary>
+            Represents a depot location where drivers can dump collected rubbish.
+            </summary>
+            <param name="Id">Unique identifier for the depot.</param>
+            <param name="Location">Geographic coordinates of the depot.</param>
+            <param name="Address">Human-readable address of the depot for driver reference.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.DepotLocation.#ctor(System.String,Megabin_Web.Shared.DTOs.Routing.Location,System.String)">
+            <summary>
+            Represents a depot location where drivers can dump collected rubbish.
+            </summary>
+            <param name="Id">Unique identifier for the depot.</param>
+            <param name="Location">Geographic coordinates of the depot.</param>
+            <param name="Address">Human-readable address of the depot for driver reference.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DepotLocation.Id">
+            <summary>Unique identifier for the depot.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DepotLocation.Location">
+            <summary>Geographic coordinates of the depot.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DepotLocation.Address">
+            <summary>Human-readable address of the depot for driver reference.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.DriverRoute">
+            <summary>
+            Represents a single driver's optimized collection route for the day.
+            </summary>
+            <param name="DriverId">The unique identifier of the driver assigned to this route.</param>
+            <param name="Stops">Ordered list of stops (collections and depot visits) for optimal routing.</param>
+            <param name="TotalDistanceMeters">Total distance of the route in meters. Null if not available.</param>
+            <param name="TotalDurationSeconds">Estimated total duration of the route in seconds. Null if not available.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.DriverRoute.#ctor(System.String,System.Collections.Generic.List{Megabin_Web.Shared.DTOs.Routing.RouteStop},System.Nullable{System.Double},System.Nullable{System.Double})">
+            <summary>
+            Represents a single driver's optimized collection route for the day.
+            </summary>
+            <param name="DriverId">The unique identifier of the driver assigned to this route.</param>
+            <param name="Stops">Ordered list of stops (collections and depot visits) for optimal routing.</param>
+            <param name="TotalDistanceMeters">Total distance of the route in meters. Null if not available.</param>
+            <param name="TotalDurationSeconds">Estimated total duration of the route in seconds. Null if not available.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverRoute.DriverId">
+            <summary>The unique identifier of the driver assigned to this route.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverRoute.Stops">
+            <summary>Ordered list of stops (collections and depot visits) for optimal routing.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverRoute.TotalDistanceMeters">
+            <summary>Total distance of the route in meters. Null if not available.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverRoute.TotalDurationSeconds">
+            <summary>Estimated total duration of the route in seconds. Null if not available.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.DriverVehicle">
+            <summary>
+            Represents a driver and their vehicle with capacity constraints for route optimization.
+            </summary>
+            <param name="Id">Unique identifier for the driver. Typically the User.Id of the driver.</param>
+            <param name="StartLocation">The geographic location where the driver begins their route (e.g., home or depot).</param>
+            <param name="Capacity">Maximum number of collection stops before requiring a depot return for dumping. Must be greater than 0.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.DriverVehicle.#ctor(System.String,Megabin_Web.Shared.DTOs.Routing.Location,System.Int32)">
+            <summary>
+            Represents a driver and their vehicle with capacity constraints for route optimization.
+            </summary>
+            <param name="Id">Unique identifier for the driver. Typically the User.Id of the driver.</param>
+            <param name="StartLocation">The geographic location where the driver begins their route (e.g., home or depot).</param>
+            <param name="Capacity">Maximum number of collection stops before requiring a depot return for dumping. Must be greater than 0.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverVehicle.Id">
+            <summary>Unique identifier for the driver. Typically the User.Id of the driver.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverVehicle.StartLocation">
+            <summary>The geographic location where the driver begins their route (e.g., home or depot).</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.DriverVehicle.Capacity">
+            <summary>Maximum number of collection stops before requiring a depot return for dumping. Must be greater than 0.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.Location">
+            <summary>
+            Represents a geographic location with longitude and latitude coordinates.
+            </summary>
+            <param name="Longitude">The longitude coordinate (X-axis). Valid range: -180 to 180.</param>
+            <param name="Latitude">The latitude coordinate (Y-axis). Valid range: -90 to 90.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.Location.#ctor(System.Double,System.Double)">
+            <summary>
+            Represents a geographic location with longitude and latitude coordinates.
+            </summary>
+            <param name="Longitude">The longitude coordinate (X-axis). Valid range: -180 to 180.</param>
+            <param name="Latitude">The latitude coordinate (Y-axis). Valid range: -90 to 90.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.Location.Longitude">
+            <summary>The longitude coordinate (X-axis). Valid range: -180 to 180.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.Location.Latitude">
+            <summary>The latitude coordinate (Y-axis). Valid range: -90 to 90.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.RouteStop">
+            <summary>
+            Represents a single stop in a driver's optimized route.
+            </summary>
+            <param name="Type">The type of stop (Collection or Depot).</param>
+            <param name="Location">Geographic coordinates of the stop.</param>
+            <param name="Address">Human-readable address for driver navigation and display.</param>
+            <param name="JobId">Reference to the collection job ID. Null for depot stops.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.DTOs.Routing.RouteStop.#ctor(Megabin_Web.Shared.DTOs.Routing.StopType,Megabin_Web.Shared.DTOs.Routing.Location,System.String,System.String)">
+            <summary>
+            Represents a single stop in a driver's optimized route.
+            </summary>
+            <param name="Type">The type of stop (Collection or Depot).</param>
+            <param name="Location">Geographic coordinates of the stop.</param>
+            <param name="Address">Human-readable address for driver navigation and display.</param>
+            <param name="JobId">Reference to the collection job ID. Null for depot stops.</param>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.RouteStop.Type">
+            <summary>The type of stop (Collection or Depot).</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.RouteStop.Location">
+            <summary>Geographic coordinates of the stop.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.RouteStop.Address">
+            <summary>Human-readable address for driver navigation and display.</summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.Routing.RouteStop.JobId">
+            <summary>Reference to the collection job ID. Null for depot stops.</summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.Routing.StopType">
+            <summary>
+            Represents the type of stop in a driver's route.
+            </summary>
+        </member>
+        <member name="F:Megabin_Web.Shared.DTOs.Routing.StopType.Collection">
+            <summary>
+            A collection stop where rubbish is picked up from a customer address.
+            </summary>
+        </member>
+        <member name="F:Megabin_Web.Shared.DTOs.Routing.StopType.Depot">
+            <summary>
+            A depot stop where the driver dumps collected rubbish before continuing the route.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest">
+            <summary>
+            Request model for sending WhatsApp messages via Facebook Graph API.
+            Supports both text messages and template messages.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest.MessagingProduct">
+            <summary>
+            Must be "whatsapp"
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest.To">
+            <summary>
+            WhatsApp ID or phone number in international format (e.g., "+64277662005")
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest.Type">
+            <summary>
+            Type of message: "text" or "template"
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest.Text">
+            <summary>
+            Text message content (used when type is "text")
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest.Template">
+            <summary>
+            Template message content (used when type is "template")
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.TextContent">
+            <summary>
+            Text message content
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.TextContent.PreviewUrl">
+            <summary>
+            Whether to show a preview of URLs in the message
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.TextContent.Body">
+            <summary>
+            The text message body
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.TemplateContent">
+            <summary>
+            Template message content
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.TemplateContent.Name">
+            <summary>
+            The name of the template (e.g., "hello_world")
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.TemplateContent.Language">
+            <summary>
+            Language configuration for the template
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.TemplateLanguage">
+            <summary>
+            Template language configuration
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.TemplateLanguage.Code">
+            <summary>
+            Language code (e.g., "en_US")
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageResponse">
+            <summary>
+            Response model from Facebook Graph API when sending WhatsApp messages.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageResponse.MessagingProduct">
+            <summary>
+            The messaging product used (always "whatsapp")
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageResponse.Contacts">
+            <summary>
+            Array of contact information
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.SendMessageResponse.Messages">
+            <summary>
+            Array of message information
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppContact">
+            <summary>
+            Contact information in the response
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppContact.WaId">
+            <summary>
+            WhatsApp ID of the contact
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppContact.Input">
+            <summary>
+            Input phone number or ID
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppMessage">
+            <summary>
+            Message information in the response
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppMessage.Id">
+            <summary>
+            Unique message identifier
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppErrorResponse">
+            <summary>
+            Error response from Facebook Graph API
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppErrorResponse.Error">
+            <summary>
+            Error details
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppError">
+            <summary>
+            Error details
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppError.Message">
+            <summary>
+            Error message
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppError.Type">
+            <summary>
+            Error type
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppError.Code">
+            <summary>
+            Error code
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppError.ErrorSubcode">
+            <summary>
+            Error subcode
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.DTOs.WhatsApp.WhatsAppError.FbtraceId">
+            <summary>
+            Facebook trace ID for debugging
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions">
+            <summary>
+            Extension methods for <see cref="T:System.Security.Claims.ClaimsPrincipal"/> to extract user information from claims.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions.GetUserId(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Gets the current authenticated user's ID from claims.
+            </summary>
+            <param name="principal">The claims principal (typically from HttpContext.User).</param>
+            <returns>The user ID as a Guid, or null if not found or invalid.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions.GetUserIdOrThrow(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Gets the current authenticated user's ID from claims, throwing an exception if not found.
+            </summary>
+            <param name="principal">The claims principal (typically from HttpContext.User).</param>
+            <returns>The user ID as a Guid.</returns>
+            <exception cref="T:System.UnauthorizedAccessException">Thrown when user ID claim is not found or invalid.</exception>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions.GetUserRole(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Gets the current authenticated user's role from claims.
+            </summary>
+            <param name="principal">The claims principal (typically from HttpContext.User).</param>
+            <returns>The user role, or null if not found.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions.GetUserEmail(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Gets the current authenticated user's email from claims.
+            </summary>
+            <param name="principal">The claims principal (typically from HttpContext.User).</param>
+            <returns>The user email, or null if not found.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions.IsAuthenticated(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Checks if the current user is authenticated.
+            </summary>
+            <param name="principal">The claims principal (typically from HttpContext.User).</param>
+            <returns>True if authenticated, false otherwise.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.Extensions.ClaimsPrincipalExtensions.HasRole(System.Security.Claims.ClaimsPrincipal,System.String)">
+            <summary>
+            Checks if the current user has a specific role.
+            </summary>
+            <param name="principal">The claims principal (typically from HttpContext.User).</param>
+            <param name="role">The role to check for.</param>
+            <returns>True if the user has the role, false otherwise.</returns>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.HangfireAuthorizationFilter.HangfireAuthorizationFilter">
+            <summary>
+            Authorization filter for Hangfire dashboard.
+            In development, allows all access. In production, should be secured with proper authorization.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.JWTTokenService.IJwtTokenService">
+            <summary>
+            Provides JWT token generation for authenticated users.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.JWTTokenService.IJwtTokenService.GenerateToken(System.Guid,System.String,Megabin_Web.Shared.Domain.Enums.UserRoles)">
+            <summary>
+            Generates a JWT access token for the specified user.
+            </summary>
+            <param name="userId">The user's unique identifier.</param>
+            <param name="email">The user's email address.</param>
+            <param name="role">The user's role (Admin, User, or Driver).</param>
+            <returns>A signed JWT token string.</returns>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtOptions">
+            <summary>
+            Configuration options for JWT token generation and validation.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtOptions.Secret">
+            <summary>
+            Secret key for signing JWT tokens. MUST be at least 32 characters (256 bits).
+            Should be stored in User Secrets for development and secure vaults in production.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtOptions.Issuer">
+            <summary>
+            Token issuer identifier. Typically the application name or domain.
+            Default: "MegabinWebAPI"
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtOptions.Audience">
+            <summary>
+            Token audience identifier. Typically the client application or domain.
+            Default: "MegabinWebClient"
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtOptions.ExpirationMinutes">
+            <summary>
+            Token expiration time in minutes.
+            Default: 480 minutes (8 hours)
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtTokenService">
+            <summary>
+            Implementation of JWT token generation service.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtTokenService.#ctor(Microsoft.Extensions.Options.IOptions{Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtOptions},Microsoft.Extensions.Logging.ILogger{Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtTokenService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtTokenService"/> class.
+            </summary>
+            <param name="jwtOptions">JWT configuration options.</param>
+            <param name="logger">Logger for JWT token service operations.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.JWTTokenService.JwtTokenService.GenerateToken(System.Guid,System.String,Megabin_Web.Shared.Domain.Enums.UserRoles)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.MapBoxService.IMapboxService">
+            <summary>
+            Service for searching and validating addresses.
+            Provides geocoding and autocomplete functionality using Mapbox.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MapBoxService.IMapboxService.GeocodeAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Converts an address string into geographic coordinates.
+            </summary>
+            <param name="address">The complete address to geocode.</param>
+            <param name="country">ISO 3166-1 alpha-2 country code for filtering results (e.g., "ZA" for South Africa).</param>
+            <param name="cancellationToken">Cancellation token for the async operation.</param>
+            <returns>Location coordinates if found, null if address cannot be geocoded.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MapBoxService.IMapboxService.AutocompleteAsync(System.String,System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Provides address suggestions as user types (autocomplete).
+            Used for interactive address input to prevent typos and ensure valid addresses.
+            </summary>
+            <param name="partialAddress">Partial address text entered by user (minimum 2 characters).</param>
+            <param name="country">ISO 3166-1 alpha-2 country code for filtering results (e.g., "ZA" for South Africa).</param>
+            <param name="maxResults">Maximum number of suggestions to return (1-20).</param>
+            <param name="cancellationToken">Cancellation token for the async operation.</param>
+            <returns>List of address suggestions with coordinates. Empty list if no matches found.</returns>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxOptions">
+            <summary>
+            Configuration options for Mapbox API integration.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxOptions.BaseUrl">
+            <summary>
+            The base URL for Mapbox APIs.
+            Default: https://api.mapbox.com
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxOptions.AccessToken">
+            <summary>
+            Mapbox access token (API key) for authentication.
+            Required for all API requests. Should be stored in User Secrets for security.
+            Get your token at: https://account.mapbox.com/access-tokens/
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxOptions.TimeoutSeconds">
+            <summary>
+            HTTP request timeout in seconds for Mapbox API calls.
+            Default: 30 seconds.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxService">
+            <summary>
+            Implementation of address search services using Mapbox Geocoding API.
+            Provides address autocomplete and geocoding with 100k free requests/month.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxService.#ctor(System.Net.Http.HttpClient,Microsoft.Extensions.Options.IOptions{Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxOptions},Microsoft.Extensions.Logging.ILogger{Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxService})">
+            <summary>
+            Initializes a new instance of the AddressSearchService.
+            </summary>
+            <param name="httpClient">HTTP client for making requests to Mapbox API.</param>
+            <param name="options">Configuration options for Mapbox access token and base URL.</param>
+            <param name="logger">Logger for debugging and monitoring operations.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxService.GeocodeAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MapBoxService.MapboxService.AutocompleteAsync(System.String,System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.MediatR.ErrorHandlingBehavior`2">
+            <summary>
+            Pipeline behavior that catches and logs exceptions from handlers.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MediatR.ErrorHandlingBehavior`2.#ctor(Microsoft.Extensions.Logging.ILogger{Megabin_Web.Shared.Infrastructure.MediatR.ErrorHandlingBehavior{`0,`1}})">
+            <summary>
+            Pipeline behavior that catches and logs exceptions from handlers.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.MediatR.LoggingBehavior`2">
+            <summary>
+            Pipeline behavior that logs request execution time and details.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.MediatR.LoggingBehavior`2.#ctor(Microsoft.Extensions.Logging.ILogger{Megabin_Web.Shared.Infrastructure.MediatR.LoggingBehavior{`0,`1}})">
+            <summary>
+            Pipeline behavior that logs request execution time and details.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.Middleware.GlobalExceptionHandlingMiddleware">
+            <summary>
+            Middleware that catches unhandled exceptions and returns consistent error responses.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.OpenRouteService.IRouteOptimizationService">
+            <summary>
+            Service for optimizing multi-vehicle routes using OpenRouteService VROOM engine.
+            Handles capacity-constrained vehicle routing for daily waste collection scheduling.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.IRouteOptimizationService.OptimizeMultiVehicleRoutesAsync(System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.CollectionJob},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DriverVehicle},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DepotLocation},System.Threading.CancellationToken)">
+            <summary>
+            Optimizes collection routes across multiple drivers with vehicle capacity constraints.
+            Assigns jobs to drivers, sequences stops efficiently, and inserts depot returns when vehicles reach capacity.
+            </summary>
+            <param name="jobs">Collection jobs to be assigned and routed (typically ~1000 daily jobs).</param>
+            <param name="vehicles">Available drivers with their start locations and vehicle capacities (typically ~100 drivers).</param>
+            <param name="depots">Depot locations where drivers can dump collected rubbish.</param>
+            <param name="cancellationToken">Cancellation token for the async operation.</param>
+            <returns>
+            A <see cref="T:Megabin_Web.Shared.DTOs.Routing.DailyOptimizationResult"/> containing optimized routes for each driver,
+            any jobs that couldn't be assigned, and aggregate distance/duration metrics.
+            </returns>
+            <remarks>
+            Uses VROOM (Vehicle Routing Open-source Optimization Machine) via OpenRouteService.
+            The optimization assigns each job to exactly one driver, prioritizing proximity to driver start locations.
+            Routes are balanced to minimize total distance while respecting vehicle capacity constraints.
+            When a driver reaches capacity, a depot stop is automatically inserted before continuing to remaining jobs.
+            </remarks>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.OpenRouteService.OpenRouteServiceOptions">
+            <summary>
+            Configuration options for the OpenRouteService integration.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.OpenRouteService.OpenRouteServiceOptions.BaseUrl">
+            <summary>
+            The base URL of the OpenRouteService instance.
+            Default: https://api.openrouteservice.org (cloud API)
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.OpenRouteService.OpenRouteServiceOptions.ApiKey">
+            <summary>
+            API key for OpenRouteService cloud API authentication.
+            Required for cloud API access. Should be stored in User Secrets for security.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.OpenRouteService.OpenRouteServiceOptions.TimeoutSeconds">
+            <summary>
+            HTTP request timeout in seconds for OpenRouteService API calls.
+            Default: 300 seconds (5 minutes) to accommodate large optimization requests.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.OpenRouteService.OpenRouteServiceOptions.MaxRetries">
+            <summary>
+            Maximum number of retry attempts for failed API calls.
+            Default: 3 retries.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationBackgroundJob">
+            <summary>
+            Background job wrapper for daily route optimization.
+            Delegates to the OptimizeDailyRoutes feature handler via MediatR.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationBackgroundJob.OptimizeRoutesAsync">
+            <summary>
+            Optimizes routes for today's scheduled collections.
+            This method is called by Hangfire as a recurring job.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService">
+            <summary>
+            Implementation of multi-vehicle route optimization using OpenRouteService VROOM engine.
+            Uses OpenRouteService cloud API for daily collection route planning with capacity constraints.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.#ctor(System.Net.Http.HttpClient,Microsoft.Extensions.Options.IOptions{Megabin_Web.Shared.Infrastructure.OpenRouteService.OpenRouteServiceOptions},Microsoft.Extensions.Logging.ILogger{Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService})">
+            <summary>
+            Initializes a new instance of the RouteOptimizationService.
+            </summary>
+            <param name="httpClient">HTTP client for making requests to OpenRouteService API.</param>
+            <param name="options">Configuration options for ORS base URL and timeout.</param>
+            <param name="logger">Logger for debugging and monitoring optimization operations.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.OptimizeMultiVehicleRoutesAsync(System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.CollectionJob},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DriverVehicle},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DepotLocation},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.ValidateInputs(System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.CollectionJob},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DriverVehicle},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DepotLocation})">
+            <summary>
+            Validates input parameters for optimization.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.IsValidCoordinate(Megabin_Web.Shared.DTOs.Routing.Location)">
+            <summary>
+            Checks if coordinates are within valid ranges.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.AssignVehiclesToDepots(System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DriverVehicle},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DepotLocation})">
+            <summary>
+            Assigns each vehicle to the nearest depot based on straight-line distance.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.CalculateDistance(Megabin_Web.Shared.DTOs.Routing.Location,Megabin_Web.Shared.DTOs.Routing.Location)">
+            <summary>
+            Calculates straight-line distance between two locations (Haversine formula).
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.BuildVroomRequest(System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.CollectionJob},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DriverVehicle},System.Collections.Generic.Dictionary{System.String,Megabin_Web.Shared.DTOs.Routing.DepotLocation})">
+            <summary>
+            Builds VROOM optimization request from inputs.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.CallVroomApiAsync(Megabin_Web.Shared.DTOs.OpenRouteService.VroomRequest,System.Threading.CancellationToken)">
+            <summary>
+            Calls the VROOM optimization API.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.OpenRouteService.RouteOptimizationService.BuildOptimizationResult(Megabin_Web.Shared.DTOs.OpenRouteService.VroomResponse,System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.CollectionJob},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DriverVehicle},System.Collections.Generic.IReadOnlyList{Megabin_Web.Shared.DTOs.Routing.DepotLocation},System.Collections.Generic.Dictionary{System.String,Megabin_Web.Shared.DTOs.Routing.DepotLocation})">
+            <summary>
+            Builds the final optimization result from VROOM response.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.PasswordService.IPasswordService">
+            <summary>
+            Provides pure password hashing and verification using BCrypt.
+            Contains no database access or business logic.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.PasswordService.IPasswordService.HashPassword(System.String)">
+            <summary>
+            Hashes a plain text password using BCrypt with work factor 12.
+            </summary>
+            <param name="password">The plain text password to hash.</param>
+            <returns>The BCrypt hashed password string.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.PasswordService.IPasswordService.VerifyPassword(System.String,System.String)">
+            <summary>
+            Verifies a plain text password against a BCrypt hash.
+            </summary>
+            <param name="password">The plain text password to verify.</param>
+            <param name="passwordHash">The BCrypt hash to verify against.</param>
+            <returns>True if the password matches the hash; otherwise, false.</returns>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.PasswordService.PasswordService">
+            <summary>
+            Pure utility service for password hashing and verification.
+            Contains no database access or business logic.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.Swagger.EnumSchemaFilter">
+            <summary>
+            Schema filter that configures enums to be represented as strings in the OpenAPI spec.
+            This ensures generated client code uses string enums instead of numeric values.
+            Uses camelCase naming to match runtime JSON serialization.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.WhatsAppService.IWhatsAppService">
+            <summary>
+            Pure integration service for sending WhatsApp messages via Facebook Graph API.
+            Contains no database access or business logic.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.WhatsAppService.IWhatsAppService.SendTextMessageAsync(System.String,System.String,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sends a text message to a phone number via WhatsApp.
+            </summary>
+            <param name="phoneNumber">The phone number to send the message to (in international format).</param>
+            <param name="message">The text message content.</param>
+            <param name="previewUrl">Whether to show URL previews in the message.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The WhatsApp message ID if successful, null otherwise.</returns>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.WhatsAppService.IWhatsAppService.SendTemplateMessageAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Sends a template message to a phone number via WhatsApp.
+            </summary>
+            <param name="phoneNumber">The phone number to send the message to (in international format).</param>
+            <param name="templateName">The name of the template to send.</param>
+            <param name="languageCode">The language code (e.g., "en_US").</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The WhatsApp message ID if successful, null otherwise.</returns>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions">
+            <summary>
+            Configuration options for the WhatsApp Business API integration via Facebook Graph API.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions.BaseUrl">
+            <summary>
+            The base URL for the Facebook Graph API.
+            Default: https://graph.facebook.com
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions.ApiVersion">
+            <summary>
+            The API version to use (e.g., "v22.0").
+            Default: v22.0
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions.PhoneNumberId">
+            <summary>
+            The WhatsApp Business Phone Number ID from Meta Business Manager.
+            This is required for sending messages.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions.AccessToken">
+            <summary>
+            The access token for authenticating with the Facebook Graph API.
+            Should be stored in User Secrets for security.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions.TimeoutSeconds">
+            <summary>
+            HTTP request timeout in seconds for WhatsApp API calls.
+            Default: 30 seconds.
+            </summary>
+        </member>
+        <member name="P:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions.MaxRetries">
+            <summary>
+            Maximum number of retry attempts for failed API calls.
+            Default: 3 retries.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppService">
+            <summary>
+            Pure integration service for WhatsApp messaging using Facebook Graph API.
+            Sends text and template messages via WhatsApp Business API.
+            Contains no database access or business logic.
+            </summary>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppService.#ctor(System.Net.Http.HttpClient,Microsoft.Extensions.Options.IOptions{Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppOptions},Microsoft.Extensions.Logging.ILogger{Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppService})">
+            <summary>
+            Initializes a new instance of the WhatsAppService.
+            </summary>
+            <param name="httpClient">HTTP client for making requests to Facebook Graph API.</param>
+            <param name="options">Configuration options for WhatsApp API credentials.</param>
+            <param name="logger">Logger for debugging and monitoring operations.</param>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppService.SendTextMessageAsync(System.String,System.String,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppService.SendTemplateMessageAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Megabin_Web.Shared.Infrastructure.WhatsAppService.WhatsAppService.SendMessageAsync(Megabin_Web.Shared.DTOs.WhatsApp.SendMessageRequest,System.Threading.CancellationToken)">
+            <summary>
+            Internal method to send a message request to Facebook Graph API.
+            </summary>
+        </member>
+        <member name="T:Megabin_Web.Migrations.InitialAppCreation">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.InitialAppCreation.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.InitialAppCreation.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.InitialAppCreation.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Megabin_Web.Migrations.AddPhoneNumber">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.AddPhoneNumber.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.AddPhoneNumber.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.AddPhoneNumber.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Megabin_Web.Migrations.RemoveBinsFromUsersTable">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.RemoveBinsFromUsersTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.RemoveBinsFromUsersTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.RemoveBinsFromUsersTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Megabin_Web.Migrations.UpdateDriverLogic">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.UpdateDriverLogic.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.UpdateDriverLogic.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Megabin_Web.Migrations.UpdateDriverLogic.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>
