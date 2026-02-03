@@ -9,10 +9,10 @@
  */
 
 
-export type StopType = 'Collection' | 'Depot';
+export type StopType = 'collection' | 'depot';
 
 export const StopType = {
-    Collection: 'Collection' as StopType,
-    Depot: 'Depot' as StopType
+    Collection: 'collection' as StopType,
+    Depot: 'depot' as StopType
 };
 

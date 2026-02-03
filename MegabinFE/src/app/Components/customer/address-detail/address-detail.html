@@ -1,0 +1,163 @@
+<p-toast></p-toast>
+
+<div class="p-4">
+  <div class="flex items-center gap-2 mb-4">
+    <p-button icon="pi pi-arrow-left" severity="secondary" [text]="true" (onClick)="goBack()" />
+    <h1 class="text-2xl font-bold">Address Details</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="flex justify-center p-8">
+      <i class="pi pi-spin pi-spinner text-4xl"></i>
+    </div>
+  } @else if (address()) {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Address Info Card -->
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="p-3 pb-0">
+            <span class="text-lg font-semibold">Address Information</span>
+          </div>
+        </ng-template>
+
+        <div class="flex flex-col gap-3">
+          <div>
+            <label class="text-gray-500 text-sm">Address</label>
+            <p class="font-medium">{{ address()?.address }}</p>
+          </div>
+
+          <div>
+            <label class="text-gray-500 text-sm">Number of Bins</label>
+            <p class="font-medium">{{ address()?.totalBins }}</p>
+          </div>
+
+          <div>
+            <label class="text-gray-500 text-sm">Status</label>
+            <div class="mt-1">
+              <p-tag
+                [severity]="getStatusSeverity(address()?.addressStatus || '')"
+                [value]="getStatusLabel(address()?.addressStatus || '')"
+              ></p-tag>
+            </div>
+          </div>
+
+          @if (address()?.addressNotes) {
+            <div>
+              <label class="text-gray-500 text-sm">Notes</label>
+              <p class="font-medium">{{ address()?.addressNotes }}</p>
+            </div>
+          }
+        </div>
+
+      </p-card>
+
+      <!-- Schedule Contracts Card -->
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="p-3 pb-0 flex justify-between items-center">
+            <span class="text-lg font-semibold">Collection Schedules</span>
+            <p-button
+              icon="pi pi-plus"
+              label="Request Collection"
+              size="small"
+              (onClick)="openScheduleDialog()"
+            />
+          </div>
+        </ng-template>
+
+        @if (scheduleContracts().length === 0) {
+          <div class="text-center p-4 text-gray-500">
+            <i class="pi pi-calendar text-3xl mb-2"></i>
+            <p>No collections yet</p>
+            <p class="text-sm">Request a collection to get started</p>
+          </div>
+        } @else {
+          <p-table [value]="scheduleContracts()" [tableStyle]="{ 'min-width': '100%' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Frequency</th>
+                <th>Day</th>
+                <th>Status</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-contract>
+              <tr>
+                <td class="capitalize">{{ contract.frequency }}</td>
+                <td class="capitalize">{{ contract.dayOfWeek }}</td>
+                <td>
+                  @if (contract.approvedExternally) {
+                    <p-tag severity="success" value="Approved"></p-tag>
+                  } @else {
+                    <p-tag severity="warn" value="Pending Approval"></p-tag>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </p-card>
+    </div>
+  } @else {
+    <div class="text-center p-8">
+      <i class="pi pi-exclamation-circle text-4xl text-gray-400 mb-2"></i>
+      <p class="text-gray-500">Address not found</p>
+      <p-button label="Go Back" icon="pi pi-arrow-left" class="mt-4" (onClick)="goBack()" />
+    </div>
+  }
+</div>
+
+<!-- Schedule Request Dialog -->
+<p-dialog
+  header="Request Collection Schedule"
+  [(visible)]="showScheduleDialog"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="frequency" class="font-medium">Collection Frequency</label>
+      <p-select
+        id="frequency"
+        [options]="frequencyOptions"
+        [(ngModel)]="selectedFrequency"
+        placeholder="Select frequency"
+        optionLabel="label"
+        optionValue="value"
+        [style]="{ width: '100%' }"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="dayOfWeek" class="font-medium">Day of Week</label>
+      <p-select
+        id="dayOfWeek"
+        [options]="dayOfWeekOptions"
+        [(ngModel)]="selectedDayOfWeek"
+        placeholder="Select day"
+        optionLabel="label"
+        optionValue="value"
+        [style]="{ width: '100%' }"
+      />
+    </div>
+
+    <small class="text-gray-500">
+      Your schedule request will be reviewed and approved by an admin.
+    </small>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="showScheduleDialog.set(false)"
+    />
+    <p-button
+      label="Submit Request"
+      icon="pi pi-check"
+      (onClick)="submitScheduleRequest()"
+      [loading]="isSubmittingSchedule()"
+      [disabled]="!selectedFrequency() || !selectedDayOfWeek()"
+    />
+  </ng-template>
+</p-dialog>

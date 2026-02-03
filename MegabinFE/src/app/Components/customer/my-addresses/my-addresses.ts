@@ -1,10 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -12,13 +6,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { TooltipModule } from 'primeng/tooltip';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { AddressService, GetAddress } from '../../../services';
 
 @Component({
-  selector: 'app-customer-dashboard',
+  selector: 'app-my-addresses',
   imports: [
     TableModule,
     TagModule,
@@ -26,14 +17,11 @@ import { AddressService, GetAddress } from '../../../services';
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    TooltipModule,
-    ToastModule,
   ],
-  providers: [MessageService],
-  templateUrl: './customer-dashboard.html',
+  templateUrl: './my-addresses.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomerDashboard implements OnInit {
+export class MyAddresses implements OnInit {
   private addressService = inject(AddressService);
   private router = inject(Router);
 
@@ -54,11 +42,11 @@ export class CustomerDashboard implements OnInit {
     this.router.navigate(['/customer/addresses', addressId]);
   }
 
-  navigateToProfile(): void {
-    this.router.navigate(['/customer/profile']);
+  addNewAddress(): void {
+    this.router.navigate(['/customer/addresses/new']);
   }
 
-  navigateToAddAddress(): void {
-    this.router.navigate(['/customer/addresses/new']);
+  goBack(): void {
+    this.router.navigate(['/customer']);
   }
 }

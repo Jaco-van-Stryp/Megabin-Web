@@ -7,13 +7,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AddressSuggestion } from './addressSuggestion';
 
 
-export type UserRoles = 'admin' | 'driver' | 'customer';
-
-export const UserRoles = {
-    Admin: 'admin' as UserRoles,
-    Driver: 'driver' as UserRoles,
-    Customer: 'customer' as UserRoles
-};
+export interface CustomerCreateAddressCommand { 
+    address?: AddressSuggestion;
+    totalBins?: number;
+    addressNotes?: string | null;
+}
 

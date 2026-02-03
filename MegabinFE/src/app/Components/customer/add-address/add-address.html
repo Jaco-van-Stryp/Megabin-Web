@@ -1,0 +1,61 @@
+<p-toast></p-toast>
+
+<div class="p-4">
+  <div class="flex items-center gap-2 mb-4">
+    <p-button icon="pi pi-arrow-left" severity="secondary" [text]="true" (onClick)="goBack()" />
+    <h1 class="text-2xl font-bold">Add New Address</h1>
+  </div>
+
+  <p-card class="max-w-2xl">
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <label for="address" class="font-medium">Address</label>
+        <app-autocomplete
+          [placeholder]="'Start typing your address...'"
+          [label]="'Address'"
+          (addressSelected)="onAddressSelected($event)"
+        />
+        @if (selectedAddress()) {
+          <small class="text-green-600">
+            <i class="pi pi-check-circle mr-1"></i>
+            Selected: {{ selectedAddress()?.label }}
+          </small>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="totalBins" class="font-medium">Number of Bins</label>
+        <p-inputNumber
+          [(ngModel)]="totalBins"
+          [min]="1"
+          [max]="10"
+          [showButtons]="true"
+          inputId="totalBins"
+        />
+        <small class="text-gray-500">How many bins do you need at this address?</small>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="notes" class="font-medium">Notes (Optional)</label>
+        <textarea
+          pTextarea
+          id="notes"
+          [(ngModel)]="addressNotes"
+          rows="3"
+          placeholder="Any special instructions for this address..."
+        ></textarea>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <p-button
+          label="Create Address"
+          icon="pi pi-check"
+          (onClick)="createAddress()"
+          [loading]="isSubmitting()"
+          [disabled]="!selectedAddress()"
+        />
+        <p-button label="Cancel" icon="pi pi-times" severity="secondary" (onClick)="goBack()" />
+      </div>
+    </div>
+  </p-card>
+</div>

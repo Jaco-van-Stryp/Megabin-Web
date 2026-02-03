@@ -85,14 +85,16 @@ export class Register {
 
           // Redirect based on user role
           // UserRoles: 'customer', 'driver', 'admin'
-          if (loginResponse.role === 'Admin') {
+          if (loginResponse.role === UserRoles.Admin) {
             this.router.navigate(['/admin']);
-          } else if (loginResponse.role === 'Driver') {
+          } else if (loginResponse.role === UserRoles.Driver) {
             // TODO: Driver dashboard not yet implemented
             this.router.navigate(['/autocomplete']);
-          } else {
+          } else if (loginResponse.role === UserRoles.Customer) {
             // Customer
             // TODO: Customer dashboard not yet implemented
+            this.router.navigate(['/autocomplete']);
+          } else {
             this.router.navigate(['/autocomplete']);
           }
         } else {

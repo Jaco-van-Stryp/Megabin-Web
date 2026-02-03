@@ -9,11 +9,7 @@
  */
 
 
-export type UserRoles = 'admin' | 'driver' | 'customer';
-
-export const UserRoles = {
-    Admin: 'admin' as UserRoles,
-    Driver: 'driver' as UserRoles,
-    Customer: 'customer' as UserRoles
-};
+export interface RequestScheduleContractResponseDto { 
+    contractId: string;
+}
 

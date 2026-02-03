@@ -31,6 +31,34 @@ export const routes: Routes = [
         (m) => m.ManageScheduleContracts,
       ),
   },
+  // Customer routes
+  {
+    path: 'customer',
+    loadComponent: () =>
+      import('./Components/customer/customer-dashboard/customer-dashboard').then(
+        (m) => m.CustomerDashboard,
+      ),
+  },
+  {
+    path: 'customer/addresses',
+    loadComponent: () =>
+      import('./Components/customer/my-addresses/my-addresses').then((m) => m.MyAddresses),
+  },
+  {
+    path: 'customer/addresses/new',
+    loadComponent: () =>
+      import('./Components/customer/add-address/add-address').then((m) => m.CustomerAddAddress),
+  },
+  {
+    path: 'customer/addresses/:addressId',
+    loadComponent: () =>
+      import('./Components/customer/address-detail/address-detail').then((m) => m.AddressDetail),
+  },
+  {
+    path: 'customer/profile',
+    loadComponent: () =>
+      import('./Components/customer/edit-profile/edit-profile').then((m) => m.EditProfile),
+  },
   {
     path: '',
     redirectTo: '/login',
