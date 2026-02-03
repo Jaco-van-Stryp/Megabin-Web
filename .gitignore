@@ -570,4 +570,13 @@ FodyWeavers.xsd
 
 appsettings.Development.json
 
+# Build artifacts and temporary build outputs
+@temp_build/
+temp_build/
+**/temp_build/
+**/@temp_build/
+*.deps.json
+*.runtimeconfig.json
+*.dll.config
+
 # End of https://www.toptal.com/developers/gitignore/api/angular,visualstudio,visualstudiocode,aspnetcore
