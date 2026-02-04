@@ -138,16 +138,24 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
                 result.TotalDistanceMeters
             );
 
+            // Build a lookup dictionary for schedule contracts to get address IDs
+            var contractLookup = activeContracts.ToDictionary(c => c.Id);
+
             // Save optimized routes to database as ScheduledCollections
             foreach (var route in result.Routes)
             {
                 var driverId = Guid.Parse(route.DriverId);
                 var driver = drivers.First(d => d.Id == driverId);
 
+                // Get collection stops only and track sequence
+                var collectionStops = route.Stops.Where(s => s.Type == StopType.Collection).ToList();
+                var routeSequence = 1;
+
                 // Create scheduled collections for each stop in the route
-                foreach (var stop in route.Stops.Where(s => s.Type == StopType.Collection))
+                foreach (var stop in collectionStops)
                 {
                     var scheduleContractId = Guid.Parse(stop.JobId!);
+                    var contract = contractLookup[scheduleContractId];
 
                     var scheduledCollection = new ScheduledCollections
                     {
@@ -155,12 +163,15 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
                         ScheduledFor = targetDate,
                         UserId = driverId, // This is actually the driver ID
                         User = driver.User,
+                        AddressId = contract.AddressesId,
+                        Address = contract.Addresses,
+                        RouteSequence = routeSequence,
                         Collected = false,
-                        Notes =
-                            $"Route order: {route.Stops.IndexOf(stop) + 1}/{route.Stops.Count}",
+                        Notes = string.Empty,
                     };
 
                     dbContext.ScheduledCollections.Add(scheduledCollection);
+                    routeSequence++;
                 }
             }
 

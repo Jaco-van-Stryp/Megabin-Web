@@ -1,6 +1,7 @@
 using MediatR;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Domain.Entities;
+using Megabin_Web.Shared.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Megabin_Web.Features.Admin.CreateDriver
@@ -38,6 +39,9 @@ namespace Megabin_Web.Features.Admin.CreateDriver
                 DropoffLocationLat = request.DropoffLocationLat,
                 VehicleCapacity = request.VehicleCapacity,
             };
+
+            // Also set the user's role to Driver
+            user.Role = UserRoles.Driver;
 
             dbContext.Drivers.Add(driver);
             await dbContext.SaveChangesAsync(cancellationToken);

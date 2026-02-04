@@ -31,6 +31,14 @@ export const routes: Routes = [
         (m) => m.ManageScheduleContracts,
       ),
   },
+  // Driver routes
+  {
+    path: 'driver',
+    loadComponent: () =>
+      import('./Components/driver/driver-dashboard/driver-dashboard').then(
+        (m) => m.DriverDashboard,
+      ),
+  },
   // Customer routes
   {
     path: 'customer',
