@@ -1,0 +1,297 @@
+<p-confirmDialog />
+
+<div class="space-y-4">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold m-0 text-surface-900">Pending Approvals</h1>
+    @if (totalPendingCount() > 0) {
+      <p-badge [value]="totalPendingCount().toString()" severity="warn" />
+    }
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="flex justify-center items-center py-12">
+      <p-progressSpinner strokeWidth="4" />
+    </div>
+  } @else {
+    <!-- Tabs -->
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-box" aria-hidden="true"></i>
+            <span>Bin Requests</span>
+            @if (binRequestCount() > 0) {
+              <p-badge [value]="binRequestCount().toString()" severity="info" />
+            }
+          </div>
+        </p-tab>
+        <p-tab value="1">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-calendar" aria-hidden="true"></i>
+            <span>Schedule Contracts</span>
+            @if (contractCount() > 0) {
+              <p-badge [value]="contractCount().toString()" severity="info" />
+            }
+          </div>
+        </p-tab>
+      </p-tablist>
+
+      <!-- Bin Requests Tab -->
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <!-- Bulk Actions -->
+          @if (selectedBinRequests().length > 0) {
+            <div class="flex items-center gap-3 mb-4 p-3 bg-surface-100 rounded-lg">
+              <span class="font-medium">{{ selectedBinRequests().length }} selected</span>
+              <p-button
+                label="Approve Selected"
+                icon="pi pi-check"
+                severity="success"
+                size="small"
+                (onClick)="bulkApproveBinRequests()"
+              />
+              <p-button
+                label="Clear"
+                icon="pi pi-times"
+                severity="secondary"
+                [text]="true"
+                size="small"
+                (onClick)="selectAllBinRequests(false)"
+              />
+            </div>
+          }
+
+          @if (pendingBinRequests().length === 0) {
+            <div class="text-center py-12">
+              <i class="pi pi-check-circle text-5xl text-surface-300 mb-4"></i>
+              <p class="text-surface-500 m-0">No pending bin requests</p>
+            </div>
+          } @else if (isMobile()) {
+            <!-- Mobile Card View -->
+            <div class="flex flex-col gap-3">
+              @for (request of pendingBinRequests(); track request.addressId) {
+                <p-card>
+                  <div class="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      [checked]="request.selected"
+                      (change)="toggleBinRequestSelection(request)"
+                      class="mt-1"
+                      [attr.aria-label]="'Select ' + request.address"
+                    />
+                    <div class="flex-1 min-w-0">
+                      <p class="font-medium m-0 truncate text-surface-900">{{ request.userName }}</p>
+                      <p class="text-sm m-0 truncate text-surface-500">{{ request.address }}</p>
+                      <div class="flex items-center gap-2 mt-2">
+                        <p-tag severity="info" [value]="request.totalBins + ' bins'" />
+                      </div>
+                    </div>
+                    <p-button
+                      icon="pi pi-check"
+                      severity="success"
+                      [text]="true"
+                      [rounded]="true"
+                      (onClick)="approveBinRequest(request)"
+                      [loading]="isProcessing(request.addressId)"
+                      pTooltip="Approve"
+                      ariaLabel="Approve bin request"
+                    />
+                  </div>
+                </p-card>
+              }
+            </div>
+          } @else {
+            <!-- Desktop Table View -->
+            <p-table
+              [value]="pendingBinRequests()"
+              [scrollable]="true"
+              scrollHeight="400px"
+              [tableStyle]="{ 'width': '100%' }"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 3rem">
+                    <input
+                      type="checkbox"
+                      [checked]="selectedBinRequests().length === pendingBinRequests().length && pendingBinRequests().length > 0"
+                      (change)="selectAllBinRequests($any($event.target).checked)"
+                      aria-label="Select all bin requests"
+                    />
+                  </th>
+                  <th pSortableColumn="userName">Customer <p-sortIcon field="userName" /></th>
+                  <th pSortableColumn="address">Address <p-sortIcon field="address" /></th>
+                  <th>Bins</th>
+                  <th style="width: 8rem">Actions</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-request>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      [checked]="request.selected"
+                      (change)="toggleBinRequestSelection(request)"
+                      [attr.aria-label]="'Select ' + request.address"
+                    />
+                  </td>
+                  <td>
+                    <div>
+                      <p class="font-medium m-0">{{ request.userName }}</p>
+                      <p class="text-sm m-0 text-surface-500">{{ request.userEmail }}</p>
+                    </div>
+                  </td>
+                  <td>{{ request.address }}</td>
+                  <td>
+                    <p-tag severity="info" [value]="request.totalBins + ' bins'" />
+                  </td>
+                  <td>
+                    <p-button
+                      icon="pi pi-check"
+                      label="Approve"
+                      severity="success"
+                      [text]="true"
+                      size="small"
+                      (onClick)="approveBinRequest(request)"
+                      [loading]="isProcessing(request.addressId)"
+                    />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          }
+        </p-tabpanel>
+
+        <!-- Schedule Contracts Tab -->
+        <p-tabpanel value="1">
+          <!-- Bulk Actions -->
+          @if (selectedContracts().length > 0) {
+            <div class="flex items-center gap-3 mb-4 p-3 bg-surface-100 rounded-lg">
+              <span class="font-medium">{{ selectedContracts().length }} selected</span>
+              <p-button
+                label="Approve Selected"
+                icon="pi pi-check"
+                severity="success"
+                size="small"
+                (onClick)="bulkApproveContracts()"
+              />
+              <p-button
+                label="Clear"
+                icon="pi pi-times"
+                severity="secondary"
+                [text]="true"
+                size="small"
+                (onClick)="selectAllContracts(false)"
+              />
+            </div>
+          }
+
+          @if (pendingContracts().length === 0) {
+            <div class="text-center py-12">
+              <i class="pi pi-check-circle text-5xl text-surface-300 mb-4"></i>
+              <p class="text-surface-500 m-0">No pending schedule contracts</p>
+            </div>
+          } @else if (isMobile()) {
+            <!-- Mobile Card View -->
+            <div class="flex flex-col gap-3">
+              @for (contract of pendingContracts(); track contract.contractId) {
+                <p-card>
+                  <div class="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      [checked]="contract.selected"
+                      (change)="toggleContractSelection(contract)"
+                      class="mt-1"
+                      [attr.aria-label]="'Select ' + contract.address"
+                    />
+                    <div class="flex-1 min-w-0">
+                      <p class="font-medium m-0 truncate text-surface-900">{{ contract.userName }}</p>
+                      <p class="text-sm m-0 truncate text-surface-500">{{ contract.address }}</p>
+                      <div class="flex items-center gap-2 mt-2 flex-wrap">
+                        <p-tag severity="secondary" [value]="formatFrequency(contract.frequency)" />
+                        <p-tag severity="contrast" [value]="formatDayOfWeek(contract.dayOfWeek)" />
+                      </div>
+                    </div>
+                    <p-button
+                      icon="pi pi-check"
+                      severity="success"
+                      [text]="true"
+                      [rounded]="true"
+                      (onClick)="approveContract(contract)"
+                      [loading]="isProcessing(contract.contractId)"
+                      pTooltip="Approve"
+                      ariaLabel="Approve schedule contract"
+                    />
+                  </div>
+                </p-card>
+              }
+            </div>
+          } @else {
+            <!-- Desktop Table View -->
+            <p-table
+              [value]="pendingContracts()"
+              [scrollable]="true"
+              scrollHeight="400px"
+              [tableStyle]="{ 'width': '100%' }"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 3rem">
+                    <input
+                      type="checkbox"
+                      [checked]="selectedContracts().length === pendingContracts().length && pendingContracts().length > 0"
+                      (change)="selectAllContracts($any($event.target).checked)"
+                      aria-label="Select all schedule contracts"
+                    />
+                  </th>
+                  <th pSortableColumn="userName">Customer <p-sortIcon field="userName" /></th>
+                  <th pSortableColumn="address">Address <p-sortIcon field="address" /></th>
+                  <th>Frequency</th>
+                  <th>Day</th>
+                  <th style="width: 8rem">Actions</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-contract>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      [checked]="contract.selected"
+                      (change)="toggleContractSelection(contract)"
+                      [attr.aria-label]="'Select ' + contract.address"
+                    />
+                  </td>
+                  <td>
+                    <div>
+                      <p class="font-medium m-0">{{ contract.userName }}</p>
+                      <p class="text-sm m-0 text-surface-500">{{ contract.userEmail }}</p>
+                    </div>
+                  </td>
+                  <td>{{ contract.address }}</td>
+                  <td>
+                    <p-tag severity="secondary" [value]="formatFrequency(contract.frequency)" />
+                  </td>
+                  <td>
+                    <p-tag severity="contrast" [value]="formatDayOfWeek(contract.dayOfWeek)" />
+                  </td>
+                  <td>
+                    <p-button
+                      icon="pi pi-check"
+                      label="Approve"
+                      severity="success"
+                      [text]="true"
+                      size="small"
+                      (onClick)="approveContract(contract)"
+                      [loading]="isProcessing(contract.contractId)"
+                    />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          }
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  }
+</div>

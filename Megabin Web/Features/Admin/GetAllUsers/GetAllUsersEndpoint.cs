@@ -15,7 +15,7 @@ namespace Megabin_Web.Features.Admin.GetAllUsers
                     }
                 )
                 .WithTags("Admin")
-                .RequireAuthorization("AdminPolicy");
+                .RequireAuthorization(policy => policy.RequireRole("Admin"));
         }
     }
 }

@@ -9,14 +9,15 @@ import {
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { DriverService, ScheduledCollectionDto } from '../../../services';
+import { ResponsiveService } from '../../../shared/services/responsive.service';
 
 @Component({
   selector: 'app-driver-dashboard',
@@ -24,12 +25,12 @@ import { DriverService, ScheduledCollectionDto } from '../../../services';
     TableModule,
     TagModule,
     ButtonModule,
-    ToastModule,
     CardModule,
     DialogModule,
     TextareaModule,
     FormsModule,
     TooltipModule,
+    ProgressSpinnerModule,
   ],
   providers: [MessageService],
   templateUrl: './driver-dashboard.html',
@@ -38,6 +39,7 @@ import { DriverService, ScheduledCollectionDto } from '../../../services';
 export class DriverDashboard implements OnInit {
   private driverService = inject(DriverService);
   private messageService = inject(MessageService);
+  private responsiveService = inject(ResponsiveService);
 
   collections = signal<ScheduledCollectionDto[]>([]);
   isLoading = signal<boolean>(true);
@@ -47,10 +49,17 @@ export class DriverDashboard implements OnInit {
   selectedCollection = signal<ScheduledCollectionDto | null>(null);
   collectionNotes = signal<string>('');
 
+  readonly isMobile = this.responsiveService.isMobile;
+
   // Computed values
   completedCount = computed(() => this.collections().filter((c) => c.collected).length);
   totalCount = computed(() => this.collections().length);
   nextStop = computed(() => this.collections().find((c) => !c.collected));
+  progressPercentage = computed(() => {
+    const total = this.totalCount();
+    if (total === 0) return 0;
+    return Math.round((this.completedCount() / total) * 100);
+  });
 
   ngOnInit(): void {
     this.loadTodaysRoute();
