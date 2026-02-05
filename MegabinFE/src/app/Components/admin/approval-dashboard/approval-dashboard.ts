@@ -25,7 +25,6 @@ import { GetScheduleContract } from '../../../services/model/getScheduleContract
 import { AddressStatus } from '../../../services/model/addressStatus';
 import { Frequency } from '../../../services/model/frequency';
 import { DayOfWeek } from '../../../services/model/dayOfWeek';
-import { UserRoles } from '../../../services/model/userRoles';
 
 export interface PendingBinRequest {
   addressId: string;
@@ -105,15 +104,14 @@ export class ApprovalDashboard implements OnInit {
 
     this.adminService.apiAdminGetAllUsersGet().subscribe({
       next: (users) => {
-        const customerUsers = users.filter(
-          (u) => u.role === UserRoles.Customer
-        );
-        if (customerUsers.length === 0) {
+        // Include all users (not just customers) to show all pending requests
+        const allUsers = users;
+        if (allUsers.length === 0) {
           this.isLoading.set(false);
           return;
         }
 
-        const addressRequests = customerUsers.map((user) =>
+        const addressRequests = allUsers.map((user) =>
           this.adminService.apiAdminGetAllUserAddressesUserIdGet(user.id)
         );
 
@@ -126,7 +124,7 @@ export class ApprovalDashboard implements OnInit {
             }[] = [];
 
             addressResults.forEach((addresses, index) => {
-              const user = customerUsers[index];
+              const user = allUsers[index];
 
               addresses.forEach((addr) => {
                 if (addr.addressStatus === AddressStatus.BinRequested) {
