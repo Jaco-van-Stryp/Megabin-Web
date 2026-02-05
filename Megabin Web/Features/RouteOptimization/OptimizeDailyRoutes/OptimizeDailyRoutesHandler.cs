@@ -18,7 +18,10 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
             CancellationToken cancellationToken
         )
         {
-            var targetDate = request.TargetDate ?? DateTime.Today;
+            // Ensure we're working with UTC dates for PostgreSQL compatibility
+            var targetDate = request.TargetDate.HasValue
+                ? DateTime.SpecifyKind(request.TargetDate.Value.Date, DateTimeKind.Utc)
+                : DateTime.UtcNow.Date;
 
             logger.LogInformation(
                 "Starting route optimization for date {Date}",
