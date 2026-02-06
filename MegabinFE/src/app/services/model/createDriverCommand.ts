@@ -1,5 +1,5 @@
 /**
- * MySmartCloset API
+ * Megabin API
  *
  * 
  *
@@ -20,5 +20,6 @@ export interface CreateDriverCommand {
     dropoffLocationLong?: number;
     dropoffLocationLat?: number;
     vehicleCapacity?: number;
+    timeZoneId?: string | null;
 }
 

@@ -12,6 +12,11 @@
         public required int VehicleCapacity { get; set; } // Max stops before depot
         public required string LicenseNumber { get; set; }
         public required bool Active { get; set; }
+        /// <summary>
+        /// IANA timezone identifier (e.g., "Africa/Johannesburg") for the driver's local time.
+        /// Used to determine "today" for route scheduling.
+        /// </summary>
+        public required string TimeZoneId { get; set; }
         public required Guid UserId { get; set; }
         public required Users User { get; set; }
     }

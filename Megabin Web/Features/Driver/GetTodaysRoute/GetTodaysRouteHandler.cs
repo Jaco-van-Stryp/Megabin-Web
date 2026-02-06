@@ -26,7 +26,10 @@ public class GetTodaysRouteHandler(
             throw new KeyNotFoundException("Driver profile not found for current user");
         }
 
-        var today = DateTime.UtcNow.Date;
+        // Convert UTC to driver's local timezone to determine "today"
+        var driverTimeZone = TimeZoneInfo.FindSystemTimeZoneById(driver.TimeZoneId);
+        var driverLocalNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, driverTimeZone);
+        var today = driverLocalNow.Date;
         var tomorrow = today.AddDays(1);
 
         var collections = await dbContext

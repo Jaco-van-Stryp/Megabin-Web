@@ -12,5 +12,6 @@ public record UpdateDriverCommand(
     double HomeAddressLat,
     string DropoffLocationLabel,
     double DropoffLocationLong,
-    double DropoffLocationLat
+    double DropoffLocationLat,
+    string TimeZoneId
 ) : IRequest;

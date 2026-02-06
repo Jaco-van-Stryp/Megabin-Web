@@ -1,5 +1,5 @@
 /**
- * MySmartCloset API
+ * Megabin API
  *
  * 
  *
@@ -10,7 +10,7 @@
 
 
 export interface UpdateCollectionStatusRequest { 
-    collected?: boolean;
+    collected?: boolean | null;
     notes?: string | null;
 }
 

@@ -47,11 +47,13 @@ export class CustomerDashboard implements OnInit {
   readonly filteredAddresses = computed(() => {
     const term = this.searchTerm().toLowerCase();
     if (!term) return this.addresses();
-    return this.addresses().filter(
-      (addr) =>
-        addr.address?.toLowerCase().includes(term) ||
-        addr.addressStatus?.toLowerCase().includes(term),
-    );
+    return this.addresses().filter((addr) => {
+      const addressMatch = addr.address?.toLowerCase().includes(term);
+      const rawStatusMatch = addr.addressStatus?.toLowerCase().includes(term);
+      const statusLabel = addr.addressStatus ? this.getStatusLabel(addr.addressStatus) : '';
+      const labelMatch = statusLabel.toLowerCase().includes(term);
+      return addressMatch || rawStatusMatch || labelMatch;
+    });
   });
 
   ngOnInit(): void {

@@ -11,12 +11,12 @@ namespace Megabin_Web.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Step 1: Add AddressId as nullable to avoid FK violations on existing rows
             migrationBuilder.AddColumn<Guid>(
                 name: "AddressId",
                 table: "ScheduledCollections",
                 type: "uuid",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "RouteSequence",
@@ -24,6 +24,21 @@ namespace Megabin_Web.Migrations
                 type: "integer",
                 nullable: false,
                 defaultValue: 0);
+
+            // Step 2: Delete any existing scheduled collections that have no valid address
+            // (these are orphaned records from before the schema change)
+            migrationBuilder.Sql(
+                "DELETE FROM \"ScheduledCollections\" WHERE \"AddressId\" IS NULL");
+
+            // Step 3: Make AddressId non-nullable now that orphaned rows are removed
+            migrationBuilder.AlterColumn<Guid>(
+                name: "AddressId",
+                table: "ScheduledCollections",
+                type: "uuid",
+                nullable: false,
+                oldClrType: typeof(Guid),
+                oldType: "uuid",
+                oldNullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ScheduledCollections_AddressId",

@@ -42,4 +42,4 @@ public static class UpdateCollectionStatusEndpoint
     }
 }
 
-public record UpdateCollectionStatusRequest(bool Collected, string? Notes);
+public record UpdateCollectionStatusRequest(bool? Collected, string? Notes);

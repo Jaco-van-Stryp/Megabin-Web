@@ -39,7 +39,10 @@ public class UpdateCollectionStatusHandler(
             );
         }
 
-        collection.Collected = request.Collected;
+        if (request.Collected.HasValue)
+        {
+            collection.Collected = request.Collected.Value;
+        }
         if (request.Notes != null)
         {
             collection.Notes = request.Notes;

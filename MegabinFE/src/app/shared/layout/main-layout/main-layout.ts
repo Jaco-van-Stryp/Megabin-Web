@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, model } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
@@ -21,7 +21,7 @@ export class MainLayout {
   sidebarCollapsed = signal(false);
 
   /** Whether the mobile drawer is visible */
-  sidebarVisible = signal(false);
+  sidebarVisible = model(false);
 
   /** Reactive signal for mobile detection */
   readonly isMobile = this.responsiveService.isMobile;

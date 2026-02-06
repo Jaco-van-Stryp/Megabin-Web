@@ -157,8 +157,24 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
                 // Create scheduled collections for each stop in the route
                 foreach (var stop in collectionStops)
                 {
-                    var scheduleContractId = Guid.Parse(stop.JobId!);
-                    var contract = contractLookup[scheduleContractId];
+                    if (!Guid.TryParse(stop.JobId, out var scheduleContractId))
+                    {
+                        logger.LogWarning(
+                            "Invalid JobId format '{JobId}' in optimization result, skipping stop",
+                            stop.JobId
+                        );
+                        continue;
+                    }
+
+                    if (!contractLookup.TryGetValue(scheduleContractId, out var contract))
+                    {
+                        logger.LogWarning(
+                            "Schedule contract not found for JobId '{JobId}' (ContractId: {ContractId}), skipping stop",
+                            stop.JobId,
+                            scheduleContractId
+                        );
+                        continue;
+                    }
 
                     var scheduledCollection = new ScheduledCollections
                     {

@@ -29,6 +29,7 @@ namespace Megabin_Web.Features.Admin.UpdateDriver
             driver.DriverProfile.DropoffLocationLabel = request.DropoffLocationLabel;
             driver.DriverProfile.DropoffLocationLong = request.DropoffLocationLong;
             driver.DriverProfile.DropoffLocationLat = request.DropoffLocationLat;
+            driver.DriverProfile.TimeZoneId = request.TimeZoneId;
 
             await dbContext.SaveChangesAsync(cancellationToken);
         }

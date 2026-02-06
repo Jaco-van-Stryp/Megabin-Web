@@ -38,6 +38,7 @@ namespace Megabin_Web.Features.Admin.CreateDriver
                 DropoffLocationLong = request.DropoffLocationLong,
                 DropoffLocationLat = request.DropoffLocationLat,
                 VehicleCapacity = request.VehicleCapacity,
+                TimeZoneId = request.TimeZoneId,
             };
 
             // Also set the user's role to Driver

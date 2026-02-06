@@ -28,7 +28,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MySmartCloset API", Version = "v1" });
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Megabin API", Version = "v1" });
 
     // Add server URLs for API client generation
     opt.AddServer(

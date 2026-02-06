@@ -4,6 +4,6 @@ namespace Megabin_Web.Features.DriverDashboard.UpdateCollectionStatus;
 
 public record UpdateCollectionStatusCommand(
     Guid CollectionId,
-    bool Collected,
+    bool? Collected,
     string? Notes
 ) : IRequest;

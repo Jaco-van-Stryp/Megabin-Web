@@ -61,6 +61,7 @@ export class Login {
               break;
             default:
               this.errorMessage.set('Unknown user role');
+              this.isLoading.set(false);
           }
         } else {
           this.errorMessage.set('Invalid response from server');

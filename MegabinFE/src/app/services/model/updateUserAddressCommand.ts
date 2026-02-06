@@ -1,5 +1,5 @@
 /**
- * MySmartCloset API
+ * Megabin API
  *
  * 
  *
@@ -13,7 +13,7 @@ import { Location } from './location';
 
 export interface UpdateUserAddressCommand { 
     addressId?: string;
-    totalBins?: number | null;
+    totalBins?: number;
     addressNotes?: string | null;
     status?: AddressStatus;
     location?: Location;

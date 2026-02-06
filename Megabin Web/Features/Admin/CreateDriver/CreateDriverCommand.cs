@@ -12,5 +12,6 @@ public record CreateDriverCommand(
     string DropoffLocationLabel,
     double DropoffLocationLong,
     double DropoffLocationLat,
-    int VehicleCapacity
+    int VehicleCapacity,
+    string TimeZoneId
 ) : IRequest;
