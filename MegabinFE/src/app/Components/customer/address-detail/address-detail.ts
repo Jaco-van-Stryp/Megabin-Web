@@ -54,20 +54,20 @@ export class AddressDetail implements OnInit {
   isSubmittingSchedule = signal<boolean>(false);
 
   frequencyOptions = [
-    { label: 'Daily', value: 'Daily' as Frequency },
-    { label: 'Weekly', value: 'Weekly' as Frequency },
-    { label: 'Bi-Weekly', value: 'BiWeekly' as Frequency },
-    { label: 'Monthly', value: 'Monthly' as Frequency },
+    { label: 'Daily', value: Frequency.Daily },
+    { label: 'Weekly', value: Frequency.Weekly },
+    { label: 'Bi-Weekly', value: Frequency.BiWeekly },
+    { label: 'Monthly', value: Frequency.Monthly },
   ];
 
   dayOfWeekOptions = [
-    { label: 'Monday', value: 'Monday' as DayOfWeek },
-    { label: 'Tuesday', value: 'Tuesday' as DayOfWeek },
-    { label: 'Wednesday', value: 'Wednesday' as DayOfWeek },
-    { label: 'Thursday', value: 'Thursday' as DayOfWeek },
-    { label: 'Friday', value: 'Friday' as DayOfWeek },
-    { label: 'Saturday', value: 'Saturday' as DayOfWeek },
-    { label: 'Sunday', value: 'Sunday' as DayOfWeek },
+    { label: 'Monday', value: DayOfWeek.Monday },
+    { label: 'Tuesday', value: DayOfWeek.Tuesday },
+    { label: 'Wednesday', value: DayOfWeek.Wednesday },
+    { label: 'Thursday', value: DayOfWeek.Thursday },
+    { label: 'Friday', value: DayOfWeek.Friday },
+    { label: 'Saturday', value: DayOfWeek.Saturday },
+    { label: 'Sunday', value: DayOfWeek.Sunday },
   ];
 
   ngOnInit(): void {

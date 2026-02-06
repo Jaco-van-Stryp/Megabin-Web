@@ -7,6 +7,5 @@ public record UpdateScheduleContractCommand(
     Guid ContractId,
     Frequency Frequency,
     Shared.Domain.Enums.DayOfWeek DayOfWeek,
-    bool Active,
     bool ApprovedExternally
 ) : IRequest;

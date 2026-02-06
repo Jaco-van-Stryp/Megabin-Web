@@ -41,7 +41,9 @@ model/registerRequest.ts
 model/requestScheduleContractCommand.ts
 model/requestScheduleContractResponseDto.ts
 model/resetUserPasswordCommand.ts
+model/routePreviewDto.ts
 model/routeStop.ts
+model/scheduleContractPreviewDto.ts
 model/scheduledCollectionDto.ts
 model/stopType.ts
 model/updateCollectionStatusRequest.ts

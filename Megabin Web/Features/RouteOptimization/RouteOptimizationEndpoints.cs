@@ -1,4 +1,5 @@
 using Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes;
+using Megabin_Web.Features.RouteOptimization.PreviewDailyRoutes;
 
 namespace Megabin_Web.Features.RouteOptimization
 {
@@ -13,6 +14,7 @@ namespace Megabin_Web.Features.RouteOptimization
                 .RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             group.MapOptimizeDailyRoutesEndpoint();
+            group.MapPreviewDailyRoutesEndpoint();
 
             return app;
         }

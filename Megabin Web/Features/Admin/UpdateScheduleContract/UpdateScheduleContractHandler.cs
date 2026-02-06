@@ -23,8 +23,11 @@ namespace Megabin_Web.Features.Admin.UpdateScheduleContract
 
             contract.Frequency = request.Frequency;
             contract.DayOfWeek = request.DayOfWeek;
-            contract.Active = request.Active;
             contract.ApprovedExternally = request.ApprovedExternally;
+
+            // When a contract is approved, it should automatically become active
+            // When disapproved, it should become inactive
+            contract.Active = request.ApprovedExternally;
 
             await dbContext.SaveChangesAsync(cancellationToken);
         }

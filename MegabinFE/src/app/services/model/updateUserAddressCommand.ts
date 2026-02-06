@@ -13,7 +13,7 @@ import { Location } from './location';
 
 export interface UpdateUserAddressCommand { 
     addressId?: string;
-    totalBins?: number;
+    totalBins?: number | null;
     addressNotes?: string | null;
     status?: AddressStatus;
     location?: Location;

@@ -1,5 +1,3 @@
-<p-confirmDialog />
-
 <div class="space-y-4">
   <!-- Header -->
   <div class="flex justify-between items-center">
@@ -20,10 +18,10 @@
       <p-tablist>
         <p-tab value="0">
           <div class="flex items-center gap-2">
-            <i class="pi pi-box" aria-hidden="true"></i>
-            <span>Bin Requests</span>
-            @if (binRequestCount() > 0) {
-              <p-badge [value]="binRequestCount().toString()" severity="info" />
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            <span>Addresses</span>
+            @if (addressCount() > 0) {
+              <p-badge [value]="addressCount().toString()" severity="info" />
             }
           </div>
         </p-tab>
@@ -36,70 +34,61 @@
             }
           </div>
         </p-tab>
+        <p-tab value="2">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-truck" aria-hidden="true"></i>
+            <span>Route Generation</span>
+          </div>
+        </p-tab>
       </p-tablist>
 
-      <!-- Bin Requests Tab -->
       <p-tabpanels>
+        <!-- Addresses Tab -->
         <p-tabpanel value="0">
-          <!-- Bulk Actions -->
-          @if (selectedBinRequests().length > 0) {
-            <div class="flex items-center gap-3 mb-4 p-3 bg-surface-100 rounded-lg">
-              <span class="font-medium">{{ selectedBinRequests().length }} selected</span>
-              <p-button
-                label="Approve Selected"
-                icon="pi pi-check"
-                severity="success"
-                size="small"
-                (onClick)="bulkApproveBinRequests()"
-              />
-              <p-button
-                label="Clear"
-                icon="pi pi-times"
-                severity="secondary"
-                [text]="true"
-                size="small"
-                (onClick)="selectAllBinRequests(false)"
-              />
-            </div>
-          }
-
-          @if (pendingBinRequests().length === 0) {
+          @if (pendingAddresses().length === 0) {
             <div class="text-center py-12">
               <i class="pi pi-check-circle text-5xl text-surface-300 mb-4"></i>
-              <p class="text-surface-500 m-0">No pending bin requests</p>
+              <p class="text-surface-500 m-0">No pending addresses</p>
+              <p class="text-surface-400 text-sm m-0 mt-2">
+                Addresses in final status can be managed from the Addresses section
+              </p>
             </div>
           } @else if (isMobile()) {
             <!-- Mobile Card View -->
             <div class="flex flex-col gap-3">
-              @for (request of pendingBinRequests(); track request.addressId) {
+              @for (item of pendingAddresses(); track item.addressId) {
                 <p-card>
-                  <div class="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      [checked]="request.selected"
-                      (change)="toggleBinRequestSelection(request)"
-                      class="mt-1"
-                      [attr.aria-label]="'Select ' + request.address"
-                    />
-                    <div class="flex-1 min-w-0">
-                      <p class="font-medium m-0 truncate text-surface-900">
-                        {{ request.userName }}
-                      </p>
-                      <p class="text-sm m-0 truncate text-surface-500">{{ request.address }}</p>
-                      <div class="flex items-center gap-2 mt-2">
-                        <p-tag severity="info" [value]="request.totalBins + ' bins'" />
+                  <div class="flex flex-col gap-3">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1 min-w-0">
+                        <p class="font-medium m-0 truncate text-surface-900">
+                          {{ item.userName }}
+                        </p>
+                        <p class="text-sm m-0 truncate text-surface-500">{{ item.address }}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                          <p-tag severity="info" [value]="item.totalBins + ' bins'" />
+                        </div>
                       </div>
                     </div>
-                    <p-button
-                      icon="pi pi-check"
-                      severity="success"
-                      [text]="true"
-                      [rounded]="true"
-                      (onClick)="approveBinRequest(request)"
-                      [loading]="isProcessing(request.addressId)"
-                      pTooltip="Approve"
-                      ariaLabel="Approve bin request"
-                    />
+                    <div class="flex items-center gap-2">
+                      <label
+                        class="text-sm text-surface-600"
+                        [attr.for]="'status-' + item.addressId"
+                        >Status:</label
+                      >
+                      <p-select
+                        [id]="'status-' + item.addressId"
+                        [options]="addressStatusOptions"
+                        [ngModel]="item.currentStatus"
+                        (ngModelChange)="onAddressStatusChange(item, $event)"
+                        optionLabel="label"
+                        optionValue="value"
+                        [disabled]="isProcessing(item.addressId)"
+                        [loading]="isProcessing(item.addressId)"
+                        class="flex-1"
+                        appendTo="body"
+                      />
+                    </div>
                   </div>
                 </p-card>
               }
@@ -107,59 +96,50 @@
           } @else {
             <!-- Desktop Table View -->
             <p-table
-              [value]="pendingBinRequests()"
+              [value]="pendingAddresses()"
               [scrollable]="true"
               scrollHeight="400px"
               [tableStyle]="{ width: '100%' }"
             >
               <ng-template pTemplate="header">
                 <tr>
-                  <th style="width: 3rem">
-                    <input
-                      type="checkbox"
-                      [checked]="
-                        selectedBinRequests().length === pendingBinRequests().length &&
-                        pendingBinRequests().length > 0
-                      "
-                      (change)="selectAllBinRequests($any($event.target).checked)"
-                      aria-label="Select all bin requests"
-                    />
-                  </th>
                   <th pSortableColumn="userName">Customer <p-sortIcon field="userName" /></th>
                   <th pSortableColumn="address">Address <p-sortIcon field="address" /></th>
                   <th>Bins</th>
-                  <th style="width: 8rem">Actions</th>
+                  <th>Current Status</th>
+                  <th style="width: 14rem">Change Status</th>
                 </tr>
               </ng-template>
-              <ng-template pTemplate="body" let-request>
+              <ng-template pTemplate="body" let-item>
                 <tr>
                   <td>
-                    <input
-                      type="checkbox"
-                      [checked]="request.selected"
-                      (change)="toggleBinRequestSelection(request)"
-                      [attr.aria-label]="'Select ' + request.address"
+                    <div>
+                      <p class="font-medium m-0">{{ item.userName }}</p>
+                      <p class="text-sm m-0 text-surface-500">{{ item.userEmail }}</p>
+                    </div>
+                  </td>
+                  <td>{{ item.address }}</td>
+                  <td>
+                    <p-tag severity="info" [value]="item.totalBins + ' bins'" />
+                  </td>
+                  <td>
+                    <p-tag
+                      [severity]="getStatusSeverity(item.currentStatus)"
+                      [value]="formatStatus(item.currentStatus)"
                     />
                   </td>
                   <td>
-                    <div>
-                      <p class="font-medium m-0">{{ request.userName }}</p>
-                      <p class="text-sm m-0 text-surface-500">{{ request.userEmail }}</p>
-                    </div>
-                  </td>
-                  <td>{{ request.address }}</td>
-                  <td>
-                    <p-tag severity="info" [value]="request.totalBins + ' bins'" />
-                  </td>
-                  <td>
-                    <p-button
-                      icon="pi pi-check"
-                      label="Approve"
-                      severity="success"
-                      [text]="true"
-                      size="small"
-                      (onClick)="approveBinRequest(request)"
-                      [loading]="isProcessing(request.addressId)"
+                    <p-select
+                      [options]="addressStatusOptions"
+                      [ngModel]="item.currentStatus"
+                      (ngModelChange)="onAddressStatusChange(item, $event)"
+                      optionLabel="label"
+                      optionValue="value"
+                      [disabled]="isProcessing(item.addressId)"
+                      [loading]="isProcessing(item.addressId)"
+                      [style]="{ width: '100%' }"
+                      appendTo="body"
+                      ariaLabel="Change address status"
                     />
                   </td>
                 </tr>
@@ -170,66 +150,57 @@
 
         <!-- Schedule Contracts Tab -->
         <p-tabpanel value="1">
-          <!-- Bulk Actions -->
-          @if (selectedContracts().length > 0) {
-            <div class="flex items-center gap-3 mb-4 p-3 bg-surface-100 rounded-lg">
-              <span class="font-medium">{{ selectedContracts().length }} selected</span>
-              <p-button
-                label="Approve Selected"
-                icon="pi pi-check"
-                severity="success"
-                size="small"
-                (onClick)="bulkApproveContracts()"
-              />
-              <p-button
-                label="Clear"
-                icon="pi pi-times"
-                severity="secondary"
-                [text]="true"
-                size="small"
-                (onClick)="selectAllContracts(false)"
-              />
-            </div>
-          }
-
           @if (pendingContracts().length === 0) {
             <div class="text-center py-12">
               <i class="pi pi-check-circle text-5xl text-surface-300 mb-4"></i>
               <p class="text-surface-500 m-0">No pending schedule contracts</p>
+              <p class="text-surface-400 text-sm m-0 mt-2">
+                Approved contracts can be managed from the Addresses section
+              </p>
             </div>
           } @else if (isMobile()) {
             <!-- Mobile Card View -->
             <div class="flex flex-col gap-3">
               @for (contract of pendingContracts(); track contract.contractId) {
                 <p-card>
-                  <div class="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      [checked]="contract.selected"
-                      (change)="toggleContractSelection(contract)"
-                      class="mt-1"
-                      [attr.aria-label]="'Select ' + contract.address"
-                    />
-                    <div class="flex-1 min-w-0">
-                      <p class="font-medium m-0 truncate text-surface-900">
-                        {{ contract.userName }}
-                      </p>
-                      <p class="text-sm m-0 truncate text-surface-500">{{ contract.address }}</p>
-                      <div class="flex items-center gap-2 mt-2 flex-wrap">
-                        <p-tag severity="secondary" [value]="formatFrequency(contract.frequency)" />
-                        <p-tag severity="contrast" [value]="formatDayOfWeek(contract.dayOfWeek)" />
+                  <div class="flex flex-col gap-3">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1 min-w-0">
+                        <p class="font-medium m-0 truncate text-surface-900">
+                          {{ contract.userName }}
+                        </p>
+                        <p class="text-sm m-0 truncate text-surface-500">{{ contract.address }}</p>
+                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                          <p-tag
+                            severity="secondary"
+                            [value]="formatFrequency(contract.frequency)"
+                          />
+                          <p-tag
+                            severity="contrast"
+                            [value]="formatDayOfWeek(contract.dayOfWeek)"
+                          />
+                        </div>
                       </div>
                     </div>
-                    <p-button
-                      icon="pi pi-check"
-                      severity="success"
-                      [text]="true"
-                      [rounded]="true"
-                      (onClick)="approveContract(contract)"
-                      [loading]="isProcessing(contract.contractId)"
-                      pTooltip="Approve"
-                      ariaLabel="Approve schedule contract"
-                    />
+                    <div class="flex items-center gap-2">
+                      <label
+                        class="text-sm text-surface-600"
+                        [attr.for]="'approval-' + contract.contractId"
+                        >Status:</label
+                      >
+                      <p-select
+                        [id]="'approval-' + contract.contractId"
+                        [options]="approvalStatusOptions"
+                        [ngModel]="contract.approvedExternally"
+                        (ngModelChange)="onContractApprovalChange(contract, $event)"
+                        optionLabel="label"
+                        optionValue="value"
+                        [disabled]="isProcessing(contract.contractId)"
+                        [loading]="isProcessing(contract.contractId)"
+                        class="flex-1"
+                        appendTo="body"
+                      />
+                    </div>
                   </div>
                 </p-card>
               }
@@ -244,34 +215,16 @@
             >
               <ng-template pTemplate="header">
                 <tr>
-                  <th style="width: 3rem">
-                    <input
-                      type="checkbox"
-                      [checked]="
-                        selectedContracts().length === pendingContracts().length &&
-                        pendingContracts().length > 0
-                      "
-                      (change)="selectAllContracts($any($event.target).checked)"
-                      aria-label="Select all schedule contracts"
-                    />
-                  </th>
                   <th pSortableColumn="userName">Customer <p-sortIcon field="userName" /></th>
                   <th pSortableColumn="address">Address <p-sortIcon field="address" /></th>
                   <th>Frequency</th>
                   <th>Day</th>
-                  <th style="width: 8rem">Actions</th>
+                  <th>Current Status</th>
+                  <th style="width: 12rem">Change Status</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-contract>
                 <tr>
-                  <td>
-                    <input
-                      type="checkbox"
-                      [checked]="contract.selected"
-                      (change)="toggleContractSelection(contract)"
-                      [attr.aria-label]="'Select ' + contract.address"
-                    />
-                  </td>
                   <td>
                     <div>
                       <p class="font-medium m-0">{{ contract.userName }}</p>
@@ -286,20 +239,239 @@
                     <p-tag severity="contrast" [value]="formatDayOfWeek(contract.dayOfWeek)" />
                   </td>
                   <td>
-                    <p-button
-                      icon="pi pi-check"
-                      label="Approve"
-                      severity="success"
-                      [text]="true"
-                      size="small"
-                      (onClick)="approveContract(contract)"
+                    <p-tag severity="warn" value="Pending Approval" />
+                  </td>
+                  <td>
+                    <p-select
+                      [options]="approvalStatusOptions"
+                      [ngModel]="contract.approvedExternally"
+                      (ngModelChange)="onContractApprovalChange(contract, $event)"
+                      optionLabel="label"
+                      optionValue="value"
+                      [disabled]="isProcessing(contract.contractId)"
                       [loading]="isProcessing(contract.contractId)"
+                      [style]="{ width: '100%' }"
+                      appendTo="body"
+                      ariaLabel="Change approval status"
                     />
                   </td>
                 </tr>
               </ng-template>
             </p-table>
           }
+        </p-tabpanel>
+
+        <!-- Route Generation Tab -->
+        <p-tabpanel value="2">
+          <div class="flex flex-col gap-4">
+            <!-- Date Selection and Actions -->
+            <div class="flex flex-wrap items-center gap-4">
+              <div class="flex items-center gap-2">
+                <label for="route-date" class="text-sm font-medium text-surface-700"
+                  >Select Date:</label
+                >
+                <p-datepicker
+                  id="route-date"
+                  [ngModel]="selectedDate()"
+                  (ngModelChange)="onDateChange($event)"
+                  dateFormat="yy-mm-dd"
+                  [showIcon]="true"
+                  appendTo="body"
+                />
+              </div>
+              <p-button
+                label="Load Preview"
+                icon="pi pi-refresh"
+                [loading]="routePreviewLoading()"
+                (onClick)="loadRoutePreview()"
+                severity="secondary"
+              />
+              <p-button
+                label="Generate Routes"
+                icon="pi pi-play"
+                [loading]="routeGenerating()"
+                [disabled]="routePreviewLoading() || routePreviewCount() === 0"
+                (onClick)="triggerRouteGeneration()"
+              />
+            </div>
+
+            <!-- Preview Stats -->
+            @if (routePreviewLoading()) {
+              <div class="flex justify-center items-center py-8">
+                <p-progressSpinner strokeWidth="4" />
+              </div>
+            } @else if (routePreview()) {
+              <div class="flex flex-wrap gap-4">
+                <p-card styleClass="flex-1 min-w-[200px]">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100"
+                    >
+                      <i class="pi pi-calendar text-xl text-blue-600" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm text-surface-500 m-0">Day of Week</p>
+                      <p class="text-xl font-semibold m-0">
+                        {{ formatDayOfWeek(routePreview()!.dayOfWeek) }}
+                      </p>
+                    </div>
+                  </div>
+                </p-card>
+                <p-card styleClass="flex-1 min-w-[200px]">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex items-center justify-center w-12 h-12 rounded-full bg-green-100"
+                    >
+                      <i class="pi pi-users text-xl text-green-600" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm text-surface-500 m-0">Active Drivers</p>
+                      <p class="text-xl font-semibold m-0">
+                        {{ routePreview()!.activeDriverCount }}
+                      </p>
+                    </div>
+                  </div>
+                </p-card>
+                <p-card styleClass="flex-1 min-w-[200px]">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100"
+                    >
+                      <i class="pi pi-map-marker text-xl text-purple-600" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm text-surface-500 m-0">Contracts to Process</p>
+                      <p class="text-xl font-semibold m-0">
+                        {{ routePreview()!.scheduleContracts?.length ?? 0 }}
+                      </p>
+                    </div>
+                  </div>
+                </p-card>
+                <p-card styleClass="flex-1 min-w-[200px]">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex items-center justify-center w-12 h-12 rounded-full"
+                      [class]="
+                        routePreview()!.existingCollectionsCount > 0
+                          ? 'bg-orange-100'
+                          : 'bg-gray-100'
+                      "
+                    >
+                      <i
+                        class="pi pi-check-circle text-xl"
+                        [class]="
+                          routePreview()!.existingCollectionsCount > 0
+                            ? 'text-orange-600'
+                            : 'text-gray-600'
+                        "
+                        aria-hidden="true"
+                      ></i>
+                    </div>
+                    <div>
+                      <p class="text-sm text-surface-500 m-0">Existing Collections</p>
+                      <p class="text-xl font-semibold m-0">
+                        {{ routePreview()!.existingCollectionsCount }}
+                      </p>
+                    </div>
+                  </div>
+                </p-card>
+              </div>
+
+              @if (routePreview()!.existingCollectionsCount > 0) {
+                <div class="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <div class="flex items-center gap-2 text-orange-700">
+                    <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+                    <span class="font-medium"
+                      >Warning: {{ routePreview()!.existingCollectionsCount }} existing collections
+                      will be replaced if you regenerate routes.</span
+                    >
+                  </div>
+                </div>
+              }
+
+              <!-- Schedule Contracts Table -->
+              @if ((routePreview()!.scheduleContracts?.length ?? 0) === 0) {
+                <div class="text-center py-12">
+                  <i class="pi pi-inbox text-5xl text-surface-300 mb-4"></i>
+                  <p class="text-surface-500 m-0">No schedule contracts for this day</p>
+                  <p class="text-surface-400 text-sm m-0 mt-2">
+                    No active, approved contracts are scheduled for
+                    {{ formatDayOfWeek(routePreview()!.dayOfWeek) }}
+                  </p>
+                </div>
+              } @else if (isMobile()) {
+                <!-- Mobile Card View -->
+                <div class="flex flex-col gap-3">
+                  @for (
+                    contract of routePreview()!.scheduleContracts ?? [];
+                    track contract.contractId
+                  ) {
+                    <p-card>
+                      <div class="flex flex-col gap-2">
+                        <div>
+                          <p class="font-medium m-0 text-surface-900">
+                            {{ contract.customerName }}
+                          </p>
+                          <p class="text-sm m-0 text-surface-500">{{ contract.address }}</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                          <p-tag
+                            severity="secondary"
+                            [value]="formatFrequency(contract.frequency)"
+                          />
+                          <p-tag severity="info" [value]="contract.totalBins + ' bins'" />
+                        </div>
+                      </div>
+                    </p-card>
+                  }
+                </div>
+              } @else {
+                <!-- Desktop Table View -->
+                <p-table
+                  [value]="routePreview()!.scheduleContracts ?? []"
+                  [scrollable]="true"
+                  scrollHeight="400px"
+                  [tableStyle]="{ width: '100%' }"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th pSortableColumn="customerName">
+                        Customer <p-sortIcon field="customerName" />
+                      </th>
+                      <th pSortableColumn="address">Address <p-sortIcon field="address" /></th>
+                      <th>Frequency</th>
+                      <th>Bins</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-contract>
+                    <tr>
+                      <td>
+                        <div>
+                          <p class="font-medium m-0">{{ contract.customerName }}</p>
+                          <p class="text-sm m-0 text-surface-500">{{ contract.customerEmail }}</p>
+                        </div>
+                      </td>
+                      <td>{{ contract.address }}</td>
+                      <td>
+                        <p-tag severity="secondary" [value]="formatFrequency(contract.frequency)" />
+                      </td>
+                      <td>
+                        <p-tag severity="info" [value]="contract.totalBins + ' bins'" />
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              }
+            } @else {
+              <div class="text-center py-12">
+                <i class="pi pi-calendar-plus text-5xl text-surface-300 mb-4"></i>
+                <p class="text-surface-500 m-0">Select a date and click "Load Preview"</p>
+                <p class="text-surface-400 text-sm m-0 mt-2">
+                  View which schedule contracts will be included in route generation
+                </p>
+              </div>
+            }
+          </div>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>

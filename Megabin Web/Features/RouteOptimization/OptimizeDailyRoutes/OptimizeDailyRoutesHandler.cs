@@ -43,8 +43,10 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
                 dbContext.ScheduledCollections.RemoveRange(existingSchedules);
             }
 
-            // Get day of week for the target date
-            var dayOfWeekEnum = targetDate.DayOfWeek;
+            // Convert System.DayOfWeek to custom DayOfWeek enum
+            // System.DayOfWeek: Sunday=0, Monday=1, ..., Saturday=6
+            // Custom enum: Monday=0, Tuesday=1, ..., Sunday=6
+            var customDayOfWeek = ConvertToCustomDayOfWeek(targetDate.DayOfWeek);
 
             // Get all active schedule contracts that need collection on this day of week
             var activeContracts = await dbContext
@@ -52,7 +54,7 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
                 .Where(sc =>
                     sc.Active
                     && sc.ApprovedExternally
-                    && (DayOfWeek)sc.DayOfWeek == dayOfWeekEnum
+                    && sc.DayOfWeek == customDayOfWeek
                 )
                 .ToListAsync(cancellationToken);
 
@@ -60,7 +62,7 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
             {
                 logger.LogInformation(
                     "No active schedule contracts found for {DayOfWeek}",
-                    dayOfWeekEnum
+                    customDayOfWeek
                 );
                 return new DailyOptimizationResult(
                     new List<DriverRoute>(),
@@ -73,7 +75,7 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
             logger.LogInformation(
                 "Found {Count} active schedule contracts for {DayOfWeek}",
                 activeContracts.Count,
-                dayOfWeekEnum
+                customDayOfWeek
             );
 
             // Get all active drivers with their user information
@@ -220,6 +222,28 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
             );
 
             return result;
+        }
+
+        /// <summary>
+        /// Converts System.DayOfWeek to custom DayOfWeek enum.
+        /// System.DayOfWeek: Sunday=0, Monday=1, ..., Saturday=6
+        /// Custom enum: Monday=0, Tuesday=1, ..., Sunday=6
+        /// </summary>
+        private static Shared.Domain.Enums.DayOfWeek ConvertToCustomDayOfWeek(
+            System.DayOfWeek systemDayOfWeek
+        )
+        {
+            return systemDayOfWeek switch
+            {
+                System.DayOfWeek.Monday => Shared.Domain.Enums.DayOfWeek.Monday,
+                System.DayOfWeek.Tuesday => Shared.Domain.Enums.DayOfWeek.Tuesday,
+                System.DayOfWeek.Wednesday => Shared.Domain.Enums.DayOfWeek.Wednesday,
+                System.DayOfWeek.Thursday => Shared.Domain.Enums.DayOfWeek.Thursday,
+                System.DayOfWeek.Friday => Shared.Domain.Enums.DayOfWeek.Friday,
+                System.DayOfWeek.Saturday => Shared.Domain.Enums.DayOfWeek.Saturday,
+                System.DayOfWeek.Sunday => Shared.Domain.Enums.DayOfWeek.Sunday,
+                _ => throw new ArgumentOutOfRangeException(nameof(systemDayOfWeek)),
+            };
         }
     }
 }
