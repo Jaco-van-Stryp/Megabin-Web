@@ -3,7 +3,7 @@ using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.CurrentUserService;
 using Microsoft.EntityFrameworkCore;
 
-namespace Megabin_Web.Features.DriverDashboard.UpdateCollectionStatus;
+namespace Megabin_Web.Features.Driver.UpdateCollectionStatus;
 
 public class UpdateCollectionStatusHandler(
     AppDbContext dbContext,

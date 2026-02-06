@@ -1,7 +1,7 @@
-using Megabin_Web.Features.DriverDashboard.GetTodaysRoute;
-using Megabin_Web.Features.DriverDashboard.UpdateCollectionStatus;
+using Megabin_Web.Features.Driver.GetTodaysRoute;
+using Megabin_Web.Features.Driver.UpdateCollectionStatus;
 
-namespace Megabin_Web.Features.DriverDashboard;
+namespace Megabin_Web.Features.Driver;
 
 public static class DriverEndpoints
 {

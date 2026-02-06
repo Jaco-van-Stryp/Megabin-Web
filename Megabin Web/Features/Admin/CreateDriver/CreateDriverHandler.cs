@@ -11,6 +11,24 @@ namespace Megabin_Web.Features.Admin.CreateDriver
     {
         public async Task Handle(CreateDriverCommand request, CancellationToken cancellationToken)
         {
+            // Validate TimeZoneId before processing
+            if (string.IsNullOrWhiteSpace(request.TimeZoneId))
+            {
+                throw new ArgumentException("TimeZoneId is required", nameof(request.TimeZoneId));
+            }
+
+            try
+            {
+                TimeZoneInfo.FindSystemTimeZoneById(request.TimeZoneId);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                throw new ArgumentException(
+                    $"Invalid timezone identifier: '{request.TimeZoneId}'",
+                    nameof(request.TimeZoneId)
+                );
+            }
+
             var user = await dbContext
                 .Users.Include(x => x.DriverProfile)
                 .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
@@ -25,7 +43,7 @@ namespace Megabin_Web.Features.Admin.CreateDriver
                 throw new InvalidOperationException("User is already a driver");
             }
 
-            var driver = new Driver
+            var driver = new Megabin_Web.Shared.Domain.Entities.Driver
             {
                 Active = request.Active,
                 LicenseNumber = request.LicenseNumber,

@@ -7,7 +7,7 @@ using Megabin_Web.Features.Address;
 using Megabin_Web.Features.Admin;
 using Megabin_Web.Features.Auth;
 using Megabin_Web.Features.Customer;
-using Megabin_Web.Features.DriverDashboard;
+using Megabin_Web.Features.Driver;
 using Megabin_Web.Features.RouteOptimization;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.APILimitationService;

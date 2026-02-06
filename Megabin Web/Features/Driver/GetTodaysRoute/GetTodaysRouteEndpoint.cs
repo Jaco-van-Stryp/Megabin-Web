@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Megabin_Web.Features.DriverDashboard.GetTodaysRoute;
+namespace Megabin_Web.Features.Driver.GetTodaysRoute;
 
 public static class GetTodaysRouteEndpoint
 {

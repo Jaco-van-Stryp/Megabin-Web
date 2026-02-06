@@ -9,7 +9,7 @@
  */
 
 
-export interface UpdateDriver { 
+export interface UpdateDriver {
     vehicleCapacity: number;
     licenseNumber: string | null;
     active: boolean;
@@ -20,5 +20,6 @@ export interface UpdateDriver {
     dropoffLocationLabel: string | null;
     dropoffLocationLong: number;
     dropoffLocationLat: number;
+    timeZoneId: string;
 }
 

@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Megabin_Web.Features.DriverDashboard.GetTodaysRoute;
+namespace Megabin_Web.Features.Driver.GetTodaysRoute;
 
 public record GetTodaysRouteQuery() : IRequest<List<ScheduledCollectionDto>>;
 

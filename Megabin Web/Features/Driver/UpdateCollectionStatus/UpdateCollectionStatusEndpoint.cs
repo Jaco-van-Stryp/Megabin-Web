@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Megabin_Web.Features.DriverDashboard.UpdateCollectionStatus;
+namespace Megabin_Web.Features.Driver.UpdateCollectionStatus;
 
 public static class UpdateCollectionStatusEndpoint
 {

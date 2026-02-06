@@ -9,6 +9,24 @@ namespace Megabin_Web.Features.Admin.UpdateDriver
     {
         public async Task Handle(UpdateDriverCommand request, CancellationToken cancellationToken)
         {
+            // Validate TimeZoneId before processing
+            if (string.IsNullOrWhiteSpace(request.TimeZoneId))
+            {
+                throw new ArgumentException("TimeZoneId is required", nameof(request.TimeZoneId));
+            }
+
+            try
+            {
+                TimeZoneInfo.FindSystemTimeZoneById(request.TimeZoneId);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                throw new ArgumentException(
+                    $"Invalid timezone identifier: '{request.TimeZoneId}'",
+                    nameof(request.TimeZoneId)
+                );
+            }
+
             var driver = await dbContext
                 .Users.Include(x => x.DriverProfile)
                 .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);

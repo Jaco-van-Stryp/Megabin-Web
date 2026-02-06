@@ -3,7 +3,7 @@ using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.CurrentUserService;
 using Microsoft.EntityFrameworkCore;
 
-namespace Megabin_Web.Features.DriverDashboard.GetTodaysRoute;
+namespace Megabin_Web.Features.Driver.GetTodaysRoute;
 
 public class GetTodaysRouteHandler(
     AppDbContext dbContext,
@@ -29,15 +29,19 @@ public class GetTodaysRouteHandler(
         // Convert UTC to driver's local timezone to determine "today"
         var driverTimeZone = TimeZoneInfo.FindSystemTimeZoneById(driver.TimeZoneId);
         var driverLocalNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, driverTimeZone);
-        var today = driverLocalNow.Date;
-        var tomorrow = today.AddDays(1);
+        var todayLocal = driverLocalNow.Date;
+        var tomorrowLocal = todayLocal.AddDays(1);
+
+        // Normalize date bounds to UTC for comparison with ScheduledFor (which is stored as UTC)
+        var todayUtc = DateTime.SpecifyKind(todayLocal, DateTimeKind.Utc);
+        var tomorrowUtc = DateTime.SpecifyKind(tomorrowLocal, DateTimeKind.Utc);
 
         var collections = await dbContext
             .ScheduledCollections.Include(sc => sc.Address)
             .Where(sc =>
                 sc.UserId == driver.Id // UserId in ScheduledCollections stores DriverId
-                && sc.ScheduledFor >= today
-                && sc.ScheduledFor < tomorrow
+                && sc.ScheduledFor >= todayUtc
+                && sc.ScheduledFor < tomorrowUtc
             )
             .OrderBy(sc => sc.RouteSequence)
             .Select(sc => new ScheduledCollectionDto

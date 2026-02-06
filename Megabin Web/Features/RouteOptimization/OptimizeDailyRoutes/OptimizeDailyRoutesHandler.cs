@@ -144,11 +144,29 @@ namespace Megabin_Web.Features.RouteOptimization.OptimizeDailyRoutes
             // Build a lookup dictionary for schedule contracts to get address IDs
             var contractLookup = activeContracts.ToDictionary(c => c.Id);
 
+            // Build a lookup dictionary for drivers
+            var driverLookup = drivers.ToDictionary(d => d.Id);
+
             // Save optimized routes to database as ScheduledCollections
             foreach (var route in result.Routes)
             {
-                var driverId = Guid.Parse(route.DriverId);
-                var driver = drivers.First(d => d.Id == driverId);
+                if (!Guid.TryParse(route.DriverId, out var driverId))
+                {
+                    logger.LogWarning(
+                        "Invalid DriverId format '{DriverId}' in optimization result, skipping route",
+                        route.DriverId
+                    );
+                    continue;
+                }
+
+                if (!driverLookup.TryGetValue(driverId, out var driver))
+                {
+                    logger.LogWarning(
+                        "Driver not found for DriverId '{DriverId}', skipping route",
+                        route.DriverId
+                    );
+                    continue;
+                }
 
                 // Get collection stops only and track sequence
                 var collectionStops = route.Stops.Where(s => s.Type == StopType.Collection).ToList();

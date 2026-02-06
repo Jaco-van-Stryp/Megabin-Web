@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Megabin_Web.Features.DriverDashboard.UpdateCollectionStatus;
+namespace Megabin_Web.Features.Driver.UpdateCollectionStatus;
 
 public record UpdateCollectionStatusCommand(
     Guid CollectionId,
