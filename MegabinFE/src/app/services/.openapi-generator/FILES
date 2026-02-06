@@ -6,6 +6,7 @@ api/admin.service.ts
 api/api.ts
 api/auth.service.ts
 api/customer.service.ts
+api/driver.service.ts
 api/routeOptimization.service.ts
 configuration.ts
 encoder.ts
@@ -41,7 +42,9 @@ model/requestScheduleContractCommand.ts
 model/requestScheduleContractResponseDto.ts
 model/resetUserPasswordCommand.ts
 model/routeStop.ts
+model/scheduledCollectionDto.ts
 model/stopType.ts
+model/updateCollectionStatusRequest.ts
 model/updateDriverCommand.ts
 model/updateProfileCommand.ts
 model/updateScheduleContractCommand.ts

@@ -1,0 +1,79 @@
+<nav
+  class="h-full flex flex-col bg-surface-0 border-r border-surface-200 transition-all duration-300"
+  [class.w-64]="!collapsed() || isMobileDrawer()"
+  [class.w-16]="collapsed() && !isMobileDrawer()"
+  role="navigation"
+  aria-label="Main navigation"
+>
+  <!-- Logo/Brand Header -->
+  @if (!isMobileDrawer()) {
+    <div class="p-4 flex items-center justify-between border-b border-surface-200">
+      @if (!collapsed()) {
+        <span class="font-bold text-xl text-surface-900">Megabin</span>
+      }
+      <p-button
+        [icon]="collapsed() ? 'pi pi-angle-right' : 'pi pi-angle-left'"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        (onClick)="toggleCollapse.emit()"
+        [pTooltip]="collapsed() ? 'Expand menu' : 'Collapse menu'"
+        tooltipPosition="right"
+        ariaLabel="Toggle sidebar"
+      />
+    </div>
+  }
+
+  <!-- Menu Items -->
+  <ul class="flex-1 py-2 list-none m-0 p-0" role="menubar">
+    @for (item of menuItems(); track item.routerLink) {
+      <li role="none" class="mx-2 my-1">
+        <a
+          [routerLink]="item.routerLink"
+          routerLinkActive="bg-primary text-primary-contrast"
+          [routerLinkActiveOptions]="{ exact: item.routerLink.split('/').length <= 2 }"
+          class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-surface-100 transition-colors no-underline text-surface-700"
+          [pTooltip]="collapsed() && !isMobileDrawer() ? item.label : ''"
+          tooltipPosition="right"
+          role="menuitem"
+        >
+          <i [class]="item.icon + ' text-lg'" aria-hidden="true"></i>
+          @if (!collapsed() || isMobileDrawer()) {
+            <span class="font-medium">{{ item.label }}</span>
+          }
+        </a>
+      </li>
+    }
+  </ul>
+
+  <p-divider />
+
+  <!-- User Section -->
+  <div class="p-4">
+    <div class="flex items-center gap-3">
+      <p-avatar
+        [label]="getUserInitial()"
+        shape="circle"
+        styleClass="bg-primary text-primary-contrast"
+      />
+      @if (!collapsed() || isMobileDrawer()) {
+        <div class="flex-1 min-w-0">
+          <p class="font-medium truncate m-0 text-surface-900">{{ user()?.name }}</p>
+          <p class="text-sm truncate m-0 text-surface-500">{{ user()?.email }}</p>
+        </div>
+      }
+    </div>
+
+    <p-button
+      [label]="collapsed() && !isMobileDrawer() ? '' : 'Logout'"
+      icon="pi pi-sign-out"
+      severity="secondary"
+      [text]="true"
+      (onClick)="logout()"
+      styleClass="w-full mt-3 justify-start"
+      [pTooltip]="collapsed() && !isMobileDrawer() ? 'Logout' : ''"
+      tooltipPosition="right"
+      ariaLabel="Logout"
+    />
+  </div>
+</nav>

@@ -49,14 +49,19 @@ export class Login {
           this.authTokenService.setAuthData(loginResponse);
           this.isLoading.set(false);
 
-          if (loginResponse.role === UserRoles.Admin) {
-            this.router.navigate(['/admin/admin-dashboard']);
-          } else if (loginResponse.role === UserRoles.Driver) {
-            this.router.navigate(['/driver']);
-          } else if (loginResponse.role === UserRoles.Customer) {
-            this.router.navigate(['/customer']);
-          } else {
-            this.errorMessage.set('Unknown user role');
+          switch (loginResponse.role) {
+            case UserRoles.Admin:
+              this.router.navigate(['/admin/dashboard']);
+              break;
+            case UserRoles.Driver:
+              this.router.navigate(['/driver']);
+              break;
+            case UserRoles.Customer:
+              this.router.navigate(['/customer']);
+              break;
+            default:
+              this.errorMessage.set('Unknown user role');
+              this.isLoading.set(false);
           }
         } else {
           this.errorMessage.set('Invalid response from server');

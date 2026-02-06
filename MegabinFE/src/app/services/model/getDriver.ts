@@ -1,5 +1,5 @@
 /**
- * MySmartCloset API
+ * Megabin API
  *
  * 
  *
@@ -20,6 +20,7 @@ export interface GetDriver {
     vehicleCapacity: number;
     licenseNumber: string | null;
     active: boolean;
+    timeZoneId: string | null;
     userId: string;
 }
 

@@ -7,6 +7,7 @@ using Megabin_Web.Features.Address;
 using Megabin_Web.Features.Admin;
 using Megabin_Web.Features.Auth;
 using Megabin_Web.Features.Customer;
+using Megabin_Web.Features.Driver;
 using Megabin_Web.Features.RouteOptimization;
 using Megabin_Web.Shared.Domain.Data;
 using Megabin_Web.Shared.Infrastructure.APILimitationService;
@@ -27,7 +28,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MySmartCloset API", Version = "v1" });
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Megabin API", Version = "v1" });
 
     // Add server URLs for API client generation
     opt.AddServer(
@@ -210,6 +211,7 @@ app.MapAddressEndpoints();
 app.MapAdminEndpoints();
 app.MapAuthEndpoints();
 app.MapCustomerEndpoints();
+app.MapDriverEndpoints();
 app.MapRouteOptimizationEndpoints();
 
 // Configure recurring jobs

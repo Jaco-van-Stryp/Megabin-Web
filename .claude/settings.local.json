@@ -12,7 +12,9 @@
       "Bash(curl:*)",
       "Bash(python:*)",
       "WebFetch(domain:localhost)",
-      "Bash(npm run generate:*)"
+      "Bash(npm run generate:*)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(cat:*)"
     ]
   }
 }

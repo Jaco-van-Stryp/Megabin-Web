@@ -22,7 +22,7 @@ namespace Megabin_Web.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Megabin_Web.Entities.APIUsageTracker", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.APIUsageTracker", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace Megabin_Web.Migrations
                     b.ToTable("APIUsageTrackers");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Addresses", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,7 @@ namespace Megabin_Web.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Driver", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Driver", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,6 +112,10 @@ namespace Megabin_Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -126,7 +130,7 @@ namespace Megabin_Web.Migrations
                     b.ToTable("Drivers");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.ScheduleContract", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.ScheduleContract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,10 +164,13 @@ namespace Megabin_Web.Migrations
                     b.ToTable("ScheduledContract");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.ScheduledCollections", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.ScheduledCollections", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Collected")
@@ -173,6 +180,9 @@ namespace Megabin_Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("RouteSequence")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("ScheduledFor")
                         .HasColumnType("timestamp with time zone");
 
@@ -181,12 +191,14 @@ namespace Megabin_Web.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("ScheduledCollections");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Users", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Users", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -216,18 +228,18 @@ namespace Megabin_Web.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.APIUsageTracker", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.APIUsageTracker", b =>
                 {
-                    b.HasOne("Megabin_Web.Entities.Users", "User")
+                    b.HasOne("Megabin_Web.Shared.Domain.Entities.Users", "User")
                         .WithMany("ApiUsageTracker")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Addresses", b =>
                 {
-                    b.HasOne("Megabin_Web.Entities.Users", "User")
+                    b.HasOne("Megabin_Web.Shared.Domain.Entities.Users", "User")
                         .WithMany("Addresss")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -236,20 +248,20 @@ namespace Megabin_Web.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Driver", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Driver", b =>
                 {
-                    b.HasOne("Megabin_Web.Entities.Users", "User")
+                    b.HasOne("Megabin_Web.Shared.Domain.Entities.Users", "User")
                         .WithOne("DriverProfile")
-                        .HasForeignKey("Megabin_Web.Entities.Driver", "UserId")
+                        .HasForeignKey("Megabin_Web.Shared.Domain.Entities.Driver", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.ScheduleContract", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.ScheduleContract", b =>
                 {
-                    b.HasOne("Megabin_Web.Entities.Addresses", "Addresses")
+                    b.HasOne("Megabin_Web.Shared.Domain.Entities.Addresses", "Addresses")
                         .WithMany("Schedules")
                         .HasForeignKey("AddressesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -258,23 +270,31 @@ namespace Megabin_Web.Migrations
                     b.Navigation("Addresses");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.ScheduledCollections", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.ScheduledCollections", b =>
                 {
-                    b.HasOne("Megabin_Web.Entities.Users", "User")
+                    b.HasOne("Megabin_Web.Shared.Domain.Entities.Addresses", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Megabin_Web.Shared.Domain.Entities.Users", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Address");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Addresses", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Addresses", b =>
                 {
                     b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("Megabin_Web.Entities.Users", b =>
+            modelBuilder.Entity("Megabin_Web.Shared.Domain.Entities.Users", b =>
                 {
                     b.Navigation("Addresss");
 

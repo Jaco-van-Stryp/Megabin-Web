@@ -36,6 +36,7 @@ namespace Megabin_Web.Features.Admin.GetDriver
                 VehicleCapacity = driver.DriverProfile.VehicleCapacity,
                 LicenseNumber = driver.DriverProfile.LicenseNumber,
                 Active = driver.DriverProfile.Active,
+                TimeZoneId = driver.DriverProfile.TimeZoneId,
                 UserId = driver.Id,
             };
         }

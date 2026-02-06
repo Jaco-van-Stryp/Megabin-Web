@@ -102,6 +102,7 @@ export class UpdateUserDetails {
       vehicleCapacity: 10,
       licenseNumber: null,
       active: true,
+      timeZoneId: 'Africa/Johannesburg',
     };
   }
 
@@ -221,6 +222,7 @@ export class UpdateUserDetails {
         vehicleCapacity: driver.vehicleCapacity,
         licenseNumber: driver.licenseNumber,
         active: driver.active,
+        timeZoneId: driver.timeZoneId,
       };
 
       this.adminService.apiAdminUpdateDriverPost(updateRequest).subscribe({
@@ -254,6 +256,7 @@ export class UpdateUserDetails {
         vehicleCapacity: driver.vehicleCapacity,
         licenseNumber: driver.licenseNumber,
         active: driver.active,
+        timeZoneId: driver.timeZoneId,
       };
 
       this.adminService.apiAdminCreateDriverPost(createRequest).subscribe({

@@ -1,5 +1,5 @@
 /**
- * MySmartCloset API
+ * Megabin API
  *
  * 
  *

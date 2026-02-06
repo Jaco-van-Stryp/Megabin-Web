@@ -1,63 +1,95 @@
-<p-table
-  #dt
-  [value]="users()"
-  [tableStyle]="{ 'min-width': '50rem' }"
-  [globalFilterFields]="['name', 'email', 'role']"
-  [scrollable]="true"
-  scrollHeight="80vh"
->
-  <ng-template pTemplate="caption">
-    <div class="flex justify-content-end">
-      <p-iconField iconPosition="left" class="w-full">
-        <p-inputIcon>
-          <i class="pi pi-search"></i>
-        </p-inputIcon>
-        <input
-          pInputText
-          type="text"
-          (input)="dt.filterGlobal($event.target.value, 'contains')"
-          placeholder="Search Users"
-          class="w-full"
-        />
-      </p-iconField>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="header">
-    <tr>
-      <th pSortableColumn="name">
-        Name
-        <p-sortIcon field="name"></p-sortIcon>
-      </th>
-      <th pSortableColumn="email">
-        Email
-        <p-sortIcon field="email"></p-sortIcon>
-      </th>
-      <th pSortableColumn="role">
-        Role
-        <p-sortIcon field="role"></p-sortIcon>
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-user>
-    <tr (click)="clickUser(user.id)">
-      <td>{{ user.name }}</td>
-      <td>{{ user.email }}</td>
-      <td>
-        @switch (user.role) {
-          @case ('admin') {
-            <p-tag severity="danger" value="Admin"></p-tag>
-          }
-          @case ('driver') {
-            <p-tag severity="success" value="Driver"></p-tag>
-          }
-          @case ('customer') {
-            <p-tag severity="info" value="Customer"></p-tag>
-          }
-          @default {
-            <p-tag severity="danger" value="Unknown"></p-tag>
-          }
-        }
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+<!-- Search Bar -->
+<div class="mb-4">
+  <p-iconField iconPosition="left" class="w-full">
+    <p-inputIcon>
+      <i class="pi pi-search" aria-hidden="true"></i>
+    </p-inputIcon>
+    <input
+      pInputText
+      type="text"
+      (input)="onSearch($event)"
+      placeholder="Search users..."
+      class="w-full"
+      aria-label="Search users"
+    />
+  </p-iconField>
+</div>
+
+@if (isMobile()) {
+  <!-- Mobile Card View -->
+  <div class="flex flex-col gap-3">
+    @for (user of filteredUsers(); track user.id) {
+      <p-card
+        class="cursor-pointer hover:shadow-md transition-shadow"
+        (click)="clickUser(user.id)"
+        (keydown.enter)="clickUser(user.id)"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="'Manage user ' + user.name"
+      >
+        <div class="flex justify-between items-start">
+          <div class="flex-1 min-w-0">
+            <p class="font-medium m-0 truncate text-surface-900">{{ user.name }}</p>
+            <p class="text-sm m-0 truncate text-surface-500">{{ user.email }}</p>
+          </div>
+          <p-tag [severity]="getRoleSeverity(user.role)" [value]="getRoleLabel(user.role)" />
+        </div>
+      </p-card>
+    } @empty {
+      <div class="text-center py-8">
+        <i class="pi pi-users text-4xl text-surface-300 mb-2"></i>
+        <p class="text-surface-500 m-0">No users found</p>
+      </div>
+    }
+  </div>
+} @else {
+  <!-- Desktop Table View -->
+  <p-table
+    #dt
+    [value]="filteredUsers()"
+    [tableStyle]="{ width: '100%' }"
+    [scrollable]="true"
+    scrollHeight="70vh"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">
+          Name
+          <p-sortIcon field="name" />
+        </th>
+        <th pSortableColumn="email">
+          Email
+          <p-sortIcon field="email" />
+        </th>
+        <th pSortableColumn="role">
+          Role
+          <p-sortIcon field="role" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr
+        class="cursor-pointer hover:bg-surface-100"
+        (click)="clickUser(user.id)"
+        (keydown.enter)="clickUser(user.id)"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="'Manage user ' + user.name"
+      >
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <p-tag [severity]="getRoleSeverity(user.role)" [value]="getRoleLabel(user.role)" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center py-8">
+          <i class="pi pi-users text-4xl text-surface-300 mb-2"></i>
+          <p class="text-surface-500 m-0">No users found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+}

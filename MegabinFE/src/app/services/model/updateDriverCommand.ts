@@ -1,5 +1,5 @@
 /**
- * MySmartCloset API
+ * Megabin API
  *
  * 
  *
@@ -20,5 +20,6 @@ export interface UpdateDriverCommand {
     dropoffLocationLabel?: string | null;
     dropoffLocationLong?: number;
     dropoffLocationLat?: number;
+    timeZoneId?: string | null;
 }
 

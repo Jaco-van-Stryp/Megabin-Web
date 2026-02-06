@@ -38,8 +38,8 @@ namespace Megabin_Web.Shared.Infrastructure.OpenRouteService
                 using var scope = _serviceProvider.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
 
-                // Delegate to the feature handler
-                var command = new OptimizeDailyRoutesCommand(DateTime.Today);
+                // Delegate to the feature handler - use UTC for PostgreSQL compatibility
+                var command = new OptimizeDailyRoutesCommand(DateTime.UtcNow.Date);
                 await mediator.Send(command);
 
                 _logger.LogInformation(

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree:*)",
+      "Bash(git rm:*)",
+      "Bash(for branch in master Add-Address Add-Initial-Frontend Add-Schedule-Contracts Add-User-Management AddWhatsAppService Build-Admin-Address-Management Convert-to-Vertical-Slice-&-MeriatR Create-Drivers User-Dashboard)",
+      "Bash(do echo \"=== $branch ===\")",
+      "Bash(done)",
+      "Bash(git rev-list:*)",
+      "Bash(git check-ignore:*)"
+    ]
+  }
+}

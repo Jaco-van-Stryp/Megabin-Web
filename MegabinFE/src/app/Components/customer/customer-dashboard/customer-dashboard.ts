@@ -4,6 +4,7 @@ import {
   inject,
   OnInit,
   signal,
+  computed,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
@@ -13,9 +14,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
 import { AddressService, GetAddress } from '../../../services';
+import { AddressStatus } from '../../../services/model/addressStatus';
+import { ResponsiveService } from '../../../shared/services/responsive.service';
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -27,17 +29,32 @@ import { AddressService, GetAddress } from '../../../services';
     IconFieldModule,
     InputIconModule,
     TooltipModule,
-    ToastModule,
+    CardModule,
   ],
-  providers: [MessageService],
   templateUrl: './customer-dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerDashboard implements OnInit {
   private addressService = inject(AddressService);
   private router = inject(Router);
+  private responsiveService = inject(ResponsiveService);
 
   addresses = signal<GetAddress[]>([]);
+  searchTerm = signal('');
+
+  readonly isMobile = this.responsiveService.isMobile;
+
+  readonly filteredAddresses = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    if (!term) return this.addresses();
+    return this.addresses().filter((addr) => {
+      const addressMatch = addr.address?.toLowerCase().includes(term);
+      const rawStatusMatch = addr.addressStatus?.toLowerCase().includes(term);
+      const statusLabel = addr.addressStatus ? this.getStatusLabel(addr.addressStatus) : '';
+      const labelMatch = statusLabel.toLowerCase().includes(term);
+      return addressMatch || rawStatusMatch || labelMatch;
+    });
+  });
 
   ngOnInit(): void {
     this.loadAddresses();
@@ -54,11 +71,46 @@ export class CustomerDashboard implements OnInit {
     this.router.navigate(['/customer/addresses', addressId]);
   }
 
-  navigateToProfile(): void {
-    this.router.navigate(['/customer/profile']);
-  }
-
   navigateToAddAddress(): void {
     this.router.navigate(['/customer/addresses/new']);
+  }
+
+  onSearch(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchTerm.set(target.value);
+  }
+
+  getStatusSeverity(
+    status: AddressStatus,
+  ): 'info' | 'warn' | 'success' | 'secondary' | 'danger' | 'contrast' {
+    switch (status) {
+      case AddressStatus.BinRequested:
+        return 'info';
+      case AddressStatus.PendingBinPayment:
+        return 'warn';
+      case AddressStatus.PendingBinDelivery:
+        return 'info';
+      case AddressStatus.BinDelivered:
+        return 'success';
+      default:
+        return 'secondary';
+    }
+  }
+
+  getStatusLabel(status: AddressStatus): string {
+    switch (status) {
+      case AddressStatus.BinRequested:
+        return 'Bin Requested';
+      case AddressStatus.PendingBinPayment:
+        return 'Pending Payment';
+      case AddressStatus.PendingBinDelivery:
+        return 'Pending Delivery';
+      case AddressStatus.BinDelivered:
+        return 'Delivered';
+      case AddressStatus.PendingAddressCompletion:
+        return 'Pending';
+      default:
+        return 'Unknown';
+    }
   }
 }
