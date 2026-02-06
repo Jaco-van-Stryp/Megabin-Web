@@ -84,16 +84,12 @@ export class ApprovalDashboard implements OnInit {
 
   readonly binRequestCount = computed(() => this.pendingBinRequests().length);
   readonly contractCount = computed(() => this.pendingContracts().length);
-  readonly totalPendingCount = computed(
-    () => this.binRequestCount() + this.contractCount()
-  );
+  readonly totalPendingCount = computed(() => this.binRequestCount() + this.contractCount());
 
   readonly selectedBinRequests = computed(() =>
-    this.pendingBinRequests().filter((r) => r.selected)
+    this.pendingBinRequests().filter((r) => r.selected),
   );
-  readonly selectedContracts = computed(() =>
-    this.pendingContracts().filter((c) => c.selected)
-  );
+  readonly selectedContracts = computed(() => this.pendingContracts().filter((c) => c.selected));
 
   ngOnInit(): void {
     this.loadPendingItems();
@@ -112,7 +108,7 @@ export class ApprovalDashboard implements OnInit {
         }
 
         const addressRequests = allUsers.map((user) =>
-          this.adminService.apiAdminGetAllUserAddressesUserIdGet(user.id)
+          this.adminService.apiAdminGetAllUserAddressesUserIdGet(user.id),
         );
 
         forkJoin(addressRequests).subscribe({
@@ -153,9 +149,7 @@ export class ApprovalDashboard implements OnInit {
             }
 
             const contractRequests = addressesWithContracts.map((item) =>
-              this.adminService.apiAdminGetScheduledContractsAddressIdGet(
-                item.address.id
-              )
+              this.adminService.apiAdminGetScheduledContractsAddressIdGet(item.address.id),
             );
 
             forkJoin(contractRequests).subscribe({
@@ -218,33 +212,25 @@ export class ApprovalDashboard implements OnInit {
   toggleBinRequestSelection(request: PendingBinRequest): void {
     this.pendingBinRequests.update((items) =>
       items.map((item) =>
-        item.addressId === request.addressId
-          ? { ...item, selected: !item.selected }
-          : item
-      )
+        item.addressId === request.addressId ? { ...item, selected: !item.selected } : item,
+      ),
     );
   }
 
   toggleContractSelection(contract: PendingScheduleContract): void {
     this.pendingContracts.update((items) =>
       items.map((item) =>
-        item.contractId === contract.contractId
-          ? { ...item, selected: !item.selected }
-          : item
-      )
+        item.contractId === contract.contractId ? { ...item, selected: !item.selected } : item,
+      ),
     );
   }
 
   selectAllBinRequests(selected: boolean): void {
-    this.pendingBinRequests.update((items) =>
-      items.map((item) => ({ ...item, selected }))
-    );
+    this.pendingBinRequests.update((items) => items.map((item) => ({ ...item, selected })));
   }
 
   selectAllContracts(selected: boolean): void {
-    this.pendingContracts.update((items) =>
-      items.map((item) => ({ ...item, selected }))
-    );
+    this.pendingContracts.update((items) => items.map((item) => ({ ...item, selected })));
   }
 
   approveBinRequest(request: PendingBinRequest): void {
@@ -258,7 +244,7 @@ export class ApprovalDashboard implements OnInit {
       .subscribe({
         next: () => {
           this.pendingBinRequests.update((items) =>
-            items.filter((item) => item.addressId !== request.addressId)
+            items.filter((item) => item.addressId !== request.addressId),
           );
           this.processingIds.update((ids) => {
             const newIds = new Set(ids);
@@ -311,7 +297,7 @@ export class ApprovalDashboard implements OnInit {
       .subscribe({
         next: () => {
           this.pendingContracts.update((items) =>
-            items.filter((item) => item.contractId !== contract.contractId)
+            items.filter((item) => item.contractId !== contract.contractId),
           );
           this.processingIds.update((ids) => {
             const newIds = new Set(ids);

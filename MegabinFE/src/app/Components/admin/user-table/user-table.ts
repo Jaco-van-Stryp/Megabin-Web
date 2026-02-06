@@ -18,14 +18,7 @@ import { ResponsiveService } from '../../../shared/services/responsive.service';
 
 @Component({
   selector: 'app-user-table',
-  imports: [
-    TableModule,
-    TagModule,
-    InputTextModule,
-    IconFieldModule,
-    InputIconModule,
-    CardModule,
-  ],
+  imports: [TableModule, TagModule, InputTextModule, IconFieldModule, InputIconModule, CardModule],
   templateUrl: './user-table.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -46,7 +39,7 @@ export class UserTable implements OnInit {
       (user) =>
         user.name?.toLowerCase().includes(term) ||
         user.email?.toLowerCase().includes(term) ||
-        user.role?.toLowerCase().includes(term)
+        user.role?.toLowerCase().includes(term),
     );
   });
 
@@ -74,9 +67,7 @@ export class UserTable implements OnInit {
     this.searchTerm.set(target.value);
   }
 
-  getRoleSeverity(
-    role: string
-  ): 'danger' | 'success' | 'info' | 'warn' | 'secondary' | 'contrast' {
+  getRoleSeverity(role: string): 'danger' | 'success' | 'info' | 'warn' | 'secondary' | 'contrast' {
     switch (role) {
       case 'admin':
         return 'danger';

@@ -9,14 +9,7 @@ import { AuthTokenService } from '../../../services/auth-token.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    ButtonModule,
-    TooltipModule,
-    DividerModule,
-    AvatarModule,
-  ],
+  imports: [RouterLink, RouterLinkActive, ButtonModule, TooltipModule, DividerModule, AvatarModule],
   templateUrl: './sidebar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

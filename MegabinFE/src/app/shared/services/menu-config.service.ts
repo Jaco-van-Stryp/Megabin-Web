@@ -73,8 +73,6 @@ export class MenuConfigService {
   readonly filteredMenuItems = computed(() => {
     const user = this.authTokenService.user();
     if (!user?.role) return [];
-    return this.menuItems.filter((item) =>
-      item.roles.includes(user.role as UserRoles)
-    );
+    return this.menuItems.filter((item) => item.roles.includes(user.role as UserRoles));
   });
 }

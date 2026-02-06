@@ -50,7 +50,7 @@ export class CustomerDashboard implements OnInit {
     return this.addresses().filter(
       (addr) =>
         addr.address?.toLowerCase().includes(term) ||
-        addr.addressStatus?.toLowerCase().includes(term)
+        addr.addressStatus?.toLowerCase().includes(term),
     );
   });
 
@@ -79,7 +79,7 @@ export class CustomerDashboard implements OnInit {
   }
 
   getStatusSeverity(
-    status: AddressStatus
+    status: AddressStatus,
   ): 'info' | 'warn' | 'success' | 'secondary' | 'danger' | 'contrast' {
     switch (status) {
       case AddressStatus.BinRequested:

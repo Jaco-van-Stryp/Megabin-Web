@@ -7,12 +7,7 @@ import { ResponsiveService } from '../../services/responsive.service';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [
-    RouterOutlet,
-    DrawerModule,
-    ButtonModule,
-    SidebarComponent,
-  ],
+  imports: [RouterOutlet, DrawerModule, ButtonModule, SidebarComponent],
   templateUrl: './main-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

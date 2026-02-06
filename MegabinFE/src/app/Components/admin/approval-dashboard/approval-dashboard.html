@@ -82,7 +82,9 @@
                       [attr.aria-label]="'Select ' + request.address"
                     />
                     <div class="flex-1 min-w-0">
-                      <p class="font-medium m-0 truncate text-surface-900">{{ request.userName }}</p>
+                      <p class="font-medium m-0 truncate text-surface-900">
+                        {{ request.userName }}
+                      </p>
                       <p class="text-sm m-0 truncate text-surface-500">{{ request.address }}</p>
                       <div class="flex items-center gap-2 mt-2">
                         <p-tag severity="info" [value]="request.totalBins + ' bins'" />
@@ -108,14 +110,17 @@
               [value]="pendingBinRequests()"
               [scrollable]="true"
               scrollHeight="400px"
-              [tableStyle]="{ 'width': '100%' }"
+              [tableStyle]="{ width: '100%' }"
             >
               <ng-template pTemplate="header">
                 <tr>
                   <th style="width: 3rem">
                     <input
                       type="checkbox"
-                      [checked]="selectedBinRequests().length === pendingBinRequests().length && pendingBinRequests().length > 0"
+                      [checked]="
+                        selectedBinRequests().length === pendingBinRequests().length &&
+                        pendingBinRequests().length > 0
+                      "
                       (change)="selectAllBinRequests($any($event.target).checked)"
                       aria-label="Select all bin requests"
                     />
@@ -206,7 +211,9 @@
                       [attr.aria-label]="'Select ' + contract.address"
                     />
                     <div class="flex-1 min-w-0">
-                      <p class="font-medium m-0 truncate text-surface-900">{{ contract.userName }}</p>
+                      <p class="font-medium m-0 truncate text-surface-900">
+                        {{ contract.userName }}
+                      </p>
                       <p class="text-sm m-0 truncate text-surface-500">{{ contract.address }}</p>
                       <div class="flex items-center gap-2 mt-2 flex-wrap">
                         <p-tag severity="secondary" [value]="formatFrequency(contract.frequency)" />
@@ -233,14 +240,17 @@
               [value]="pendingContracts()"
               [scrollable]="true"
               scrollHeight="400px"
-              [tableStyle]="{ 'width': '100%' }"
+              [tableStyle]="{ width: '100%' }"
             >
               <ng-template pTemplate="header">
                 <tr>
                   <th style="width: 3rem">
                     <input
                       type="checkbox"
-                      [checked]="selectedContracts().length === pendingContracts().length && pendingContracts().length > 0"
+                      [checked]="
+                        selectedContracts().length === pendingContracts().length &&
+                        pendingContracts().length > 0
+                      "
                       (change)="selectAllContracts($any($event.target).checked)"
                       aria-label="Select all schedule contracts"
                     />

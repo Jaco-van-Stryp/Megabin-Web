@@ -10,17 +10,14 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () =>
-      import('./Components/register/register').then((m) => m.Register),
+    loadComponent: () => import('./Components/register/register').then((m) => m.Register),
   },
 
   // Protected routes (with layout)
   {
     path: '',
     loadComponent: () =>
-      import('./shared/layout/main-layout/main-layout').then(
-        (m) => m.MainLayout
-      ),
+      import('./shared/layout/main-layout/main-layout').then((m) => m.MainLayout),
     canActivate: [authGuard],
     children: [
       // Admin routes
@@ -37,36 +34,34 @@ export const routes: Routes = [
             path: 'dashboard',
             loadComponent: () =>
               import('./Components/admin/admin-dashboard/admin-dashboard').then(
-                (m) => m.AdminDashboard
+                (m) => m.AdminDashboard,
               ),
           },
           {
             path: 'approvals',
             loadComponent: () =>
-              import(
-                './Components/admin/approval-dashboard/approval-dashboard'
-              ).then((m) => m.ApprovalDashboard),
+              import('./Components/admin/approval-dashboard/approval-dashboard').then(
+                (m) => m.ApprovalDashboard,
+              ),
           },
           {
             path: 'users',
             loadComponent: () =>
               import('./Components/admin/admin-dashboard/admin-dashboard').then(
-                (m) => m.AdminDashboard
+                (m) => m.AdminDashboard,
               ),
           },
           {
             path: 'manage-user/:userId',
             loadComponent: () =>
-              import('./Components/admin/manage-user/manage-user').then(
-                (m) => m.ManageUser
-              ),
+              import('./Components/admin/manage-user/manage-user').then((m) => m.ManageUser),
           },
           {
             path: 'manage-schedule-contracts/:addressId',
             loadComponent: () =>
-              import(
-                './Components/admin/manage-schedule-contracts/manage-schedule-contracts'
-              ).then((m) => m.ManageScheduleContracts),
+              import('./Components/admin/manage-schedule-contracts/manage-schedule-contracts').then(
+                (m) => m.ManageScheduleContracts,
+              ),
           },
         ],
       },
@@ -77,7 +72,7 @@ export const routes: Routes = [
         canActivate: [roleGuard(UserRoles.Driver)],
         loadComponent: () =>
           import('./Components/driver/driver-dashboard/driver-dashboard').then(
-            (m) => m.DriverDashboard
+            (m) => m.DriverDashboard,
           ),
       },
 
@@ -89,37 +84,33 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-              import(
-                './Components/customer/customer-dashboard/customer-dashboard'
-              ).then((m) => m.CustomerDashboard),
+              import('./Components/customer/customer-dashboard/customer-dashboard').then(
+                (m) => m.CustomerDashboard,
+              ),
           },
           {
             path: 'addresses',
             loadComponent: () =>
-              import('./Components/customer/my-addresses/my-addresses').then(
-                (m) => m.MyAddresses
-              ),
+              import('./Components/customer/my-addresses/my-addresses').then((m) => m.MyAddresses),
           },
           {
             path: 'addresses/new',
             loadComponent: () =>
               import('./Components/customer/add-address/add-address').then(
-                (m) => m.CustomerAddAddress
+                (m) => m.CustomerAddAddress,
               ),
           },
           {
             path: 'addresses/:addressId',
             loadComponent: () =>
-              import(
-                './Components/customer/address-detail/address-detail'
-              ).then((m) => m.AddressDetail),
+              import('./Components/customer/address-detail/address-detail').then(
+                (m) => m.AddressDetail,
+              ),
           },
           {
             path: 'profile',
             loadComponent: () =>
-              import('./Components/customer/edit-profile/edit-profile').then(
-                (m) => m.EditProfile
-              ),
+              import('./Components/customer/edit-profile/edit-profile').then((m) => m.EditProfile),
           },
         ],
       },
